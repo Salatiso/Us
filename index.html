@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tee & Me - Our Detailed Journey</title>
+    <title>Tee & Me - Our Story</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -28,27 +28,56 @@
             color: var(--ls-dark);
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1200px;
-            margin: 40px auto;
+            margin: 20px auto; /* Reduced top/bottom margin for header/footer */
             padding: 20px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex-grow: 1; /* Allow container to grow and push footer down */
         }
 
-        .header {
+        header {
+            background-color: var(--ls-primary);
+            color: white;
+            padding: 1em 0;
             text-align: center;
-            margin-bottom: 30px;
+            font-family: 'Montserrat', sans-serif;
+            border-bottom: 2px solid var(--ls-secondary);
         }
 
-        .header h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 3rem;
-            color: var(--ls-primary);
-            margin-bottom: 10px;
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 1em 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--ls-secondary);
+            font-weight: 600;
+            padding: 0.5em 1em;
+            margin: 0 0.5em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: var(--ls-secondary);
+            color: white;
         }
 
         .section-title {
@@ -73,7 +102,7 @@
             text-center;
         }
 
-        .carousel-section, .timeline-section, .graph-section, .reinforcement-section, .lifesync-section, .sensitive-section {
+        .carousel-section, .timeline-section, .graph-section, .reinforcement-section, .lifesync-section, .sensitive-section, .overview-section {
             margin-top: 40px;
         }
 
@@ -81,9 +110,9 @@
             display: flex;
             align-items: center;
             position: relative;
-            overflow-x: auto; /* Enable horizontal scrolling if JavaScript carousel isn't fully implemented */
-            scroll-snap-type: x mandatory; /* Enable snap scrolling for a carousel effect */
-            -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
             padding: 10px 0;
         }
 
@@ -93,14 +122,14 @@
         }
 
         .carousel-item {
-            flex: 0 0 80%; /* Adjust width as needed */
+            flex: 0 0 80%;
             padding: 20px;
             margin-right: 20px;
             border: 1px solid #ddd;
             border-radius: 8px;
             background-color: white;
             box-sizing: border-box;
-            scroll-snap-align: start; /* Snap items to the start of the container */
+            scroll-snap-align: start;
         }
 
         .carousel-arrow {
@@ -145,7 +174,7 @@
 
         .timeline-item {
             flex: 0 0 auto;
-            width: 200px; /* Adjust width as needed */
+            width: 200px;
             scroll-snap-align: center;
             text-align: center;
             position: relative;
@@ -158,6 +187,17 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 15px;
+        }
+
+        .timeline-content h3 {
+            font-size: 1rem;
+            margin-top: 0;
+            color: var(--ls-primary);
+        }
+
+        .timeline-content p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
         }
 
         .timeline-item::before {
@@ -198,37 +238,54 @@
             background-color: #f9f9f9;
             text-align: center;
         }
+
+        footer {
+            background-color: var(--ls-dark);
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 0.8rem;
+            border-top: 2px solid var(--ls-secondary);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Tee & Me</h1>
-            <p class="emotional-note">Our detailed journey of love and life.</p>
-        </div>
+    <header>
+        <h1>Our Love Story</h1>
+    </header>
 
-        <section class="dashboard">
+    <nav>
+        <a href="#dashboard">Overview</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#graphs">Tracking</a>
+        <a href="#reinforcement">Reinforcement</a>
+        <a href="#lifesync">LifeSync</a>
+        <a href="#sensitive">Insights</a>
+    </nav>
+
+    <div class="container">
+        <section id="dashboard" class="dashboard">
             <h2 class="section-title">Relationship Dashboard</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="dashboard-item">
                     <i class="fas fa-heart text-2xl text-ls-primary mb-2"></i>
                     <h3>Affection Level</h3>
-                    <p>High (Tracked over time)</p>
+                    <p>High (Tracked Weekly)</p>
                 </div>
                 <div class="dashboard-item">
                     <i class="fas fa-hands-helping text-2xl text-ls-secondary mb-2"></i>
                     <h3>Support Score</h3>
-                    <p>Strong (Based on favor exchanges)</p>
+                    <p>Strong (Weekly Analysis)</p>
                 </div>
                 <div class="dashboard-item">
                     <i class="fas fa-share-alt text-2xl text-ls-accent1 mb-2"></i>
-                    <h3>Shared Interests</h3>
-                    <p>Numerous (Based on shared links)</p>
+                    <h3>Shared Moments</h3>
+                    <p>Numerous (Weekly Highlights)</p>
                 </div>
                 <div class="dashboard-item">
                     <i class="fas fa-envelope text-2xl text-ls-accent2 mb-2"></i>
-                    <h3>Communication Frequency</h3>
-                    <p>Very High (Messages per day)</p>
+                    <h3>Communication</h3>
+                    <p>Very High (Weekly Count)</p>
                 </div>
                 </div>
         </section>
@@ -240,73 +297,76 @@
             </div>
         </section>
 
-        <section class="timeline-section">
-            <h2 class="section-title">Our Journey - Week by Week Timeline</h2>
+        <section id="timeline" class="timeline-section">
+            <h2 class="section-title">Our Journey - Weekly Timeline</h2>
             <div class="timeline">
                 <div class="timeline-item">
                     <div class="timeline-content">
-                        <h3>Week of May 22, 2024</h3>
-                        <p>Group "Us" created. Initial messages exchanged.</p>
-                        </div>
+                        <h3>Week of May 20, 2024</h3>
+                        <p>Initial exchanges and planning.</p>
+                        <button onclick="alert('Relevant messages for this week will be displayed here.')">See Details</button>
+                    </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-content">
-                        <h3>Week of May 26, 2024</h3>
-                        <p>Planning for potential outings and sharing accommodation links.</p>
+                        <h3>Week of May 27, 2024</h3>
+                        <p>Focus on safety and initial affection.</p>
+                        <button onclick="alert('Relevant messages for this week will be displayed here.')">See Details</button>
                     </div>
                 </div>
                 </div>
             <div class="text-center mt-4">
-                <p>Use the scroll bar or left/right arrows (if implemented with JavaScript) to navigate the timeline.</p>
+                <p>Use the scroll bar or left/right arrows (if implemented with JavaScript) to navigate the timeline. Click "See Details" for relevant messages.</p>
             </div>
         </section>
 
-        <section class="graph-section">
+        <section id="graphs" class="graph-section">
             <h2 class="section-title">Relationship Tracking</h2>
             <div class="graph-area">
                 <label for="aspect-select">Select Aspect to Track:</label>
                 <select id="aspect-select">
-                    <option value="affection">Affection Level</option>
-                    <option value="support">Support Score</option>
-                    <option value="communication">Communication Frequency</option>
+                    <option value="affection">Affection Level (Weekly)</option>
+                    <option value="support">Support Score (Weekly)</option>
+                    <option value="communication">Communication Frequency (Weekly)</option>
                     </select>
                 <canvas id="relationship-graph" width="400" height="200"></canvas>
-                <p>This graph will display the trend of the selected aspect over time (requires JavaScript charting library like Chart.js).</p>
+                <p>This graph will display the weekly trend of the selected aspect over time (requires JavaScript charting library like Chart.js and your data input).</p>
             </div>
         </section>
 
-        <section class="reinforcement-section">
+        <section id="reinforcement" class="reinforcement-section">
             <h2 class="section-title">Reinforcement Words & Actions</h2>
             <table class="reinforcement-table">
                 <thead>
                     <tr>
                         <th>Word/Action</th>
                         <th>Purpose</th>
-                        <th>Occurred On</th>
-                        <th>Did Not Occur On</th>
+                        <th>Occurred On (Weekly)</th>
+                        <th>Did Not Occur On (Weekly)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>"I'm safe baby"</td>
                         <td>Reassurance of well-being</td>
-                        <td>Multiple dates</td>
-                        <td></td>
+                        <td>Week of [Date]</td>
+                        <td>Week of [Date]</td>
                     </tr>
                     <tr>
                         <td>Requests for massage</td>
                         <td>Seeking physical comfort/care</td>
-                        <td>Multiple dates</td>
+                        <td>Week of [Date]</td>
                         <td></td>
                     </tr>
                     </tbody>
             </table>
+            <p>This table tracks the weekly occurrence of key reinforcement words and actions in our communication.</p>
         </section>
 
-        <section class="lifesync-section">
-            <h2 class="section-title">LifeSync Features (Conceptual Embedding)</h2>
+        <section id="lifesync" class="lifesync-section">
+            <h2 class="section-title">LifeSync Relationship Analysis</h2>
             <div class="mb-4">
-                <h3>Generate Relationship Report</h3>
+                <h3>Generate Detailed Report</h3>
                 <label for="report-period">Select Period:</label>
                 <select id="report-period">
                     <option value="3-months">Last 3 Months</option>
@@ -315,32 +375,28 @@
                     <option value="all-time">All Time</option>
                 </select>
                 <button class="bg-ls-primary text-white py-2 px-4 rounded-md hover:bg-ls-primary-light focus:outline-none focus:ring-2 focus:ring-ls-primary focus:ring-opacity-50">Generate Report</button>
-                <p class="mt-2">This would be a placeholder for generating a detailed report based on selected timeframes (requires backend logic and data processing).</p>
+                <p class="mt-2">This would generate a comprehensive report on various aspects of our relationship over the selected period (requires backend logic and data analysis).</p>
             </div>
             <div>
-                <h3>Relationship Status Overview</h3>
-                <p>This section would dynamically display a more comprehensive status based on various data points (requires backend analysis and frontend visualization).</p>
-            </div>
-        </section>
-
-        <section class="sensitive-section">
-            <h2 class="section-title">Affection & Intimacy</h2>
-            <div class="data-point">
-                <p>This section could contain data related to affection expressed (e.g., frequency of kisses, cuddles) and discussions around intimacy. Please be mindful of the sensitivity of this information and populate it as you feel comfortable.</p>
-                </div>
-            <h2 class="section-title">Discussions on Sensitive Topics</h2>
-            <div class="data-point">
-                <p>This section could highlight discussions around sensitive topics, showing openness and communication in addressing important aspects of the relationship.</p>
+                <h3>Relationship Status - Detailed View</h3>
+                <p>This section would provide a more in-depth analysis of our relationship status, potentially including compatibility scores and trend analysis based on underlying data.</p>
                 </div>
         </section>
 
-        <div class="text-center mt-8">
-            <p class="text-gray-600 text-sm">This detailed view of our journey is a testament to the depth and richness of our relationship.</p>
-        </div>
+        <section id="sensitive" class="sensitive-section">
+            <h2 class="section-title">Affection & Intimacy Insights</h2>
+            <div class="data-point">
+                <p>This section contains detailed information regarding expressions of affection and discussions related to intimacy on a weekly basis. Please review this data with care and consideration for privacy.</p>
+                </div>
+        </section>
     </div>
 
+    <footer>
+        <p>&copy; 2025 Tee & Me - Our Love Story</p>
+    </footer>
+
     <script>
-        // JavaScript for basic carousel functionality (you might want to use a library for more advanced features)
+        // JavaScript for basic carousel functionality
         const carousels = document.querySelectorAll('.carousel-container');
 
         carousels.forEach(container => {
@@ -353,7 +409,6 @@
                 leftArrow.addEventListener('click', () => {
                     scrollAmount -= container.offsetWidth;
                     carousel.style.transform = `translateX(${scrollAmount}px)`;
-                    // Basic check to disable/enable arrows at the ends (can be improved)
                     if (scrollAmount < 0) rightArrow.style.display = 'block';
                     if (scrollAmount === 0) leftArrow.style.display = 'none';
                 });
@@ -363,13 +418,11 @@
                 rightArrow.addEventListener('click', () => {
                     scrollAmount += container.offsetWidth;
                     carousel.style.transform = `translateX(${scrollAmount}px)`;
-                    // Basic check to disable/enable arrows at the ends (can be improved)
                     if (scrollAmount > - (carousel.scrollWidth - container.offsetWidth)) leftArrow.style.display = 'block';
                     if (scrollAmount <= - (carousel.scrollWidth - container.offsetWidth)) rightArrow.style.display = 'none';
                 });
             }
 
-            // Initialize arrow visibility for the first carousel
             if (container === carousels[0] && leftArrow && carousel.scrollWidth <= container.offsetWidth) {
                 leftArrow.style.display = 'none';
                 rightArrow.style.display = 'none';
@@ -385,11 +438,22 @@
         if (aspectSelect && relationshipGraph) {
             aspectSelect.addEventListener('change', (event) => {
                 const selectedAspect = event.target.value;
-                // In a real application, you would fetch data based on the selected aspect and update the graph
                 console.log(`Tracking: ${selectedAspect}`);
-                // Example using Chart.js (include the library in <head>):
+                // Include Chart.js library in <head> to use this:
                 // const ctx = relationshipGraph.getContext('2d');
-                // const myChart = new Chart(ctx, { ... });
+                // const myChart = new Chart(ctx, {
+                //     type: 'line', // or 'bar', 'pie' etc.
+                //     data: {
+                //         labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'], // Replace with your weekly labels
+                //         datasets: [{
+                //             label: selectedAspect,
+                //             data: [/* Your weekly data here */],
+                //             borderColor: var(--ls-primary),
+                //             fill: false
+                //         }]
+                //     },
+                //     options: { ... }
+                // });
             });
             // Initial graph setup (if needed)
         }
