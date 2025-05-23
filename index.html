@@ -1,626 +1,920 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>LifeSync: Mdeni Family Relationship Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google Fonts for modern look -->
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-  <style>
-    :root {
-      --primary: #1a237e;
-      --accent: #ffb300;
-      --bg: #f5f5f5;
-      --card: #fff;
-      --timeline: #3949ab;
-      --text: #222;
-      --tab-active: #ffb300;
-      --tab-inactive: #e0e0e0;
-      --border-radius: 18px;
-    }
-    body {
-      margin: 0;
-      font-family: 'Montserrat', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow: hidden;
-    }
-    #app {
-      height: 100vh;
-      width: 100vw;
-      display: flex;
-      flex-direction: column;
-    }
-    /* Tabs */
-    .tabs {
-      display: flex;
-      background: var(--card);
-      border-bottom: 2px solid var(--timeline);
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 2vw;
-      height: 60px;
-    }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 18px 0;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 1.1em;
-      color: var(--primary);
-      background: var(--tab-inactive);
-      border-radius: var(--border-radius) var(--border-radius) 0 0;
-      margin: 0 8px;
-      transition: background 0.2s;
-    }
-    .tab.active {
-      background: var(--tab-active);
-      color: #fff;
-    }
-    .lang-switch {
-      font-size: 1.2em;
-      cursor: pointer;
-      margin-left: 12px;
-      color: var(--primary);
-      background: none;
-      border: none;
-    }
-    /* Content panels */
-    .panel {
-      flex: 1;
-      display: none;
-      overflow: hidden;
-      position: relative;
-    }
-    .panel.active {
-      display: block;
-      animation: fadein 0.4s;
-    }
-    @keyframes fadein {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    /* Dashboard */
-    .dashboard {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      align-items: center;
-      height: 100%;
-      gap: 2vw;
-      padding: 2vw;
-    }
-    .card {
-      background: var(--card);
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      padding: 2vw;
-      min-width: 260px;
-      min-height: 180px;
-      flex: 1 0 320px;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .card h3 {
-      margin: 0 0 12px 0;
-      color: var(--primary);
-    }
-    /* Timeline */
-    .timeline-container {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .timeline {
-      display: flex;
-      flex-direction: row;
-      overflow-x: auto;
-      overflow-y: hidden;
-      height: 90%;
-      align-items: center;
-      gap: 40px;
-      padding: 2vw;
-      scroll-behavior: smooth;
-    }
-    .timeline-event {
-      background: var(--card);
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 8px rgba(26,35,126,0.09);
-      min-width: 260px;
-      max-width: 320px;
-      padding: 18px 20px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .timeline-event .icon {
-      font-size: 2em;
-      color: var(--timeline);
-      margin-bottom: 10px;
-    }
-    .timeline-event .date {
-      font-size: 0.95em;
-      color: var(--accent);
-      margin-bottom: 7px;
-    }
-    .timeline-event .desc {
-      font-size: 1.08em;
-      margin-bottom: 8px;
-    }
-    .timeline-event .link {
-      color: var(--primary);
-      text-decoration: underline;
-      font-size: 0.95em;
-      cursor: pointer;
-      margin-top: 4px;
-    }
-    /* Carousel */
-    .carousel-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      background: var(--bg);
-    }
-    .carousel {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      width: 90vw;
-      max-width: 900px;
-      overflow: hidden;
-      position: relative;
-    }
-    .carousel-message {
-      background: var(--card);
-      border-radius: var(--border-radius);
-      box-shadow: 0 2px 8px rgba(26,35,126,0.09);
-      min-width: 350px;
-      max-width: 450px;
-      padding: 24px 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      font-size: 1.08em;
-      position: relative;
-      transition: box-shadow 0.2s;
-    }
-    .carousel-message .meta {
-      font-size: 0.95em;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-    .carousel-message .author {
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-    .carousel-nav {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      font-size: 1.5em;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin: 0 12px;
-    }
-    .carousel-nav:active {
-      background: var(--accent);
-    }
-    .carousel-index {
-      margin-top: 12px;
-      color: var(--timeline);
-      font-size: 1.1em;
-    }
-    /* Responsive */
-    @media (max-width: 900px) {
-      .dashboard { flex-direction: column; }
-      .card { min-width: 90vw; max-width: 95vw; }
-      .timeline-event { min-width: 90vw; max-width: 95vw; }
-      .carousel-message { min-width: 90vw; max-width: 95vw; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="websiteTitle">Tee & Me - Our Story</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.16/dist/umd/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/dist/umd/i18nextBrowserLanguageDetector.min.js"></script>
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif; /* Matching salatiso.com */
+            background-color: #fdf6f6; /* Soft, feminine background */
+            color: #333;
+            overflow-x: hidden; /* Prevent horizontal scroll on body */
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100vw;
+        }
+        .content-area {
+            flex-grow: 1;
+            width: 100%;
+            overflow: hidden; /* Key for horizontal scrolling sections */
+            position: relative;
+        }
+        .content-section {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto; /* Allow vertical scroll within section if content overflows height */
+            padding: 1.5rem; /* p-6 */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-button.active-nav, .nav-button:hover {
+            color: #e11d48; /* Rose-500 for active/hover */
+            border-bottom-color: #e11d48;
+        }
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 1rem; /* Space for scrollbar */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .carousel-item {
+            flex: 0 0 auto; /* Prevent shrinking/growing */
+            width: 300px; /* Adjust as needed */
+            margin-right: 1rem;
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); /* shadow-md */
+            padding: 1rem;
+        }
+        .carousel-item:last-child {
+            margin-right: 0;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px; /* Adjust as needed */
+            width: 100%;
+            max-width: 600px; /* Limit chart width */
+            margin: 1rem auto;
+        }
+        /* Custom scrollbar for carousels (optional) */
+        .carousel-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .carousel-container::-webkit-scrollbar-track {
+            background: #fde4e4; /* Lighter rose for track */
+            border-radius: 10px;
+        }
+        .carousel-container::-webkit-scrollbar-thumb {
+            background: #f43f5e; /* Rose-500 for thumb */
+            border-radius: 10px;
+        }
+        .carousel-container::-webkit-scrollbar-thumb:hover {
+            background: #e11d48; /* Darker rose on hover */
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .language-switcher button {
+            background-color: #f43f5e; /* rose-500 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            margin-left: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .language-switcher button:hover {
+            background-color: #e11d48; /* rose-600 */
+        }
+        .dashboard-metric-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        .dashboard-metric-card h3 {
+            color: #f43f5e; /* rose-500 */
+        }
+    </style>
 </head>
 <body>
-  <div id="app">
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> <span class="tr" data-key="dashboard">Dashboard</span></div>
-      <div class="tab" data-tab="timeline"><i class="fas fa-stream"></i> <span class="tr" data-key="timeline">Timeline</span></div>
-      <div class="tab" data-tab="messages"><i class="fas fa-comments"></i> <span class="tr" data-key="messages">Messages</span></div>
-      <div class="tab" data-tab="about"><i class="fas fa-heart"></i> <span class="tr" data-key="about">About</span></div>
-      <button class="lang-switch" id="langSwitch" title="Switch language">
-        <i class="fas fa-language"></i> <span id="langLabel">Xhosa</span>
-      </button>
+    <div class="main-container">
+        <header class="bg-white shadow-md sticky top-0 z-50">
+            <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-rose-600" data-i18n="headerTitle">Tee & Me</h1>
+                <div class="language-switcher">
+                    <button id="lang-en">EN</button>
+                    <button id="lang-xh">XH</button>
+                </div>
+            </div>
+        </header>
+
+        <nav class="bg-white shadow-sm">
+            <div class="container mx-auto px-6 py-2 flex justify-center space-x-4 sm:space-x-6 md:space-x-8 overflow-x-auto">
+                <button data-section="overview" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-3 text-sm sm:text-base active-nav" data-i18n="nav.overview">Overview</button>
+                <button data-section="timeline" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-3 text-sm sm:text-base" data-i18n="nav.timeline">Timeline</button>
+                <button data-section="tracking" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-3 text-sm sm:text-base" data-i18n="nav.tracking">Tracking</button>
+                <button data-section="reinforcement" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-3 text-sm sm:text-base" data-i18n="nav.reinforcement">Reinforcement</button>
+                <button data-section="lifesync" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-3 text-sm sm:text-base" data-i18n="nav.lifesync">LifeSync</button>
+                <button data-section="insights" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-3 text-sm sm:text-base" data-i18n="nav.insights">Insights</button>
+            </div>
+        </nav>
+
+        <main class="content-area">
+            <section id="overview" class="content-section active">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="overview.title">Our Journey Snapshot</h2>
+                
+                <div class="mb-8">
+                    <h3 class="text-2xl font-medium mb-4 text-gray-700" data-i18n="overview.dashboardTitle">Relationship Dashboard</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="dashboard-metric-card">
+                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.affectionLevel">Affection Level</h3>
+                            <p class="text-3xl font-bold text-gray-800" id="affection-metric">85%</p>
+                            <p class="text-sm text-gray-500" data-i18n="overview.weeklyAverage">Weekly Average</p>
+                        </div>
+                        <div class="dashboard-metric-card">
+                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.supportScore">Support Score</h3>
+                            <p class="text-3xl font-bold text-gray-800" id="support-metric">92%</p>
+                            <p class="text-sm text-gray-500" data-i18n="overview.basedOnFavors">Based on mutual support</p>
+                        </div>
+                        <div class="dashboard-metric-card">
+                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.sharedInterests">Shared Interests</h3>
+                            <p class="text-3xl font-bold text-gray-800" id="interests-metric">7</p>
+                            <p class="text-sm text-gray-500" data-i18n="overview.activeShared">Active shared activities/links</p>
+                        </div>
+                        <div class="dashboard-metric-card">
+                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.commFrequency">Communication</h3>
+                            <p class="text-3xl font-bold text-gray-800" id="comm-metric">High</p>
+                            <p class="text-sm text-gray-500" data-i18n="overview.dailyMessages">Avg. daily messages</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dashboardChart"></canvas>
+                    </div>
+                     <div class="mt-4 text-center">
+                        <label for="dashboardMetricSelect" class="mr-2 font-medium text-gray-700" data-i18n="overview.selectMetric">Display on graph:</label>
+                        <select id="dashboardMetricSelect" class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500">
+                            <option value="affection" data-i18n="overview.affectionLevel">Affection Level</option>
+                            <option value="support" data-i18n="overview.supportScore">Support Score</option>
+                            <option value="communication" data-i18n="overview.commFrequency">Communication Frequency</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-center mb-8 p-6 bg-rose-50 rounded-lg shadow">
+                    <h3 class="text-2xl font-medium mb-3 text-rose-700" data-i18n="overview.ourSong">Our Special Song</h3>
+                    <p class="mb-4 text-gray-600" data-i18n="overview.songDescription">A song that holds a special place in our hearts.</p>
+                    <a href="https://www.youtube.com/watch?v=a2xtL3a-N4E" target="_blank" class="inline-block bg-rose-500 hover:bg-rose-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">
+                        <i class="fas fa-play mr-2"></i> <span data-i18n="overview.playSong">Play "You're Still The One"</span>
+                    </a>
+                </div>
+            </section>
+
+            <section id="timeline" class="content-section">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="timeline.title">Our Relationship Timeline</h2>
+                <p class="text-gray-600 mb-6" data-i18n="timeline.description">A week-by-week journey of our story, starting from May 20, 2024. Scroll horizontally to explore.</p>
+                <div class="relative">
+                    <button id="timeline-scroll-left" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-left"></i></button>
+                    <div id="timelineCarousel" class="carousel-container">
+                        </div>
+                    <button id="timeline-scroll-right" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+
+            <section id="tracking" class="content-section">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="tracking.title">Relationship Tracking</h2>
+                <p class="text-gray-600 mb-4" data-i18n="tracking.description">Visualize different aspects of our relationship over time.</p>
+                <div class="mb-6">
+                    <label for="trackingMetricSelect" class="mr-2 font-medium text-gray-700" data-i18n="tracking.selectAspect">Select aspect to track:</label>
+                    <select id="trackingMetricSelect" class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500">
+                        <option value="affection" data-i18n="tracking.affectionLevel">Affection Level</option>
+                        <option value="support" data-i18n="tracking.supportScore">Support Score</option>
+                        <option value="communication" data-i18n="tracking.communicationFrequency">Communication Frequency</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trackingChart"></canvas>
+                </div>
+            </section>
+
+            <section id="reinforcement" class="content-section">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="reinforcement.title">Reinforcement Words & Actions</h2>
+                <p class="text-gray-600 mb-6" data-i18n="reinforcement.description">Tracking important words and actions in our communication.</p>
+                <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-rose-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-rose-700 uppercase tracking-wider" data-i18n="reinforcement.table.wordAction">Word/Action</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-rose-700 uppercase tracking-wider" data-i18n="reinforcement.table.purpose">Purpose</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-rose-700 uppercase tracking-wider" data-i18n="reinforcement.table.occurred">Occurred (Weeks)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-rose-700 uppercase tracking-wider" data-i18n="reinforcement.table.notOccurred">Not Occurred (Weeks)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reinforcementTableBody" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="lifesync" class="content-section">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="lifesync.title">LifeSync Analysis</h2>
+                <p class="text-gray-600 mb-6" data-i18n="lifesync.description">Tools for generating reports and viewing detailed analyses of our relationship.</p>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="lifesync.reportGen">Generate Relationship Report</h3>
+                    <div class="flex items-center space-x-3">
+                        <select id="lifesyncPeriodSelect" class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500">
+                            <option value="3m" data-i18n="lifesync.last3Months">Last 3 Months</option>
+                            <option value="6m" data-i18n="lifesync.last6Months">Last 6 Months</option>
+                            <option value="1y" data-i18n="lifesync.lastYear">Last Year</option>
+                            <option value="all" data-i18n="lifesync.allTime">All Time</option>
+                        </select>
+                        <button class="bg-rose-500 hover:bg-rose-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" data-i18n="lifesync.generateButton">Generate Report</button>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-500" data-i18n="lifesync.reportNote">(Note: Full report generation requires backend implementation. This is a placeholder.)</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="lifesync.detailedStatus">Detailed Relationship Status</h3>
+                    <p class="text-gray-500" data-i18n="lifesync.statusPlaceholder">This section will display a more in-depth, potentially score-based analysis of the relationship. (Placeholder)</p>
+                </div>
+            </section>
+
+            <section id="insights" class="content-section">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="insights.title">Affection & Intimacy Insights</h2>
+                <p class="text-gray-600 mb-6" data-i18n="insights.description">Delving into personal aspects of our connection. Scroll horizontally to explore weekly insights.</p>
+                <div class="relative">
+                     <button id="insights-scroll-left" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-left"></i></button>
+                    <div id="insightsCarousel" class="carousel-container">
+                        </div>
+                     <button id="insights-scroll-right" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="container mx-auto px-6 py-4 text-center text-gray-600 text-sm">
+                <p>&copy; <span id="currentYear"></span> <span data-i18n="footer.text">Tee & Me. A digital chronicle of our love.</span></p>
+            </div>
+        </footer>
     </div>
-    <!-- Panels -->
-    <div class="panel active" id="dashboardPanel">
-      <div class="dashboard">
-        <div class="card">
-          <h3 class="tr" data-key="relationship_health">Relationship Health</h3>
-          <canvas id="loveGraph" width="220" height="120"></canvas>
-          <div style="margin-top:10px;" class="tr" data-key="love_score">Love Score: <span id="loveScore">98</span>/100</div>
+
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">&times;</span>
+            <h3 id="modalTitle" class="text-xl font-semibold mb-4 text-rose-600">Details</h3>
+            <div id="modalBody" class="text-gray-700">
+                <div class="relative">
+                    <button id="modal-carousel-prev" class="absolute -left-3 top-1/2 transform -translate-y-1/2 z-20 bg-white/70 hover:bg-white p-1 rounded-full shadow-md text-rose-500 text-xs"><i class="fas fa-chevron-left"></i></button>
+                    <div id="modalCarouselContainer" class="carousel-container messages-carousel" style="max-height: 300px; overflow-y:auto;">
+                        </div>
+                    <button id="modal-carousel-next" class="absolute -right-3 top-1/2 transform -translate-y-1/2 z-20 bg-white/70 hover:bg-white p-1 rounded-full shadow-md text-rose-500 text-xs"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
         </div>
-        <div class="card">
-          <h3 class="tr" data-key="communication">Communication</h3>
-          <canvas id="commGraph" width="220" height="120"></canvas>
-          <div style="margin-top:10px;" class="tr" data-key="messages_sent">Messages Sent: <span id="msgCount">84</span></div>
-        </div>
-        <div class="card">
-          <h3 class="tr" data-key="crisis_handling">Crisis Handling</h3>
-          <canvas id="crisisGraph" width="220" height="120"></canvas>
-          <div style="margin-top:10px;" class="tr" data-key="crisis_resolved">Crises Resolved: <span id="crisisCount">5</span></div>
-        </div>
-      </div>
     </div>
-    <div class="panel" id="timelinePanel">
-      <div class="timeline-container">
-        <div class="timeline" id="timeline">
-          <!-- Timeline events injected here -->
-        </div>
-      </div>
-    </div>
-    <div class="panel" id="messagesPanel">
-      <div class="carousel-container">
-        <div style="margin-bottom:12px;text-align:center;">
-          <span class="tr" data-key="browse_messages">Browse Key Messages</span>
-        </div>
-        <div class="carousel">
-          <button class="carousel-nav" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
-          <div id="carouselMessage">
-            <!-- Message injected here -->
-          </div>
-          <button class="carousel-nav" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
-        </div>
-        <div class="carousel-index" id="carouselIndex"></div>
-      </div>
-    </div>
-    <div class="panel" id="aboutPanel">
-      <div style="padding:3vw;max-width:700px;margin:0 auto;">
-        <h2 class="tr" data-key="about_title">About This Relationship</h2>
-        <p class="tr" data-key="about_desc">
-          This interactive dashboard chronicles the journey of Salatiso and Tee, blending love, partnership, and enterprise. 
-          Explore their timeline, key communications, and the systems that keep their bond strong. 
-          All content is available in English and isiXhosa for cultural resonance.
-        </p>
-        <ul>
-          <li class="tr" data-key="no_scroll">No vertical scrolling – everything is at your fingertips.</li>
-          <li class="tr" data-key="timelines">Horizontal timeline with icons and links to original messages.</li>
-          <li class="tr" data-key="dashboard_custom">Customizable dashboard with relationship analytics.</li>
-          <li class="tr" data-key="fully_translatable">Fully translatable: switch between English and isiXhosa instantly.</li>
-        </ul>
-        <p>
-          <span class="tr" data-key="repo_suggestion">For asset management, use the suggested repository structure. All code is open for your customization.</span>
-        </p>
-      </div>
-    </div>
-  </div>
-  <!-- Chart.js for graphs -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    // --- Data Section ---
-    // Timeline Events
-    const timelineEvents = [
-      {
-        date: "2024-05-22",
-        icon: "fa-users",
-        title: "Relationship Formalized",
-        desc: "WhatsApp group 'Us' created. Partnership begins.",
-        msgIndex: 0
-      },
-      {
-        date: "2024-05-27",
-        icon: "fa-shield-heart",
-        title: "Safety Ritual Starts",
-        desc: "First daily safety check-in: 'I'm safe sthandwa sam.'",
-        msgIndex: 5
-      },
-      {
-        date: "2024-05-28",
-        icon: "fa-gavel",
-        title: "Legal Coordination",
-        desc: "First joint court appearance and legal planning.",
-        msgIndex: 10
-      },
-      {
-        date: "2024-06-04",
-        icon: "fa-snowflake",
-        title: "Winter Adaptation",
-        desc: "Bakkie iced over; geyser and home logistics coordinated.",
-        msgIndex: 30
-      },
-      {
-        date: "2024-06-26",
-        icon: "fa-coins",
-        title: "Financial Tracker",
-        desc: "Expenditure tracking system planned together.",
-        msgIndex: 60
-      },
-      {
-        date: "2024-06-28",
-        icon: "fa-notes-medical",
-        title: "Health Crisis",
-        desc: "Vomiting episode; crisis-handling protocol activated.",
-        msgIndex: 75
-      },
-      {
-        date: "2024-06-29",
-        icon: "fa-lock",
-        title: "Security Alert",
-        desc: "Bank app security code changed; joint response.",
-        msgIndex: 78
-      },
-      {
-        date: "2024-07-09",
-        icon: "fa-globe",
-        title: "Website Launch",
-        desc: "First website draft shared for enterprise.",
-        msgIndex: 100
-      }
-    ];
 
-    // Key Messages (for carousel)
-    const messages = [
-      {
-        date: "2024-05-22 13:32",
-        author: "Salatiso",
-        text: "WhatsApp group 'Us' created. Partnership begins.",
-        lang: {
-          xh: "Iqela le-WhatsApp 'Us' lenziwe. Ubudlelwane buqalile."
-        }
-      },
-      {
-        date: "2024-05-27 07:43",
-        author: "Tee",
-        text: "I'm safe sthandwa sam",
-        lang: {
-          xh: "Ndikhuselekile sthandwa sam"
-        }
-      },
-      {
-        date: "2024-05-28 10:26",
-        author: "Salatiso",
-        text: "Surprisingly the original magistrate was not there. It went as expected, I have to go again on 10 July. Now I have what I need to approach the equality court.",
-        lang: {
-          xh: "Ngumangaliso ukuba ijaji yokuqala ibingekho. Kufuneka ndibuye ngo-10 July. Ndinalo ngoku endilidingayo ukuya enkundleni yobulungisa."
-        }
-      },
-      {
-        date: "2024-06-04 07:48",
-        author: "Tee",
-        text: "Please adjust the geyser, I've been showering with cold water. May you please move the bakkie today, windscreen yam had actual ice this morning.",
-        lang: {
-          xh: "Nceda ulungise i-geyser, bendihlamba ngamanzi abandayo. Nceda ushukumise i-bakkie namhlanje, ifestile ibinemkhenkce."
-        }
-      },
-      {
-        date: "2024-06-26 09:57",
-        author: "Salatiso",
-        text: "Please remind me this weekend to do a financial tracker for your expenditure. This construction is getting out of hand.",
-        lang: {
-          xh: "Nceda undikhumbuze ngempelaveki ukwenza itraka yezezimali. Ulwakhiwo luyaphuma ezandleni."
-        }
-      },
-      {
-        date: "2024-06-28 12:28",
-        author: "Salatiso",
-        text: "I'm not getting better, quite the opposite. Took some meds, thought they were working... Vomited all of them. Please Uber back.",
-        lang: {
-          xh: "Andiphili, kumbi ngakumbi. Ndithathe amayeza, ndacinga ukuba ayasebenza... Ndiphose onke. Nceda ubuye nge-Uber."
-        }
-      },
-      {
-        date: "2024-06-29 01:45",
-        author: "System",
-        text: "Your security code with Tee changed.",
-        lang: {
-          xh: "Ikhowudi yakho yokhuseleko noTee itshintshile."
-        }
-      },
-      {
-        date: "2024-07-09 14:02",
-        author: "Salatiso",
-        text: "Website draft shared: https://grey-alligator-976716.builder-preview.com/",
-        lang: {
-          xh: "Umzobo wewebhusayithi wabelwana: https://grey-alligator-976716.builder-preview.com/"
-        }
-      }
-    ];
+    <script>
+        // --- i18next Configuration ---
+        const translations = {
+            en: {
+                translation: {
+                    websiteTitle: "Tee & Me - Our Story",
+                    headerTitle: "Tee & Me",
+                    nav: {
+                        overview: "Overview",
+                        timeline: "Timeline",
+                        tracking: "Tracking",
+                        reinforcement: "Reinforcement",
+                        lifesync: "LifeSync",
+                        insights: "Insights"
+                    },
+                    overview: {
+                        title: "Our Journey Snapshot",
+                        dashboardTitle: "Relationship Dashboard",
+                        affectionLevel: "Affection Level",
+                        supportScore: "Support Score",
+                        sharedInterests: "Shared Interests",
+                        commFrequency: "Communication",
+                        weeklyAverage: "Weekly Average",
+                        basedOnFavors: "Based on mutual support",
+                        activeShared: "Active shared activities/links",
+                        dailyMessages: "Avg. daily messages",
+                        selectMetric: "Display on graph:",
+                        ourSong: "Our Special Song",
+                        songDescription: "A song that holds a special place in our hearts.",
+                        playSong: "Play \"You're Still The One\""
+                    },
+                    timeline: {
+                        title: "Our Relationship Timeline",
+                        description: "A week-by-week journey of our story, starting from May 20, 2024. Scroll horizontally to explore.",
+                        seeDetails: "See Details",
+                        week: "Week"
+                    },
+                    tracking: {
+                        title: "Relationship Tracking",
+                        description: "Visualize different aspects of our relationship over time.",
+                        selectAspect: "Select aspect to track:",
+                        affectionLevel: "Affection Level",
+                        supportScore: "Support Score",
+                        communicationFrequency: "Communication Frequency"
+                    },
+                    reinforcement: {
+                        title: "Reinforcement Words & Actions",
+                        description: "Tracking important words and actions in our communication.",
+                        table: {
+                            wordAction: "Word/Action",
+                            purpose: "Purpose",
+                            occurred: "Occurred (Weeks)",
+                            notOccurred: "Not Occurred (Weeks)"
+                        }
+                    },
+                    lifesync: {
+                        title: "LifeSync Analysis",
+                        description: "Tools for generating reports and viewing detailed analyses of our relationship.",
+                        reportGen: "Generate Relationship Report",
+                        last3Months: "Last 3 Months",
+                        last6Months: "Last 6 Months",
+                        lastYear: "Last Year",
+                        allTime: "All Time",
+                        generateButton: "Generate Report",
+                        reportNote: "(Note: Full report generation requires backend implementation. This is a placeholder.)",
+                        detailedStatus: "Detailed Relationship Status",
+                        statusPlaceholder: "This section will display a more in-depth, potentially score-based analysis of the relationship. (Placeholder)"
+                    },
+                    insights: {
+                        title: "Affection & Intimacy Insights",
+                        description: "Delving into personal aspects of our connection. Scroll horizontally to explore weekly insights."
+                    },
+                    footer: {
+                        text: "Tee & Me. A digital chronicle of our love."
+                    },
+                    modal: {
+                        detailsTitle: "Details for Week {weekNumber}"
+                    }
+                }
+            },
+            xh: {
+                translation: {
+                    websiteTitle: "Tee & Me - Ibali Lethu",
+                    headerTitle: "Tee & Me",
+                    nav: {
+                        overview: "Isishwankathelo",
+                        timeline: "Umzila Wexesha",
+                        tracking: "Ukulandelela",
+                        reinforcement: "Ukuqinisa",
+                        lifesync: "LifeSync",
+                        insights: "Ukuqonda"
+                    },
+                    overview: {
+                        title: "Isishwankathelo Sohambo Lwethu",
+                        dashboardTitle: "Ideshibhodi Yobudlelwane",
+                        affectionLevel: "Iqondo Lothando",
+                        supportScore: "Inqaku Lenkxaso",
+                        sharedInterests: "Izinto Esizithandayo Ngokufanayo",
+                        commFrequency: "Ukunxibelelana",
+                        weeklyAverage: "Umndilili Weveki",
+                        basedOnFavors: "Ngokusekelwe kwinkxaso efanayo",
+                        activeShared: "Imisebenzi/amakhonkco ekwabelwana ngawo",
+                        dailyMessages: "Umndilili wemiyalezo yosuku",
+                        selectMetric: "Bonisa kwigrafu:",
+                        ourSong: "Ingoma Yethu Ekhethekileyo",
+                        songDescription: "Ingoma enendawo ekhethekileyo ezintliziyweni zethu.",
+                        playSong: "Dlala \"You're Still The One\""
+                    },
+                    timeline: {
+                        title: "Umzila Wexesha Lobudlelwane Bethu",
+                        description: "Uhambo lwebali lethu, iveki ngeveki, ukuqala nge-20 kaMeyi 2024. Skrola ngokuthe tye ukuze uhlole.",
+                        seeDetails: "Bona Iinkcukacha",
+                        week: "Iveki"
+                    },
+                    tracking: {
+                        title: "Ukulandelela Ubudlelwane",
+                        description: "Bonisa iinkalo ezahlukeneyo zobudlelwane bethu ngokuhamba kwexesha.",
+                        selectAspect: "Khetha inkalo oza kuyilandela:",
+                        affectionLevel: "Iqondo Lothando",
+                        supportScore: "Inqaku Lenkxaso",
+                        communicationFrequency: "Ukuphindaphindeka Konxibelelwano"
+                    },
+                    reinforcement: {
+                        title: "Amagama Nezenzo Zokuqinisa",
+                        description: "Ukulandelela amagama nezenzo ezibalulekileyo kunxibelelwano lwethu.",
+                        table: {
+                            wordAction: "Igama/Isenzo",
+                            purpose: "Injongo",
+                            occurred: "Kwenzekile (IiVeki)",
+                            notOccurred: "Akwenzekanga (IiVeki)"
+                        }
+                    },
+                    lifesync: {
+                        title: "Uhlalutyo lweLifeSync",
+                        description: "Izixhobo zokwenza iingxelo nokujonga uhlalutyo oluneenkcukacha lobudlelwane bethu.",
+                        reportGen: "Yenza Ingxelo Yobudlelwane",
+                        last3Months: "Kwiinyanga ezi-3 ezidlulileyo",
+                        last6Months: "Kwiinyanga ezi-6 ezidlulileyo",
+                        lastYear: "Kunyaka ophelileyo",
+                        allTime: "Lonke Ixesha",
+                        generateButton: "Yenza Ingxelo",
+                        reportNote: "(Qaphela: Ukwenziwa kwengxelo epheleleyo kufuna uphuhliso lwasemva. Le yindawo yokubeka.)",
+                        detailedStatus: "Isimo Esineenkcukacha Sobudlelwane",
+                        statusPlaceholder: "Eli candelo liza kubonisa uhlalutyo olunzulu, olunokuba namanqaku obudlelwane. (Indawo yokubeka)"
+                    },
+                    insights: {
+                        title: "Ukuqonda Ngothando Nobuhlobo",
+                        description: "Ukungena nzulu kwiinkalo zobuqu zonxibelelwano lwethu. Skrola ngokuthe tye ukuze uhlole ukuqonda ngeveki."
+                    },
+                    footer: {
+                        text: "Tee & Me. Isikhumbuzo sothando lwethu sedijithali."
+                    },
+                     modal: {
+                        detailsTitle: "Iinkcukacha zeVeki {weekNumber}"
+                    }
+                }
+            }
+        };
 
-    // --- Translation dictionaries ---
-    const translations = {
-      en: {
-        dashboard: "Dashboard",
-        timeline: "Timeline",
-        messages: "Messages",
-        about: "About",
-        relationship_health: "Relationship Health",
-        love_score: "Love Score",
-        communication: "Communication",
-        messages_sent: "Messages Sent",
-        crisis_handling: "Crisis Handling",
-        crisis_resolved: "Crises Resolved",
-        browse_messages: "Browse Key Messages",
-        about_title: "About This Relationship",
-        about_desc: "This interactive dashboard chronicles the journey of Salatiso and Tee, blending love, partnership, and enterprise. Explore their timeline, key communications, and the systems that keep their bond strong. All content is available in English and isiXhosa for cultural resonance.",
-        no_scroll: "No vertical scrolling – everything is at your fingertips.",
-        timelines: "Horizontal timeline with icons and links to original messages.",
-        dashboard_custom: "Customizable dashboard with relationship analytics.",
-        fully_translatable: "Fully translatable: switch between English and isiXhosa instantly.",
-        repo_suggestion: "For asset management, use the suggested repository structure. All code is open for your customization."
-      },
-      xh: {
-        dashboard: "Ideshibhodi",
-        timeline: "Ixesha",
-        messages: "Imiyalezo",
-        about: "Malunga",
-        relationship_health: "Impilo yobudlelwane",
-        love_score: "Inqanaba lothando",
-        communication: "Unxibelelwano",
-        messages_sent: "Imiyalezo ethunyelweyo",
-        crisis_handling: "Ulawulo lweengxaki",
-        crisis_resolved: "Iingxaki ezisombululiweyo",
-        browse_messages: "Jonga Imiyalezo Ebalulekileyo",
-        about_title: "Malunga Nobudlelwane",
-        about_desc: "Le deshibhodi intsebenziswano ibalisa uhambo lukaSalatiso noTee, idibanisa uthando, intsebenziswano, kunye noshishino. Jonga ixesha labo, unxibelelwano oluphambili, kunye neenkqubo eziqinisa ubudlelwane babo. Konke oku kufumaneka ngesiNgesi nesiXhosa.",
-        no_scroll: "Akukho skrola phezulu/ezantsi – yonke into isondele kuwe.",
-        timelines: "Ixesha elithe tye elineempawu kunye nekhonkco kwimiyalezo yoqobo.",
-        dashboard_custom: "Ideshibhodi enokwenziwa ngokwezifiso kunye nohlalutyo lobudlelwane.",
-        fully_translatable: "Iyaguqulelwa ngokupheleleyo: tshintsha phakathi kwesiNgesi nesiXhosa kwangoko.",
-        repo_suggestion: "Ukugcina iiasethi, sebenzisa ulwakhiwo lwe-repository olucetyisiweyo. Ikhowudi yonke ivulekile ukuze uyilungise."
-      }
-    };
+        i18next
+            .use(i18nextBrowserLanguageDetector)
+            .init({
+                debug: true,
+                fallbackLng: 'en',
+                resources: translations
+            }, function(err, t) {
+                updateContent();
+            });
 
-    // --- State ---
-    let currentTab = "dashboard";
-    let currentLang = "en";
-    let carouselIdx = 0;
-
-    // --- Tab Switching ---
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.onclick = function() {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        currentTab = tab.getAttribute('data-tab');
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.getElementById(currentTab + "Panel").classList.add('active');
-      };
-    });
-
-    // --- Language Switching ---
-    function setLang(lang) {
-      currentLang = lang;
-      // Update all .tr elements
-      document.querySelectorAll('.tr').forEach(el => {
-        const key = el.getAttribute('data-key');
-        if (translations[lang][key]) {
-          el.textContent = translations[lang][key];
+        function updateContent() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                // Handle nested keys for attributes like title
+                if (el.tagName === 'TITLE' || el.hasAttribute('title')) {
+                     // el.title = i18next.t(key); // If you plan to use title attributes
+                }
+                if (el.tagName === 'TITLE') {
+                    el.innerHTML = i18next.t(key);
+                } else {
+                    el.innerHTML = i18next.t(key);
+                }
+            });
         }
-      });
-      // Update lang label
-      document.getElementById('langLabel').textContent = (lang === 'en') ? 'Xhosa' : 'English';
-      // Update timeline and carousel
-      renderTimeline();
-      renderCarousel();
-    }
-    document.getElementById('langSwitch').onclick = function() {
-      setLang(currentLang === "en" ? "xh" : "en");
-    };
 
-    // --- Timeline Rendering ---
-    function renderTimeline() {
-      const timeline = document.getElementById('timeline');
-      timeline.innerHTML = '';
-      timelineEvents.forEach((event, idx) => {
-        const msg = messages[event.msgIndex];
-        const title = (currentLang === "xh" && msg.lang && msg.lang.xh) ? msg.lang.xh : event.title;
-        const desc = (currentLang === "xh" && msg.lang && msg.lang.xh) ? msg.lang.xh : event.desc;
-        timeline.innerHTML += `
-          <div class="timeline-event">
-            <div class="icon"><i class="fas ${event.icon}"></i></div>
-            <div class="date">${event.date}</div>
-            <div class="desc"><b>${title}</b></div>
-            <div class="desc">${desc}</div>
-            <div class="link" onclick="goToMessage(${event.msgIndex})">${currentLang === 'xh' ? 'Jonga umyalezo' : 'View message'}</div>
-          </div>
-        `;
-      });
-    }
-    window.goToMessage = function(idx) {
-      // Switch to messages tab and show the message at idx
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelector('.tab[data-tab="messages"]').classList.add('active');
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      document.getElementById("messagesPanel").classList.add('active');
-      carouselIdx = idx;
-      renderCarousel();
-    };
+        document.getElementById('lang-en').addEventListener('click', () => {
+            i18next.changeLanguage('en', updateContent);
+        });
+        document.getElementById('lang-xh').addEventListener('click', () => {
+            i18next.changeLanguage('xh', updateContent);
+        });
 
-    // --- Carousel Rendering ---
-    function renderCarousel() {
-      const msg = messages[carouselIdx];
-      const text = (currentLang === "xh" && msg.lang && msg.lang.xh) ? msg.lang.xh : msg.text;
-      document.getElementById('carouselMessage').innerHTML = `
-        <div class="carousel-message">
-          <div class="meta">${msg.date}</div>
-          <div class="author">${msg.author}</div>
-          <div class="text">${text}</div>
-        </div>
-      `;
-      document.getElementById('carouselIndex').textContent = `${carouselIdx + 1} / ${messages.length}`;
-    }
-    document.getElementById('carouselPrev').onclick = function() {
-      carouselIdx = (carouselIdx - 1 + messages.length) % messages.length;
-      renderCarousel();
-    };
-    document.getElementById('carouselNext').onclick = function() {
-      carouselIdx = (carouselIdx + 1) % messages.length;
-      renderCarousel();
-    };
+        // --- Data (Sample - to be expanded based on All_Comms_Tee&Me.txt analysis) ---
+        const relationshipData = {
+            // Weekly data from May 20, 2024
+            // Each week could have: affectionScore, supportScore, communicationScore, keyEvents, messages
+            weeks: [
+                { weekNumber: 1, startDate: "2024-05-20", affection: 7, support: 8, communication: 9, summaryKey: "timeline.week1.summary", events: [{type: "event", textKey: "timeline.week1.event1", originalMessage: "Salatiso created group 'Us' (May 22)"}, {type: "link", textKey: "timeline.week1.event2", url: "https://www.grootkrokodil.co.za/", originalMessage: "Shared Groot Krokodil link (May 26)"}] },
+                { weekNumber: 2, startDate: "2024-05-27", affection: 8, support: 9, communication: 8, summaryKey: "timeline.week2.summary", events: [{type: "support", textKey: "timeline.week2.event1", originalMessage: "Tee: 'Always by your side 💞' during Salatiso's legal issue (May 28)"}, {type: "affection", textKey: "timeline.week2.event2", originalMessage: "Tee: 'I'm craving dunked wings' (May 31)"}] },
+                { weekNumber: 3, startDate: "2024-06-03", affection: 9, support: 7, communication: 9, summaryKey: "timeline.week3.summary", events: [{type: "affection", textKey: "timeline.week3.event1", originalMessage: "Tee: 'Ndiyakuthanda kakhulu Tshezi ❤️' (June 6)"}, {type: "event", textKey: "timeline.week3.event2", originalMessage: "Household: Tee asked Salatiso to adjust geyser (June 4)"}] },
+                // ... Add more weeks up to May 2025, including positive and challenging periods
+                // Example of a later, more complex week (conceptual)
+                { 
+                    weekNumber: 48, // Approx April 14, 2025
+                    startDate: "2025-04-14", 
+                    affection: 3, 
+                    support: 2, 
+                    communication: 4, 
+                    summaryKey: "timeline.week48.summary", 
+                    events: [
+                        {type: "conflict", textKey: "timeline.week48.event1", originalMessage: "Salatiso: 'Just need some time It'll pass' (April 14)"},
+                        {type: "conflict", textKey: "timeline.week48.event2", originalMessage: "Salatiso tells Tee to 'Make alternative plans' for EC trip (April 15)"}
+                    ] 
+                },
+                { 
+                    weekNumber: 50, // Approx May 2, 2025
+                    startDate: "2025-05-02", 
+                    affection: 1, 
+                    support: 1, 
+                    communication: 2, 
+                    summaryKey: "timeline.week50.summary", 
+                    events: [
+                        {type: "conflict", textKey: "timeline.week50.event1", originalMessage: "Intense arguments, Salatiso: 'My way or no way' (May 2-3)"},
+                        {type: "event", textKey: "timeline.week50.event2", originalMessage: "Salatiso initiates 'Relationship Close Out' (May 3)"}
+                    ] 
+                }
+            ],
+            reinforcementWords: [
+                { wordActionKey: "reinforcement.words.safe", purposeKey: "reinforcement.purpose.reassurance", occurredWeeks: [1,2,3,5], notOccurredWeeks: [4] },
+                { wordActionKey: "reinforcement.words.loveYou", purposeKey: "reinforcement.purpose.affection", occurredWeeks: [1,2,3,4,5], notOccurredWeeks: [] },
+                { wordActionKey: "reinforcement.words.helpRequest", purposeKey: "reinforcement.purpose.supportSeeking", occurredWeeks: [2,4], notOccurredWeeks: [1,3,5] },
+            ],
+            insightsData: [ // Weekly insights
+                { weekNumber: 1, affectionDetailKey: "insights.week1.affection", intimacyDetailKey: "insights.week1.intimacy" },
+                { weekNumber: 2, affectionDetailKey: "insights.week2.affection", intimacyDetailKey: "insights.week2.intimacy" },
+                // ... more insights
+            ]
+        };
+        
+        // Add more specific translation keys for dynamic data
+        translations.en.translation.timeline = {
+            ...translations.en.translation.timeline,
+            "week1.summary": "The beginning: Group 'Us' created, early getaway planning.",
+            "week1.event1": "Salatiso created group 'Us'.",
+            "week1.event2": "Shared link for Groot Krokodil.",
+            "week2.summary": "Mutual support and daily life.",
+            "week2.event1": "Tee offers support for Salatiso's legal matters.",
+            "week2.event2": "Shared craving for dunked wings.",
+            "week3.summary": "Expressions of love and household coordination.",
+            "week3.event1": "Tee: 'Ndiyakuthanda kakhulu Tshezi ❤️'.",
+            "week3.event2": "Discussed adjusting the geyser.",
+            "week48.summary": "Growing distance and altered plans.",
+            "week48.event1": "Salatiso expresses need for space.",
+            "week48.event2": "Salatiso changes plans for Tee's Eastern Cape trip.",
+            "week50.summary": "Intense conflict and relationship close-out.",
+            "week50.event1": "Heated arguments via text.",
+            "week50.event2": "Salatiso initiates 'Relationship Close Out' process."
+        };
+        translations.xh.translation.timeline = {
+            ...translations.xh.translation.timeline,
+            "week1.summary": "Isiqalo: Iqela 'Us' lenziwe, ukucwangciswa kohambo lokuqala.",
+            "week1.event1": "USalatiso wenza iqela 'Us'.",
+            "week1.event2": "Kwabelwana ngekhonkco leGroot Krokodil.",
+            "week2.summary": "Inkxaso efanayo nobomi bemihla ngemihla.",
+            "week2.event1": "UTee unika inkxaso kwimicimbi yezomthetho kaSalatiso.",
+            "week2.event2": "Kwabelwana ngomnqweno wamaphiko adankiweyo.",
+            "week3.summary": "Ukubonakaliswa kothando nolungelelwaniso lwekhaya.",
+            "week3.event1": "UTee: 'Ndiyakuthanda kakhulu Tshezi ❤️'.",
+            "week3.event2": "Kwaxoxwa ngokulungiswa kwegeyiza.",
+            "week48.summary": "Ukukhula komgama nezicwangciso ezitshintshileyo.",
+            "week48.event1": "USalatiso ubonisa imfuno yexesha.",
+            "week48.event2": "USalatiso utshintsha izicwangciso zohambo lukaTee oluya eMpuma Koloni.",
+            "week50.summary": "Ungquzulwano olukhulu nokuvalwa kobudlelwane.",
+            "week50.event1": "Iingxoxo ezishushu ngemiyalezo.",
+            "week50.event2": "USalatiso uqalisa inkqubo 'Yokuvalwa Kobudlelwane'."
+        };
+        translations.en.translation.reinforcement = {
+            ...translations.en.translation.reinforcement,
+            "words.safe": "'I'm safe baby/mntuwam'",
+            "words.loveYou": "Expressions of 'I love you'",
+            "words.helpRequest": "Requests for help/support",
+            "purpose.reassurance": "Reassurance, checking in",
+            "purpose.affection": "Expressing love and care",
+            "purpose.supportSeeking": "Seeking assistance or comfort"
+        };
+         translations.xh.translation.reinforcement = {
+            ...translations.xh.translation.reinforcement,
+            "words.safe": "'Ndifikile sithandwa/mntuwam'",
+            "words.loveYou": "Amazwi athi 'Ndiyakuthanda'",
+            "words.helpRequest": "Izicelo zoncedo/inkxaso",
+            "purpose.reassurance": "Ukuqinisekisa, ukujonga",
+            "purpose.affection": "Ukubonisa uthando nenkathalo",
+            "purpose.supportSeeking": "Ukufuna uncedo okanye intuthuzelo"
+        };
+        translations.en.translation.insights = {
+            ...translations.en.translation.insights,
+            "week1.affection": "Early expressions of affection were frequent and warm, setting a positive tone.",
+            "week1.intimacy": "Discussions about future plans and shared experiences began, building initial intimacy.",
+            "week2.affection": "Affection continued strong with terms of endearment and care.",
+            "week2.intimacy": "Shared vulnerability regarding Salatiso's legal matters deepened connection."
+        };
+        translations.xh.translation.insights = {
+            ...translations.xh.translation.insights,
+            "week1.affection": "Amazwi okuqala othando ayexhaphakile kwaye efudumele, nto leyo eyayibeka umoya omuhle.",
+            "week1.intimacy": "Kwaqala iingxoxo ngezicwangciso zexesha elizayo kunye namava ekwabelwana ngawo, nto leyo eyakha ubuhlobo bokuqala.",
+            "week2.affection": "Uthando lwaqhubeka lomelele ngamagama othando nenkathalo.",
+            "week2.intimacy": "Ukwabelana ngobuthathaka malunga nemicimbi yezomthetho kaSalatiso kwenza nzulu unxibelelwano."
+        };
 
-    // --- Dashboard Graphs ---
-    function renderGraphs() {
-      // Love Score
-      new Chart(document.getElementById('loveGraph'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Love', 'Other'],
-          datasets: [{
-            data: [98, 2],
-            backgroundColor: [ '#ffb300', '#e0e0e0' ]
-          }]
-        },
-        options: { cutout: '70%', plugins: { legend: { display: false } } }
-      });
-      // Communication
-      new Chart(document.getElementById('commGraph'), {
-        type: 'bar',
-        data: {
-          labels: ['May', 'June', 'July'],
-          datasets: [{
-            label: 'Messages',
-            data: [10, 60, 14],
-            backgroundColor: [ '#1a237e', '#ffb300', '#3949ab' ]
-          }]
-        },
-        options: { plugins: { legend: { display: false } } }
-      });
-      // Crisis Handling
-      new Chart(document.getElementById('crisisGraph'), {
-        type: 'pie',
-        data: {
-          labels: ['Resolved', 'Pending'],
-          datasets: [{
-            data: [5, 0],
-            backgroundColor: [ '#1a237e', '#e0e0e0' ]
-          }]
-        },
-        options: { plugins: { legend: { display: false } } }
-      });
-      // Update stats
-      document.getElementById('loveScore').textContent = 98;
-      document.getElementById('msgCount').textContent = 84;
-      document.getElementById('crisisCount').textContent = 5;
-    }
 
-    // --- Initial Render ---
-    renderTimeline();
-    renderCarousel();
-    renderGraphs();
-    setLang('en');
-  </script>
+        // --- DOM Elements ---
+        const navButtons = document.querySelectorAll('.nav-button');
+        const contentSections = document.querySelectorAll('.content-section');
+        const timelineCarousel = document.getElementById('timelineCarousel');
+        const reinforcementTableBody = document.getElementById('reinforcementTableBody');
+        const insightsCarousel = document.getElementById('insightsCarousel');
+        const dashboardChartCanvas = document.getElementById('dashboardChart').getContext('2d');
+        const trackingChartCanvas = document.getElementById('trackingChart').getContext('2d');
+        const dashboardMetricSelect = document.getElementById('dashboardMetricSelect');
+        const trackingMetricSelect = document.getElementById('trackingMetricSelect');
+        const modal = document.getElementById('detailsModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalCarouselContainer = document.getElementById('modalCarouselContainer');
+        let currentModalCarouselIndex = 0;
+        let modalCarouselItems = [];
+
+
+        // --- Chart Instances ---
+        let dashboardChart;
+        let trackingChart;
+
+        // --- Helper Functions ---
+        function getWeeklyData(metric) {
+            return relationshipData.weeks.map(week => week[metric]);
+        }
+        function getWeekLabels() {
+            return relationshipData.weeks.map(week => `${i18next.t('timeline.week')} ${week.weekNumber} (${week.startDate})`);
+        }
+
+        // --- Render Functions ---
+        function renderTimeline() {
+            timelineCarousel.innerHTML = ''; // Clear existing items
+            relationshipData.weeks.forEach(week => {
+                const item = document.createElement('div');
+                item.className = 'carousel-item';
+                item.innerHTML = `
+                    <h4 class="font-semibold text-lg mb-2 text-rose-600">${i18next.t('timeline.week')} ${week.weekNumber} (${week.startDate})</h4>
+                    <p class="text-sm text-gray-600 mb-3">${i18next.t(week.summaryKey) || "Summary not available."}</p>
+                    <button class="text-sm bg-rose-500 hover:bg-rose-600 text-white py-1 px-3 rounded-md see-details-btn" data-week="${week.weekNumber}">${i18next.t('timeline.seeDetails')}</button>
+                `;
+                timelineCarousel.appendChild(item);
+            });
+            addSeeDetailsListeners();
+            updateContent(); // Re-apply translations if any new elements were added with data-i18n
+        }
+        
+        function addSeeDetailsListeners() {
+            document.querySelectorAll('.see-details-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const weekNumber = parseInt(this.dataset.week);
+                    const weekData = relationshipData.weeks.find(w => w.weekNumber === weekNumber);
+                    if (weekData) {
+                        modalTitle.textContent = i18next.t('modal.detailsTitle', { weekNumber: weekData.weekNumber });
+                        modalCarouselItems = weekData.events || [];
+                        currentModalCarouselIndex = 0;
+                        renderModalCarousel();
+                        modal.style.display = 'block';
+                    }
+                });
+            });
+        }
+
+        function renderModalCarousel() {
+            modalCarouselContainer.innerHTML = '';
+            if (modalCarouselItems.length === 0) {
+                modalCarouselContainer.innerHTML = `<p class="text-gray-500 p-4">No specific events recorded for this week.</p>`;
+                document.getElementById('modal-carousel-prev').style.display = 'none';
+                document.getElementById('modal-carousel-next').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('modal-carousel-prev').style.display = modalCarouselItems.length > 1 ? 'block' : 'none';
+            document.getElementById('modal-carousel-next').style.display = modalCarouselItems.length > 1 ? 'block' : 'none';
+
+            modalCarouselItems.forEach((event, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'carousel-item modal-carousel-slide p-3'; // Ensure padding
+                itemDiv.style.width = 'calc(100% - 20px)'; // Adjust width for modal
+                itemDiv.style.display = index === currentModalCarouselIndex ? 'block' : 'none'; // Show only current
+                
+                let eventText = i18next.t(event.textKey) || event.textKey; // Fallback to key if not found
+                let originalMessageHTML = event.originalMessage ? `<p class="mt-2 text-xs text-gray-500 italic">"${event.originalMessage}"</p>` : "";
+
+                itemDiv.innerHTML = `
+                    <p class="text-sm font-medium text-gray-800">${eventText}</p>
+                    ${event.url ? `<a href="${event.url}" target="_blank" class="text-rose-500 hover:underline text-sm">View Link</a>` : ''}
+                    ${originalMessageHTML}
+                `;
+                modalCarouselContainer.appendChild(itemDiv);
+            });
+        }
+
+        document.getElementById('modal-carousel-prev').addEventListener('click', () => {
+            currentModalCarouselIndex = (currentModalCarouselIndex - 1 + modalCarouselItems.length) % modalCarouselItems.length;
+            renderModalCarousel();
+        });
+
+        document.getElementById('modal-carousel-next').addEventListener('click', () => {
+            currentModalCarouselIndex = (currentModalCarouselIndex + 1) % modalCarouselItems.length;
+            renderModalCarousel();
+        });
+
+
+        function renderReinforcementTable() {
+            reinforcementTableBody.innerHTML = '';
+            relationshipData.reinforcementWords.forEach(item => {
+                const row = reinforcementTableBody.insertRow();
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${i18next.t(item.wordActionKey)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${i18next.t(item.purposeKey)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.occurredWeeks.join(', ')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.notOccurredWeeks.join(', ')}</td>
+                `;
+            });
+             updateContent();
+        }
+
+        function renderInsightsCarousel() {
+            insightsCarousel.innerHTML = '';
+            relationshipData.insightsData.forEach(insight => {
+                const item = document.createElement('div');
+                item.className = 'carousel-item';
+                item.innerHTML = `
+                    <h4 class="font-semibold text-lg mb-2 text-rose-600">${i18next.t('timeline.week')} ${insight.weekNumber}</h4>
+                    <p class="text-sm text-gray-700 mb-1"><strong>${i18next.t('overview.affectionLevel')}:</strong> ${i18next.t(insight.affectionDetailKey) || "Details not available."}</p>
+                    <p class="text-sm text-gray-700"><strong>${i18next.t('insights.title')}:</strong> ${i18next.t(insight.intimacyDetailKey) || "Details not available."}</p>
+                `;
+                insightsCarousel.appendChild(item);
+            });
+            updateContent();
+        }
+        
+        function createChart(ctx, type, data, options) {
+            return new Chart(ctx, { type, data, options });
+        }
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 10 // Assuming scores are 0-10
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#333' // Darker legend text
+                    }
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+             elements: {
+                line: {
+                    tension: 0.4 // Smoother lines
+                },
+                point: {
+                    radius: 4,
+                    hoverRadius: 6,
+                    backgroundColor: '#f43f5e' // rose-500
+                }
+            }
+        };
+
+        function updateDashboardChart(metric = 'affection') {
+            const data = {
+                labels: getWeekLabels().slice(0, 12), // Show first 12 weeks for dashboard brevity
+                datasets: [{
+                    label: i18next.t(`overview.${metric}Level`) || i18next.t(`overview.${metric}Score`) || i18next.t(`overview.${metric}Frequency`),
+                    data: getWeeklyData(metric).slice(0, 12),
+                    borderColor: '#f43f5e', // rose-500
+                    backgroundColor: 'rgba(244, 63, 94, 0.2)', // Lighter rose fill
+                    fill: true,
+                }]
+            };
+            if (dashboardChart) dashboardChart.destroy();
+            dashboardChart = createChart(dashboardChartCanvas, 'line', data, commonChartOptions);
+        }
+
+        function updateTrackingChart(metric = 'affection') {
+            const data = {
+                labels: getWeekLabels(),
+                datasets: [{
+                    label: i18next.t(`tracking.${metric}Level`) || i18next.t(`tracking.${metric}Score`) || i18next.t(`tracking.${metric}Frequency`),
+                    data: getWeeklyData(metric),
+                    borderColor: '#e11d48', // rose-600
+                    backgroundColor: 'rgba(225, 29, 72, 0.2)',
+                    fill: true,
+                }]
+            };
+            if (trackingChart) trackingChart.destroy();
+            trackingChart = createChart(trackingChartCanvas, 'line', data, commonChartOptions);
+        }
+        
+        // --- Event Listeners ---
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                navButtons.forEach(btn => btn.classList.remove('active-nav'));
+                this.classList.add('active-nav');
+
+                const targetSection = this.dataset.section;
+                contentSections.forEach(section => {
+                    if (section.id === targetSection) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+                // Re-render charts if their section becomes active, as Chart.js might need a visible canvas
+                if (targetSection === 'overview') updateDashboardChart(dashboardMetricSelect.value);
+                if (targetSection === 'tracking') updateTrackingChart(trackingMetricSelect.value);
+            });
+        });
+
+        dashboardMetricSelect.addEventListener('change', (e) => updateDashboardChart(e.target.value));
+        trackingMetricSelect.addEventListener('change', (e) => updateTrackingChart(e.target.value));
+        
+        closeModalButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Carousel scroll buttons
+        function setupCarouselScroll(carouselId, leftBtnId, rightBtnId) {
+            const carousel = document.getElementById(carouselId);
+            const leftBtn = document.getElementById(leftBtnId);
+            const rightBtn = document.getElementById(rightBtnId);
+            if (!carousel || !leftBtn || !rightBtn) return;
+
+            const scrollAmount = 300; // Adjust as needed
+
+            leftBtn.addEventListener('click', () => {
+                carousel.scrollLeft -= scrollAmount;
+            });
+            rightBtn.addEventListener('click', () => {
+                carousel.scrollLeft += scrollAmount;
+            });
+        }
+
+        setupCarouselScroll('timelineCarousel', 'timeline-scroll-left', 'timeline-scroll-right');
+        setupCarouselScroll('insightsCarousel', 'insights-scroll-left', 'insights-scroll-right');
+
+
+        // --- Initialization ---
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Initial renders after i18next is ready
+        i18next.on('initialized', () => {
+            renderTimeline();
+            renderReinforcementTable();
+            renderInsightsCarousel();
+            updateDashboardChart(); // Initial dashboard chart
+            updateTrackingChart(); // Initial tracking chart
+            updateContent(); // Ensure all static content is translated
+        });
+         // Fallback if initialized event doesn't fire or for immediate rendering
+        if (i18next.isInitialized) {
+            renderTimeline();
+            renderReinforcementTable();
+            renderInsightsCarousel();
+            updateDashboardChart();
+            updateTrackingChart();
+            updateContent();
+        }
+
+
+    </script>
 </body>
 </html>
