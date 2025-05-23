@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tee & Me - Our Journey</title>
+    <title>Tee & Me - Our Detailed Journey</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ls-primary: #1D4ED8; /* Darker Blue */
-            --ls-primary-light: #60A5FA; /* Lighter Blue */
-            --ls-secondary: #F97316; /* Orange */
-            --ls-accent1: #059669; /* Green */
-            --ls-accent2: #8B5CF6; /* Violet */
-            --ls-dark: #111827; /* Very Dark Gray */
-            --ls-light: #F9FAFB; /* Light Gray */
-            --ls-success: #10B981; /* Emerald */
-            --ls-warning: #F59E0B; /* Amber */
-            --ls-info: #3B82F6; /* Blue */
-            --ls-danger: #EF4444; /* Red */
+            --ls-primary: #1D4ED8;
+            --ls-primary-light: #60A5FA;
+            --ls-secondary: #F97316;
+            --ls-accent1: #059669;
+            --ls-accent2: #8B5CF6;
+            --ls-dark: #111827;
+            --ls-light: #F9FAFB;
+            --ls-success: #10B981;
+            --ls-warning: #F59E0B;
+            --ls-info: #3B82F6;
+            --ls-danger: #EF4444;
         }
 
         body {
@@ -31,7 +31,7 @@
         }
 
         .container {
-            max-width: 960px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
             background-color: white;
@@ -46,14 +46,14 @@
 
         .header h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: var(--ls-primary);
             margin-bottom: 10px;
         }
 
         .section-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.75rem;
+            font-size: 2rem;
             color: var(--ls-secondary);
             margin-top: 30px;
             margin-bottom: 15px;
@@ -61,23 +61,142 @@
             padding-bottom: 5px;
         }
 
-        .data-point {
+        .dashboard {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-item {
+            background-color: white;
             padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            text-center;
+        }
+
+        .carousel-section, .timeline-section, .graph-section, .reinforcement-section, .lifesync-section, .sensitive-section {
+            margin-top: 40px;
+        }
+
+        .carousel-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow-x: auto; /* Enable horizontal scrolling if JavaScript carousel isn't fully implemented */
+            scroll-snap-type: x mandatory; /* Enable snap scrolling for a carousel effect */
+            -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+            padding: 10px 0;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            flex: 0 0 80%; /* Adjust width as needed */
+            padding: 20px;
+            margin-right: 20px;
             border: 1px solid #ddd;
-            border-radius: 6px;
+            border-radius: 8px;
+            background-color: white;
+            box-sizing: border-box;
+            scroll-snap-align: start; /* Snap items to the start of the container */
         }
 
-        .data-point h3 {
-            font-size: 1.2rem;
-            color: var(--ls-accent1);
-            margin-top: 0;
-            margin-bottom: 10px;
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--ls-primary);
+            cursor: pointer;
+            padding: 10px;
+            z-index: 10;
         }
 
-        .emotional-note {
-            font-style: italic;
-            color: #777;
+        .left-arrow {
+            left: 10px;
+        }
+
+        .right-arrow {
+            right: 10px;
+        }
+
+        .timeline {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x proximity;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--ls-secondary);
+            z-index: 1;
+        }
+
+        .timeline-item {
+            flex: 0 0 auto;
+            width: 200px; /* Adjust width as needed */
+            scroll-snap-align: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin: 0 20px;
+        }
+
+        .timeline-content {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--ls-secondary);
+            border: 2px solid white;
+        }
+
+        .reinforcement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .reinforcement-table th, .reinforcement-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .reinforcement-table th {
+            background-color: #f2f2f2;
+        }
+
+        .graph-area {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            text-align: center;
         }
     </style>
 </head>
@@ -85,75 +204,195 @@
     <div class="container">
         <div class="header">
             <h1>Tee & Me</h1>
-            <p class="emotional-note">A glimpse into our journey together.</p>
+            <p class="emotional-note">Our detailed journey of love and life.</p>
         </div>
 
-        <section>
-            <h2 class="section-title">Affection & Endearment</h2>
-            <div class="data-point">
-                <h3>Our Little Names for Each Other</h3>
-                <p>We have many special names we call each other, showing our love and connection. Some of the sweet terms we often use include "Baby," "sthandwa sam," "mntuwam," "lover," and many more that are unique to us.</p>
-                <p class="emotional-note">These names are like little whispers of our affection throughout the day.</p>
+        <section class="dashboard">
+            <h2 class="section-title">Relationship Dashboard</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="dashboard-item">
+                    <i class="fas fa-heart text-2xl text-ls-primary mb-2"></i>
+                    <h3>Affection Level</h3>
+                    <p>High (Tracked over time)</p>
+                </div>
+                <div class="dashboard-item">
+                    <i class="fas fa-hands-helping text-2xl text-ls-secondary mb-2"></i>
+                    <h3>Support Score</h3>
+                    <p>Strong (Based on favor exchanges)</p>
+                </div>
+                <div class="dashboard-item">
+                    <i class="fas fa-share-alt text-2xl text-ls-accent1 mb-2"></i>
+                    <h3>Shared Interests</h3>
+                    <p>Numerous (Based on shared links)</p>
+                </div>
+                <div class="dashboard-item">
+                    <i class="fas fa-envelope text-2xl text-ls-accent2 mb-2"></i>
+                    <h3>Communication Frequency</h3>
+                    <p>Very High (Messages per day)</p>
+                </div>
+                </div>
+        </section>
+
+        <section class="link-to-song">
+            <h2 class="section-title">Our Song</h2>
+            <div class="text-center">
+                <a href="https://www.youtube.com/watch?v=KNZH-emehxA" target="_blank" class="text-ls-primary hover:underline">Listen to Shania Twain - You're Still The One</a>
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">Mutual Support</h2>
-            <div class="data-point">
-                <h3>Always There for Each Other</h3>
-                <p>From adjusting the geyser to dealing with car troubles or needing a comforting massage after a long day, we know we can always rely on each other for support. These acts of service, big or small, demonstrate our care and commitment to one another's well-being.</p>
-                <p class="emotional-note">Knowing we have each other's back makes navigating life's challenges so much easier.</p>
+        <section class="timeline-section">
+            <h2 class="section-title">Our Journey - Week by Week Timeline</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Week of May 22, 2024</h3>
+                        <p>Group "Us" created. Initial messages exchanged.</p>
+                        </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Week of May 26, 2024</h3>
+                        <p>Planning for potential outings and sharing accommodation links.</p>
+                    </div>
+                </div>
+                </div>
+            <div class="text-center mt-4">
+                <p>Use the scroll bar or left/right arrows (if implemented with JavaScript) to navigate the timeline.</p>
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">Shared Moments</h2>
-            <div class="data-point">
-                <h3>Exploring Together</h3>
-                <p>We love to share things that excite us, whether it's planning getaways to new places, sharing interesting articles, or discovering new music. These shared experiences and interests strengthen our bond and create lasting memories.</p>
-                <p class="emotional-note">Every shared link and planned adventure is another thread weaving our lives together.</p>
+        <section class="graph-section">
+            <h2 class="section-title">Relationship Tracking</h2>
+            <div class="graph-area">
+                <label for="aspect-select">Select Aspect to Track:</label>
+                <select id="aspect-select">
+                    <option value="affection">Affection Level</option>
+                    <option value="support">Support Score</option>
+                    <option value="communication">Communication Frequency</option>
+                    </select>
+                <canvas id="relationship-graph" width="400" height="200"></canvas>
+                <p>This graph will display the trend of the selected aspect over time (requires JavaScript charting library like Chart.js).</p>
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">Expressions of Love</h2>
-            <div class="data-point">
-                <h3>Words of Love</h3>
-                <p>Saying "I love you" is something we cherish and do often. These simple words are a constant reminder of the deep affection and connection we share.</p>
-                <p class="emotional-note">These three words carry the weight of our hearts and the promise of our forever.</p>
+        <section class="reinforcement-section">
+            <h2 class="section-title">Reinforcement Words & Actions</h2>
+            <table class="reinforcement-table">
+                <thead>
+                    <tr>
+                        <th>Word/Action</th>
+                        <th>Purpose</th>
+                        <th>Occurred On</th>
+                        <th>Did Not Occur On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"I'm safe baby"</td>
+                        <td>Reassurance of well-being</td>
+                        <td>Multiple dates</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Requests for massage</td>
+                        <td>Seeking physical comfort/care</td>
+                        <td>Multiple dates</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+            </table>
+        </section>
+
+        <section class="lifesync-section">
+            <h2 class="section-title">LifeSync Features (Conceptual Embedding)</h2>
+            <div class="mb-4">
+                <h3>Generate Relationship Report</h3>
+                <label for="report-period">Select Period:</label>
+                <select id="report-period">
+                    <option value="3-months">Last 3 Months</option>
+                    <option value="6-months">Last 6 Months</option>
+                    <option value="1-year">Last 1 Year</option>
+                    <option value="all-time">All Time</option>
+                </select>
+                <button class="bg-ls-primary text-white py-2 px-4 rounded-md hover:bg-ls-primary-light focus:outline-none focus:ring-2 focus:ring-ls-primary focus:ring-opacity-50">Generate Report</button>
+                <p class="mt-2">This would be a placeholder for generating a detailed report based on selected timeframes (requires backend logic and data processing).</p>
+            </div>
+            <div>
+                <h3>Relationship Status Overview</h3>
+                <p>This section would dynamically display a more comprehensive status based on various data points (requires backend analysis and frontend visualization).</p>
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">Financial Partnership</h2>
+        <section class="sensitive-section">
+            <h2 class="section-title">Affection & Intimacy</h2>
             <div class="data-point">
-                <h3>Building Our Future, Together</h3>
-                <p>We approach our finances with openness and transparency, working together to track our expenses and plan for our future. These discussions, though sometimes challenging, show our commitment to building a stable and secure life together.</p>
-                <p class="emotional-note">Navigating our finances together is a testament to our trust and shared vision for the future.</p>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="section-title">Care and Concern</h2>
+                <p>This section could contain data related to affection expressed (e.g., frequency of kisses, cuddles) and discussions around intimacy. Please be mindful of the sensitivity of this information and populate it as you feel comfortable.</p>
+                </div>
+            <h2 class="section-title">Discussions on Sensitive Topics</h2>
             <div class="data-point">
-                <h3>Looking Out for Each Other</h3>
-                <p>Checking in on each other's well-being, especially during tough times or when feeling unwell, is a priority for us. These small gestures of care highlight the deep empathy and concern we have for each other's happiness and health.</p>
-                <p class="emotional-note">Knowing someone is thinking of you and genuinely cares makes all the difference.</p>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="section-title">Our Beginning</h2>
-            <div class="data-point">
-                <h3>The Start of "Us"</h3>
-                <p>Our journey officially began on May 22, 2024, marking the creation of "Us" and the start of this beautiful chapter in our lives.</p>
-                <p class="emotional-note">Every day since then has been a new page in our ever-evolving story.</p>
-            </div>
+                <p>This section could highlight discussions around sensitive topics, showing openness and communication in addressing important aspects of the relationship.</p>
+                </div>
         </section>
 
         <div class="text-center mt-8">
-            <p class="text-gray-600 text-sm">This page offers a snapshot of our beautiful relationship. Our journey is ongoing, filled with love, laughter, and growth.</p>
+            <p class="text-gray-600 text-sm">This detailed view of our journey is a testament to the depth and richness of our relationship.</p>
         </div>
     </div>
+
+    <script>
+        // JavaScript for basic carousel functionality (you might want to use a library for more advanced features)
+        const carousels = document.querySelectorAll('.carousel-container');
+
+        carousels.forEach(container => {
+            const carousel = container.querySelector('.carousel');
+            const leftArrow = container.querySelector('.left-arrow');
+            const rightArrow = container.querySelector('.right-arrow');
+            let scrollAmount = 0;
+
+            if (leftArrow) {
+                leftArrow.addEventListener('click', () => {
+                    scrollAmount -= container.offsetWidth;
+                    carousel.style.transform = `translateX(${scrollAmount}px)`;
+                    // Basic check to disable/enable arrows at the ends (can be improved)
+                    if (scrollAmount < 0) rightArrow.style.display = 'block';
+                    if (scrollAmount === 0) leftArrow.style.display = 'none';
+                });
+            }
+
+            if (rightArrow) {
+                rightArrow.addEventListener('click', () => {
+                    scrollAmount += container.offsetWidth;
+                    carousel.style.transform = `translateX(${scrollAmount}px)`;
+                    // Basic check to disable/enable arrows at the ends (can be improved)
+                    if (scrollAmount > - (carousel.scrollWidth - container.offsetWidth)) leftArrow.style.display = 'block';
+                    if (scrollAmount <= - (carousel.scrollWidth - container.offsetWidth)) rightArrow.style.display = 'none';
+                });
+            }
+
+            // Initialize arrow visibility for the first carousel
+            if (container === carousels[0] && leftArrow && carousel.scrollWidth <= container.offsetWidth) {
+                leftArrow.style.display = 'none';
+                rightArrow.style.display = 'none';
+            } else if (container === carousels[0] && leftArrow) {
+                leftArrow.style.display = 'none';
+            }
+        });
+
+        // Placeholder for graph functionality (requires Chart.js or similar library)
+        const aspectSelect = document.getElementById('aspect-select');
+        const relationshipGraph = document.getElementById('relationship-graph');
+
+        if (aspectSelect && relationshipGraph) {
+            aspectSelect.addEventListener('change', (event) => {
+                const selectedAspect = event.target.value;
+                // In a real application, you would fetch data based on the selected aspect and update the graph
+                console.log(`Tracking: ${selectedAspect}`);
+                // Example using Chart.js (include the library in <head>):
+                // const ctx = relationshipGraph.getContext('2d');
+                // const myChart = new Chart(ctx, { ... });
+            });
+            // Initial graph setup (if needed)
+        }
+    </script>
 </body>
 </html>
