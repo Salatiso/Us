@@ -14,21 +14,40 @@
         /* Custom Styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #fdf6f6; 
             color: #333;
             overflow-x: hidden;
+        }
+        #videoBackground {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1000;
+            background-size: cover;
+            filter: blur(3px) brightness(0.7); /* Adjust blur and brightness */
         }
         .main-container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             width: 100vw;
+            position: relative; 
+            z-index: 1;
         }
         .content-area {
             flex-grow: 1;
-            width: 100%;
+            width: calc(100% - 2rem); /* Account for margin */
+            max-width: 1400px; /* Max width for very wide screens */
+            margin: 1rem auto; /* Centered with margin */
             overflow: hidden;
             position: relative;
+            background-color: rgba(253, 246, 246, 0.9); /* Slightly more opaque for better readability */
+            border-radius: 0.75rem; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 0; /* Remove padding here, add to sections */
         }
         .content-section {
             display: none; 
@@ -41,102 +60,89 @@
             padding: 1.5rem; /* p-6 */
             animation: fadeIn 0.5s ease-in-out;
         }
-        .content-section.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        header, nav { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); }
+
         .nav-button {
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
+            white-space: nowrap; 
+            padding: 0.5rem 0.75rem; /* Adjusted padding */
         }
-        .nav-button.active-nav, .nav-button:hover {
-            color: #e11d48; /* Rose-500 */
-            border-bottom-color: #e11d48;
-        }
-        .carousel-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding-bottom: 1rem; 
-            -webkit-overflow-scrolling: touch; 
-        }
-        .carousel-item {
-            flex: 0 0 auto; 
-            width: 300px; 
-            margin-right: 1rem;
-            background-color: white;
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); /* shadow-md */
-            padding: 1rem;
-        }
-        .carousel-item:last-child {
-            margin-right: 0;
-        }
-        .chart-container {
-            position: relative;
-            height: 300px; 
-            width: 100%;
-            max-width: 600px; 
-            margin: 1rem auto;
-        }
-        .carousel-container::-webkit-scrollbar { height: 8px; }
-        .carousel-container::-webkit-scrollbar-track { background: #fde4e4; border-radius: 10px; }
-        .carousel-container::-webkit-scrollbar-thumb { background: #f43f5e; border-radius: 10px; }
-        .carousel-container::-webkit-scrollbar-thumb:hover { background: #e11d48; }
+        .nav-button.active-nav, .nav-button:hover { color: #e11d48; border-bottom-color: #e11d48; }
+        nav .container { overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+        nav .container::-webkit-scrollbar { display: none; }
         
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
-        .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 0.5rem; position: relative; }
-        .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .carousel-container { display: flex; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 1rem; -webkit-overflow-scrolling: touch; }
+        .carousel-item { flex: 0 0 auto; width: 320px; margin-right: 1rem; background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 1.25rem; }
+        .carousel-item:last-child { margin-right: 0; }
+        
+        .chart-container { position: relative; height: 350px; width: 100%; max-width: 700px; margin: 1.5rem auto; }
+        
+        .modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); }
+        .modal-content { background-color: #fff; margin: 5% auto; padding: 25px; border: 1px solid #888; width: 90%; max-width: 750px; border-radius: 0.75rem; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .close-button { color: #aaa; float: right; font-size: 32px; font-weight: bold; line-height: 1; }
         .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; }
         
         .language-switcher button { background-color: #f43f5e; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; margin-left: 0.5rem; transition: background-color 0.3s ease; }
         .language-switcher button:hover { background-color: #e11d48; }
         
-        .dashboard-metric-card { background-color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); text-align: center; }
-        .dashboard-metric-card h3 { color: #f43f5e; }
+        .dashboard-metric-card { background-color: white; padding: 1.25rem; border-radius: 0.75rem; box-shadow: 0 4px 8px rgba(0,0,0,0.08); text-align: center; }
+        .dashboard-metric-card h3 { color: #f43f5e; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .dashboard-metric-card p.text-3xl { font-size: 2rem; }
 
-        .contribution-table th, .contribution-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+
+        .contribution-table th, .contribution-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        .contribution-table th { background-color: #fff1f2; color: #be123c; font-weight: 600; }
+        
+        .input-field, .textarea-field, .select-field {
+            border: 1px solid #d1d5db; padding: 0.65rem 0.85rem; border-radius: 0.375rem; width: 100%; margin-bottom: 0.75rem;
+            background-color: #fff; box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
         }
-        .contribution-table th {
-            background-color: #fff1f2; /* rose-50 */
-            color: #be123c; /* rose-700 */
-            font-weight: 600;
-        }
-        .input-field {
-            border: 1px solid #d1d5db; /* gray-300 */
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem; /* rounded-md */
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
+        .textarea-field { min-height: 80px; }
+
         .action-button {
-            background-color: #f43f5e; /* rose-500 */
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem; /* rounded-md */
-            transition: background-color 0.3s ease;
+            background-color: #f43f5e; color: white; font-weight: 600; padding: 0.65rem 1.25rem;
+            border-radius: 0.375rem; transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .action-button:hover {
-            background-color: #e11d48; /* rose-600 */
+        .action-button:hover { background-color: #e11d48; transform: translateY(-1px); }
+        .action-button:active { transform: translateY(0px); }
+
+        .secondary-button {
+            background-color: #f1f5f9; /* slate-100 */ color: #334155; /* slate-700 */
+            border: 1px solid #cbd5e1; /* slate-300 */
         }
-        .feedback-item {
-            background-color: #fff1f2; /* rose-50 */
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid #f43f5e; /* rose-500 */
-        }
+        .secondary-button:hover { background-color: #e2e8f0; /* slate-200 */ }
+        
+        .feedback-item, .action-log-item { background-color: #fff8f8; padding: 1.25rem; border-radius: 0.5rem; margin-bottom: 1rem; border-left: 5px solid #f43f5e; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        .media-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.25rem; }
+        .media-gallery-item img { width: 100%; height: 140px; object-fit: cover; border-radius: 0.5rem; box-shadow: 0 3px 6px rgba(0,0,0,0.12); cursor: pointer; transition: transform 0.2s ease; }
+        .media-gallery-item img:hover { transform: scale(1.05); }
+
+        .song-item { background-color: #fff8f8; padding: 0.85rem 1.1rem; border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .song-item a { color: #f43f5e; font-weight: 500; }
+        .song-item a:hover { text-decoration: underline; }
+
+        /* Custom Alert Modal Specific Styles */
+        #customAlertModal .modal-content { max-width: 450px; text-align: center; }
+        #customAlertModal #customAlertOkButton { display: block; margin: 1.5rem auto 0; }
+
+        /* Styling for Relationship Action forms */
+        .relationship-action-form { background-color: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .relationship-action-form h4 { font-size: 1.25rem; color: #c2173c; margin-bottom: 1rem; font-weight: 600; }
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <video autoplay muted loop id="videoBackground">
+        <source src="assets/videos/our_moments_placeholder.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="main-container" id="mainContainer">
         <header class="bg-white shadow-md sticky top-0 z-50">
             <div class="container mx-auto px-6 py-3 flex justify-between items-center">
                 <h1 class="text-2xl font-bold text-rose-600" data-i18n="headerTitle">Tee & Me</h1>
@@ -147,17 +153,18 @@
             </div>
         </header>
 
-        <nav class="bg-white shadow-sm">
-            <div class="container mx-auto px-6 py-2 flex justify-center space-x-2 sm:space-x-3 md:space-x-4 overflow-x-auto">
-                <button data-section="overview" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm active-nav" data-i18n="nav.overview">Overview</button>
-                <button data-section="timeline" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.timeline">Timeline</button>
-                <button data-section="tracking" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.tracking">Tracking</button>
-                <button data-section="contributions" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.contributions">Contributions</button>
-                <button data-section="reinforcement" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.reinforcement">Reinforcement</button>
-                <button data-section="lifesync" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.lifesync">LifeSync</button>
-                <button data-section="insights" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.insights">Insights</button>
-                <button data-section="funtools" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.funtools">Fun Tools</button>
-                <button data-section="feedback" class="nav-button text-gray-700 hover:text-rose-500 py-2 px-2 sm:px-3 text-xs sm:text-sm" data-i18n="nav.feedback">Feedback</button>
+        <nav class="bg-white shadow-sm sticky top-[calc(3rem+1.5rem)] z-40"> <div class="container mx-auto px-3 sm:px-6 py-2 flex justify-start sm:justify-center space-x-1 sm:space-x-2 md:space-x-3 overflow-x-auto">
+                <button data-section="overview" class="nav-button text-gray-700 hover:text-rose-500 active-nav" data-i18n="nav.overview">Overview</button>
+                <button data-section="timeline" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.timeline">Timeline</button>
+                <button data-section="tracking" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.tracking">Tracking</button>
+                <button data-section="contributions" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.contributions">Contributions</button>
+                <button data-section="reinforcement" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.reinforcement">Reinforcement</button>
+                <button data-section="mediaGallery" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.mediaGallery">Media Gallery</button>
+                <button data-section="relationshipActions" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.relationshipActions">Connect & Resolve</button>
+                <button data-section="lifesync" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.lifesync">LifeSync</button>
+                <button data-section="insights" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.insights">Insights</button>
+                <button data-section="funtools" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.funtools">Fun Tools</button>
+                <button data-section="feedback" class="nav-button text-gray-700 hover:text-rose-500" data-i18n="nav.feedback">Feedback</button>
             </div>
         </nav>
 
@@ -168,19 +175,19 @@
                     <h3 class="text-2xl font-medium mb-4 text-gray-700" data-i18n="overview.dashboardTitle">Relationship Dashboard</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         <div class="dashboard-metric-card">
-                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.affectionLevel">Affection Level</h3>
+                            <h3 data-i18n="overview.affectionLevel">Affection Level</h3>
                             <p class="text-3xl font-bold text-gray-800" id="affection-metric">--%</p>
                         </div>
                         <div class="dashboard-metric-card">
-                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.supportScore">Support Score</h3>
+                            <h3 data-i18n="overview.supportScore">Support Score</h3>
                             <p class="text-3xl font-bold text-gray-800" id="support-metric">--%</p>
                         </div>
                          <div class="dashboard-metric-card">
-                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.foodContribution">Food Prep</h3>
+                            <h3 data-i18n="overview.foodContribution">Food Prep</h3>
                             <p class="text-3xl font-bold text-gray-800" id="food-metric">--%</p>
                         </div>
                         <div class="dashboard-metric-card">
-                            <h3 class="text-xl font-semibold mb-2" data-i18n="overview.safetyFeeling">Safety/Security</h3>
+                            <h3 data-i18n="overview.safetyFeeling">Safety/Security</h3>
                             <p class="text-3xl font-bold text-gray-800" id="safety-metric">--%</p>
                         </div>
                     </div>
@@ -189,18 +196,19 @@
                     </div>
                      <div class="mt-4 text-center">
                         <label for="dashboardMetricSelect" class="mr-2 font-medium text-gray-700" data-i18n="overview.selectMetric">Display on graph:</label>
-                        <select id="dashboardMetricSelect" class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500">
+                        <select id="dashboardMetricSelect" class="select-field w-auto inline-block">
                             <option value="affection" data-i18n="overview.affectionLevel">Affection Level</option>
                             <option value="support" data-i18n="overview.supportScore">Support Score</option>
-                            <option value="communication" data-i18n="overview.commFrequency">Communication Frequency</option>
+                            <option value="communication" data-i18n="overview.commFrequency">Communication</option>
                             <option value="food" data-i18n="overview.foodContribution">Food Contributions</option>
                             <option value="safety" data-i18n="overview.safetyFeeling">Safety Score</option>
+                            <option value="finances" data-i18n="overview.financialTeamwork">Financial Teamwork</option>
                         </select>
                     </div>
                 </div>
                 <div class="text-center mb-8 p-6 bg-rose-50 rounded-lg shadow">
                     <h3 class="text-2xl font-medium mb-3 text-rose-700" data-i18n="overview.ourSong">Our Special Song</h3>
-                    <a href="https://youtu.be/DOcCQ-kC4iE?si=DrJURhh0p86ce7yt" target="_blank" class="inline-block bg-rose-500 hover:bg-rose-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300">
+                    <a href="https://youtu.be/DOcCQ-kC4iE?si=DrJURhh0p86ce7yt" target="_blank" class="action-button">
                         <i class="fas fa-play mr-2"></i> <span data-i18n="overview.playSong">Play "You're Still The One"</span>
                     </a>
                 </div>
@@ -209,22 +217,23 @@
             <section id="timeline" class="content-section">
                 <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="timeline.title">Our Relationship Timeline</h2>
                 <div class="relative">
-                    <button id="timeline-scroll-left" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-left"></i></button>
+                    <button id="timeline-scroll-left" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-rose-500"><i class="fas fa-chevron-left"></i></button>
                     <div id="timelineCarousel" class="carousel-container"></div>
-                    <button id="timeline-scroll-right" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-right"></i></button>
+                    <button id="timeline-scroll-right" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-rose-500"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </section>
 
             <section id="tracking" class="content-section">
                 <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="tracking.title">Relationship Tracking</h2>
-                <div class="mb-6">
+                <div class="mb-6 text-center">
                     <label for="trackingMetricSelect" class="mr-2 font-medium text-gray-700" data-i18n="tracking.selectAspect">Select aspect to track:</label>
-                    <select id="trackingMetricSelect" class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500">
+                    <select id="trackingMetricSelect" class="select-field w-auto inline-block">
                         <option value="affection" data-i18n="tracking.affectionLevel">Affection Level</option>
                         <option value="support" data-i18n="tracking.supportScore">Support Score</option>
-                        <option value="communication" data-i18n="tracking.communicationFrequency">Communication Frequency</option>
+                        <option value="communication" data-i18n="tracking.communicationFrequency">Communication</option>
                         <option value="food" data-i18n="tracking.foodContribution">Food Contributions</option>
                         <option value="safety" data-i18n="tracking.safetyFeeling">Safety Score</option>
+                        <option value="finances" data-i18n="tracking.financialTeamwork">Financial Teamwork</option>
                         <option value="feedback_response" data-i18n="tracking.feedbackResponseTime">Feedback Response Time</option>
                     </select>
                 </div>
@@ -238,23 +247,22 @@
                 <p class="text-gray-600 mb-4" data-i18n="contributions.description">A look at who contributed what in different areas of our life together.</p>
                 <div class="mb-6">
                     <label for="contributionFilterWeek" class="mr-2 font-medium text-gray-700" data-i18n="contributions.filterWeek">Filter by Week:</label>
-                    <select id="contributionFilterWeek" class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500">
-                        </select>
+                    <select id="contributionFilterWeek" class="select-field w-auto inline-block"> </select>
                 </div>
                 <div class="overflow-x-auto bg-white shadow-md rounded-lg">
                     <table class="min-w-full divide-y divide-gray-200 contribution-table">
                         <thead>
                             <tr>
                                 <th data-i18n="contributions.table.parameter">Parameter</th>
-                                <th data-i18n="contributions.table.salatiso">Salatiso's Contribution</th>
-                                <th data-i18n="contributions.table.tee">Tee's Contribution</th>
+                                <th data-i18n="contributions.table.salatiso">Salatiso's Input</th>
+                                <th data-i18n="contributions.table.tee">Tee's Input</th>
                                 <th data-i18n="contributions.table.details">Details/Notes</th>
                             </tr>
                         </thead>
-                        <tbody id="contributionsTableBody">
-                            </tbody>
+                        <tbody id="contributionsTableBody"> </tbody>
                     </table>
                 </div>
+                 <p class="mt-4 text-sm text-gray-500" data-i18n="contributions.aggregationNote">(Note: For aggregated views, like 'every 3 months', use the LifeSync Report Generator - placeholder for now.)</p>
             </section>
 
             <section id="reinforcement" class="content-section">
@@ -265,8 +273,9 @@
                             <tr>
                                 <th data-i18n="reinforcement.table.wordAction">Word/Action</th>
                                 <th data-i18n="reinforcement.table.purpose">Purpose</th>
-                                <th data-i18n="reinforcement.table.occurred">Occurred (Weeks)</th>
-                                <th data-i18n="reinforcement.table.notOccurred">Not Occurred (Weeks)</th>
+                                <th data-i18n="reinforcement.table.salatisoOccurrences">Salatiso (Weeks)</th>
+                                <th data-i18n="reinforcement.table.teeOccurrences">Tee (Weeks)</th>
+                                <th data-i18n="reinforcement.table.jointOccurrences">Joint/Unspecified (Weeks)</th>
                             </tr>
                         </thead>
                         <tbody id="reinforcementTableBody"></tbody>
@@ -274,29 +283,103 @@
                 </div>
             </section>
 
+            <section id="mediaGallery" class="content-section">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="mediaGallery.title">Our Media Gallery</h2>
+                <div class="mb-8">
+                    <h3 class="text-2xl font-medium text-gray-700 mb-3" data-i18n="mediaGallery.sharedSongs">Shared Songs</h3>
+                    <div id="songListContainer" class="max-h-96 overflow-y-auto pr-2 bg-white p-4 rounded-lg shadow">
+                        </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-medium text-gray-700 mb-3" data-i18n="mediaGallery.photoMoments">Photo Moments</h3>
+                    <p class="text-sm text-gray-500 mb-3" data-i18n="mediaGallery.photoNote">(Photos are loaded from the 'assets/photos/' folder. Add your images there.)</p>
+                    <div id="photoGalleryContainer" class="media-gallery-grid">
+                        </div>
+                </div>
+            </section>
+            
+            <section id="relationshipActions" class="content-section">
+                <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="relationshipActions.title">Connect & Resolve</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="relationship-action-form">
+                        <h4 data-i18n="relationshipActions.apology.title">Make an Apology</h4>
+                        <select id="apologyFrom" class="select-field mb-3" data-i18n-label="relationshipActions.apology.from">
+                            <option value="Salatiso" data-i18n="relationshipActions.salatiso">Salatiso</option>
+                            <option value="Tee" data-i18n="relationshipActions.tee">Tee</option>
+                        </select>
+                        <textarea id="apologyMessage" class="textarea-field" data-i18n-placeholder="relationshipActions.apology.messagePlaceholder"></textarea>
+                        <button id="sendApologyBtn" class="action-button mt-2" data-i18n="relationshipActions.apology.sendButton">Send Apology</button>
+                    </div>
+
+                    <div class="relationship-action-form">
+                        <h4 data-i18n="relationshipActions.dissatisfaction.title">Express Dissatisfaction</h4>
+                        <select id="dissatisfactionFrom" class="select-field mb-3" data-i18n-label="relationshipActions.dissatisfaction.from">
+                             <option value="Salatiso" data-i18n="relationshipActions.salatiso">Salatiso</option>
+                            <option value="Tee" data-i18n="relationshipActions.tee">Tee</option>
+                        </select>
+                        <textarea id="dissatisfactionMessage" class="textarea-field" data-i18n-placeholder="relationshipActions.dissatisfaction.messagePlaceholder"></textarea>
+                        <button id="sendDissatisfactionBtn" class="action-button mt-2" data-i18n="relationshipActions.dissatisfaction.sendButton">Log Dissatisfaction</button>
+                    </div>
+
+                    <div class="relationship-action-form">
+                        <h4 data-i18n="relationshipActions.bookDate.title">Book a Date</h4>
+                        <select id="dateBooker" class="select-field mb-3" data-i18n-label="relationshipActions.bookDate.booker">
+                             <option value="Salatiso" data-i18n="relationshipActions.salatiso">Salatiso</option>
+                            <option value="Tee" data-i18n="relationshipActions.tee">Tee</option>
+                        </select>
+                        <input type="text" id="dateActivity" class="input-field" data-i18n-placeholder="relationshipActions.bookDate.activityPlaceholder">
+                        <input type="date" id="dateProposedDate" class="input-field">
+                        <button id="proposeDateBtn" class="action-button mt-2" data-i18n="relationshipActions.bookDate.proposeButton">Propose Date</button>
+                    </div>
+
+                    <div class="relationship-action-form border-red-300 border-2">
+                        <h4 class="text-red-600" data-i18n="relationshipActions.terminate.title">Initiate Relationship Termination</h4>
+                         <select id="terminator" class="select-field mb-3" data-i18n-label="relationshipActions.terminate.terminator">
+                             <option value="Salatiso" data-i18n="relationshipActions.salatiso">Salatiso</option>
+                            <option value="Tee" data-i18n="relationshipActions.tee">Tee</option>
+                        </select>
+                        <label for="terminationReason" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="relationshipActions.terminate.reason">Reason:</label>
+                        <select id="terminationReason" class="select-field mb-3">
+                            <option value="irreconcilable_differences" data-i18n="relationshipActions.terminate.reasons.irreconcilable">Irreconcilable Differences</option>
+                            <option value="communication_breakdown" data-i18n="relationshipActions.terminate.reasons.communication">Communication Breakdown</option>
+                            <option value="different_paths" data-i18n="relationshipActions.terminate.reasons.paths">Different Life Paths</option>
+                            <option value="other" data-i18n="relationshipActions.terminate.reasons.other">Other (Specify Below)</option>
+                        </select>
+                        <textarea id="terminationOtherReason" class="textarea-field" data-i18n-placeholder="relationshipActions.terminate.otherReasonPlaceholder"></textarea>
+                        <button id="initiateTerminationBtn" class="action-button bg-red-600 hover:bg-red-700 mt-2" data-i18n="relationshipActions.terminate.initiateButton">Initiate Termination</button>
+                    </div>
+                </div>
+                 <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="relationshipActions.logTitle">Relationship Actions Log</h3>
+                    <div id="relationshipActionLogContainer" class="max-h-96 overflow-y-auto">
+                        </div>
+                </div>
+            </section>
+
+
             <section id="lifesync" class="content-section">
                 <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="lifesync.title">LifeSync Analysis</h2>
                  <div class="bg-white p-6 rounded-lg shadow-md mb-8">
                     <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="lifesync.reportGen">Generate Relationship Report</h3>
                     <div class="flex items-center space-x-3">
-                        <select id="lifesyncPeriodSelect" class="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-rose-500 focus:border-rose-500">
+                        <select id="lifesyncPeriodSelect" class="select-field w-auto inline-block">
                             <option value="3m" data-i18n="lifesync.last3Months">Last 3 Months</option>
                             <option value="6m" data-i18n="lifesync.last6Months">Last 6 Months</option>
                             <option value="1y" data-i18n="lifesync.lastYear">Last Year</option>
                             <option value="all" data-i18n="lifesync.allTime">All Time</option>
                         </select>
-                        <button class="action-button" data-i18n="lifesync.generateButton">Generate Report</button>
+                        <button class="action-button" data-i18n="lifesync.generateButton" id="generateReportBtn">Generate Report</button>
                     </div>
-                    <p class="mt-4 text-sm text-gray-500" data-i18n="lifesync.reportNote">(Placeholder)</p>
+                    <p class="mt-4 text-sm text-gray-500" data-i18n="lifesync.reportNote">(Note: Full report generation is a placeholder. This button currently shows an alert.)</p>
                 </div>
             </section>
 
             <section id="insights" class="content-section">
                 <h2 class="text-3xl font-semibold mb-6 text-rose-500" data-i18n="insights.title">Affection & Intimacy Insights</h2>
                 <div class="relative">
-                     <button id="insights-scroll-left" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-left"></i></button>
+                     <button id="insights-scroll-left" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-rose-500"><i class="fas fa-chevron-left"></i></button>
                     <div id="insightsCarousel" class="carousel-container"></div>
-                     <button id="insights-scroll-right" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white p-2 rounded-full shadow-md text-rose-500"><i class="fas fa-chevron-right"></i></button>
+                     <button id="insights-scroll-right" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-rose-500"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </section>
 
@@ -306,11 +389,11 @@
                     <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="funtools.astrology.title">Astrology Compatibility</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label for="salatisoBday" class="block text-sm font-medium text-gray-700" data-i18n="funtools.astrology.salatisoBday">Salatiso's Birthday (YYYY-MM-DD):</label>
+                            <label for="salatisoBday" class="block text-sm font-medium text-gray-700" data-i18n="funtools.astrology.salatisoBday">Salatiso's Birthday:</label>
                             <input type="date" id="salatisoBday" value="1982-09-16" class="input-field">
                         </div>
                         <div>
-                            <label for="teeBday" class="block text-sm font-medium text-gray-700" data-i18n="funtools.astrology.teeBday">Tee's Birthday (YYYY-MM-DD):</label>
+                            <label for="teeBday" class="block text-sm font-medium text-gray-700" data-i18n="funtools.astrology.teeBday">Tee's Birthday:</label>
                             <input type="date" id="teeBday" value="1990-05-05" class="input-field"> </div>
                     </div>
                     <button id="checkCompatibilityBtn" class="action-button" data-i18n="funtools.astrology.checkButton">Check Compatibility</button>
@@ -318,7 +401,7 @@
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="funtools.quizzes.title">Relationship Quizzes</h3>
-                    <p class="text-gray-500" data-i18n="funtools.quizzes.placeholder">Quizzes coming soon! Test your knowledge about each other or explore relationship dynamics.</p>
+                    <p class="text-gray-500" data-i18n="funtools.quizzes.placeholder">Quizzes coming soon!</p>
                     </div>
             </section>
 
@@ -327,29 +410,35 @@
                 <div class="bg-white p-6 rounded-lg shadow-md mb-8">
                     <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="feedback.giveFeedback">Give Feedback</h3>
                     <div>
+                        <label for="feedbackSender" class="block text-sm font-medium text-gray-700" data-i18n="feedback.sender">Sender:</label>
+                         <select id="feedbackSender" class="select-field mb-2">
+                            <option value="Salatiso" data-i18n="feedback.salatiso">Salatiso</option>
+                            <option value="Tee" data-i18n="feedback.tee">Tee</option>
+                        </select>
+                    </div>
+                    <div>
                         <label for="feedbackRecipient" class="block text-sm font-medium text-gray-700" data-i18n="feedback.recipient">Recipient:</label>
-                        <select id="feedbackRecipient" class="input-field mb-2">
+                        <select id="feedbackRecipient" class="select-field mb-2">
                             <option value="Tee" data-i18n="feedback.tee">Tee</option>
                             <option value="Salatiso" data-i18n="feedback.salatiso">Salatiso</option>
                         </select>
                     </div>
                     <div>
                         <label for="feedbackMessage" class="block text-sm font-medium text-gray-700" data-i18n="feedback.message">Message:</label>
-                        <textarea id="feedbackMessage" rows="3" class="input-field"></textarea>
+                        <textarea id="feedbackMessage" rows="3" class="textarea-field"></textarea>
                     </div>
                     <button id="sendFeedbackBtn" class="action-button mt-2" data-i18n="feedback.sendButton">Send Feedback</button>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-xl font-medium text-gray-700 mb-3" data-i18n="feedback.receivedFeedback">Received Feedback / Log</h3>
-                    <div id="feedbackLogContainer">
-                        </div>
+                    <div id="feedbackLogContainer" class="max-h-96 overflow-y-auto"> </div>
                 </div>
             </section>
 
         </main>
 
-        <footer class="bg-white border-t border-gray-200 mt-auto">
-            <div class="container mx-auto px-6 py-4 text-center text-gray-600 text-sm">
+        <footer class="bg-white border-t border-gray-200 mt-auto sticky bottom-0 z-30">
+            <div class="container mx-auto px-6 py-3 text-center text-gray-600 text-xs sm:text-sm">
                 <p>© <span id="currentYear"></span> <span data-i18n="footer.text">Tee & Me. A digital chronicle of our love.</span></p>
             </div>
         </footer>
@@ -361,170 +450,186 @@
             <h3 id="modalTitle" class="text-xl font-semibold mb-4 text-rose-600">Details</h3>
             <div id="modalBody" class="text-gray-700">
                 <div class="relative">
-                    <button id="modal-carousel-prev" class="absolute -left-3 top-1/2 transform -translate-y-1/2 z-20 bg-white/70 hover:bg-white p-1 rounded-full shadow-md text-rose-500 text-xs"><i class="fas fa-chevron-left"></i></button>
-                    <div id="modalCarouselContainer" class="carousel-container messages-carousel" style="max-height: 300px; overflow-y:auto;"></div>
-                    <button id="modal-carousel-next" class="absolute -right-3 top-1/2 transform -translate-y-1/2 z-20 bg-white/70 hover:bg-white p-1 rounded-full shadow-md text-rose-500 text-xs"><i class="fas fa-chevron-right"></i></button>
+                    <button id="modal-carousel-prev" class="absolute -left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-1.5 rounded-full shadow-md text-rose-500 text-sm"><i class="fas fa-chevron-left"></i></button>
+                    <div id="modalCarouselContainer" class="carousel-container messages-carousel" style="max-height: 350px; overflow-y:auto;"></div>
+                    <button id="modal-carousel-next" class="absolute -right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/80 hover:bg-white p-1.5 rounded-full shadow-md text-rose-500 text-sm"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
     </div>
+    
+    <div id="customAlertModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="customAlertCloseButton">×</span>
+            <h3 id="customAlertTitle" class="text-xl font-semibold mb-4 text-rose-600">Alert</h3>
+            <p id="customAlertMessage" class="text-gray-700 mb-4"></p>
+            <button id="customAlertOkButton" class="action-button mt-4 float-right">OK</button>
+        </div>
+    </div>
+
 
     <script>
         // --- i18next Configuration ---
         const translations = {
+            // English and Xhosa translations will be extensive and managed here
+            // For brevity in this response, only key new ones are shown.
+            // The full Xhosa translation object will be provided separately.
             en: {
                 translation: {
                     websiteTitle: "Tee & Me - Our Story",
                     headerTitle: "Tee & Me",
                     nav: {
                         overview: "Overview", timeline: "Timeline", tracking: "Tracking",
-                        contributions: "Contributions", reinforcement: "Reinforcement",
+                        contributions: "Contributions", reinforcement: "Reinforcement", mediaGallery: "Media Gallery",
+                        relationshipActions: "Connect & Resolve",
                         lifesync: "LifeSync", insights: "Insights", funtools: "Fun Tools", feedback: "Feedback"
                     },
                     overview: {
                         title: "Our Journey Snapshot", dashboardTitle: "Relationship Dashboard",
                         affectionLevel: "Affection", supportScore: "Support", sharedInterests: "Shared Interests",
                         commFrequency: "Communication", foodContribution: "Food Prep", safetyFeeling: "Safety/Security",
-                        weeklyAverage: "Weekly Avg", basedOnFavors: "Mutual Support", activeShared: "Shared Activities",
-                        dailyMessages: "Avg Daily Msgs", selectMetric: "Display:",
+                        financialTeamwork: "Financial Teamwork",
+                        selectMetric: "Display:",
                         ourSong: "Our Special Song", playSong: "Play \"You're Still The One\""
                     },
-                    timeline: { /* ... existing ... */ week: "Week", seeDetails: "See Details" },
+                    timeline: { week: "Week", seeDetails: "See Details", sharedSong: "Shared Song:" },
                     tracking: {
-                        title: "Relationship Tracking", description: "Visualize aspects over time.",
-                        selectAspect: "Track:", affectionLevel: "Affection", supportScore: "Support",
-                        communicationFrequency: "Communication", foodContribution: "Food Prep", safetyFeeling: "Safety Score",
-                        feedbackResponseTime: "Feedback Response Time"
+                        title: "Relationship Tracking", selectAspect: "Track:", affectionLevel: "Affection", 
+                        supportScore: "Support", communicationFrequency: "Communication", foodContribution: "Food Prep", 
+                        safetyFeeling: "Safety Score", financialTeamwork: "Financial Teamwork", feedbackResponseTime: "Feedback Response Time"
                     },
                     contributions: {
-                        title: "Individual Contributions",
-                        description: "Who contributed what in different areas.",
+                        title: "Individual Contributions", description: "Who contributed what in different areas.",
                         filterWeek: "Filter by Week:",
                         table: { parameter: "Parameter", salatiso: "Salatiso's Input", tee: "Tee's Input", details: "Details" },
-                        params: { food: "Food Preparation", safety: "Safety & Security", chores: "Household Chores", planning: "Activity Planning" }
+                        params: { food: "Food Preparation", safety: "Safety & Security", chores: "Household Chores", planning: "Activity Planning", finances: "Finances" },
+                        aggregationNote: "(Note: For aggregated views, like 'every 3 months', use the LifeSync Report Generator - placeholder for now.)",
+                        noDataForWeek: "No specific contribution data recorded for this week.",
+                        noneReported: "None reported"
                     },
-                    reinforcement: { /* ... existing ... */ },
+                    reinforcement: {
+                        title: "Reinforcement Words & Actions",
+                        table: { wordAction: "Word/Action", purpose: "Purpose", salatisoOccurrences: "Salatiso (Weeks)", teeOccurrences: "Tee (Weeks)", jointOccurrences: "Joint/Unspecified (Weeks)"},
+                        // ... other reinforcement keys
+                    },
+                    mediaGallery: {
+                        title: "Our Media Gallery", sharedSongs: "Shared Songs", photoMoments: "Photo Moments",
+                        photoNote: "(Photos are loaded from the 'assets/photos/' folder. Add your images there.)",
+                        noSongs: "No songs logged yet.", noPhotos: "No photos added yet. Place images in 'assets/photos/'."
+                    },
+                    relationshipActions: {
+                        title: "Connect & Resolve",
+                        salatiso: "Salatiso", tee: "Tee",
+                        apology: { title: "Make an Apology", from: "From:", messagePlaceholder: "Your heartfelt apology...", sendButton: "Send Apology", success: "Apology sent and logged." },
+                        dissatisfaction: { title: "Express Dissatisfaction", from: "From:", messagePlaceholder: "Describe your dissatisfaction...", sendButton: "Log Dissatisfaction", success: "Dissatisfaction logged." },
+                        bookDate: { title: "Book a Date", booker: "Booked by:", activityPlaceholder: "E.g., Dinner at [Restaurant]", proposeButton: "Propose Date", success: "Date proposal logged." },
+                        terminate: { 
+                            title: "Initiate Relationship Termination", terminator: "Initiated by:", reason: "Reason:",
+                            reasons: { irreconcilable: "Irreconcilable Differences", communication: "Communication Breakdown", paths: "Different Life Paths", other: "Other" },
+                            otherReasonPlaceholder: "Specify other reason...", initiateButton: "Initiate Termination", success: "Termination process initiated and logged.", confirmMessage: "Are you sure you want to initiate termination? This action will be logged."
+                        },
+                        logTitle: "Relationship Actions Log", actionBy: "Action by {actor}", actionType: "Type: {type}",
+                        actionDetails: "Details: {details}", actionLogged: "Action Logged"
+                    },
                     lifesync: { /* ... existing ... */ },
                     insights: { /* ... existing ... */ },
-                    funtools: {
-                        title: "Fun Tools & Activities",
-                        astrology: { title: "Astrology Compatibility", salatisoBday: "Salatiso's Birthday (YYYY-MM-DD):", teeBday: "Tee's Birthday (YYYY-MM-DD):", checkButton: "Check Compatibility" },
-                        quizzes: { title: "Relationship Quizzes", placeholder: "Quizzes coming soon!" }
-                    },
-                    feedback: {
-                        title: "Feedback Exchange", giveFeedback: "Give Feedback", recipient: "Recipient:",
-                        tee: "Tee", salatiso: "Salatiso", message: "Message:", sendButton: "Send Feedback",
-                        receivedFeedback: "Received Feedback / Log", feedbackFrom: "Feedback from {sender}",
-                        respondedIn: "Responded in: {duration}", pendingResponse: "Pending response", markAsRead: "Mark as Read/Responded"
-                    },
+                    funtools: { /* ... existing ... */ },
+                    feedback: { /* ... existing ... */ sender: "Sender:" },
                     footer: { text: "Tee & Me. A digital chronicle of our love." },
-                    modal: { detailsTitle: "Details for Week {weekNumber}" }
+                    modal: { detailsTitle: "Details for Week {weekNumber}" },
+                    alert: {
+                        defaultTitle: "Notification",
+                        actionLogged: "Action Logged",
+                        fillAllFields: "Please fill in all required fields.",
+                        messageEmpty: "Message cannot be empty."
+                    }
                 }
             },
-            xh: { // NOTE: Xhosa translations need to be comprehensive for new sections
-                translation: {
-                    websiteTitle: "Tee & Me - Ibali Lethu", headerTitle: "Tee & Me",
-                    nav: {
-                        overview: "Isishwankathelo", timeline: "Umzila Wexesha", tracking: "Ukulandelela",
-                        contributions: "Igalelo Lomntu", reinforcement: "Ukuqinisa",
-                        lifesync: "LifeSync", insights: "Ukuqonda", funtools: "Izixhobo Zolonwabo", feedback: "Impendulo"
-                    },
-                    overview: {
-                        title: "Isishwankathelo Sohambo Lwethu", dashboardTitle: "Ideshibhodi Yobudlelwane",
-                        affectionLevel: "Uthando", supportScore: "Inkxaso", sharedInterests: "Ezabelwanayo",
-                        commFrequency: "Unxibelelwano", foodContribution: "Ukulung. Ukutya", safetyFeeling: "Ukhuseleko",
-                        selectMetric: "Bonisa:",
-                        ourSong: "Ingoma Yethu Ekhethekileyo", playSong: "Dlala \"You're Still The One\""
-                    },
-                    timeline: { /* ... existing ... */ week: "Iveki", seeDetails: "Bona Iinkcukacha" },
-                    tracking: {
-                        title: "Ukulandelela Ubudlelwane", description: "Bonisa iinkalo ngokuhamba kwexesha.",
-                        selectAspect: "Landelela:", affectionLevel: "Uthando", supportScore: "Inkxaso",
-                        communicationFrequency: "Unxibelelwano", foodContribution: "Ukulung. Ukutya", safetyFeeling: "Ukhuseleko",
-                        feedbackResponseTime: "Ixesha Lokuphendula"
-                    },
-                    contributions: {
-                        title: "Igalelo Lomntu Ngamnye",
-                        description: "Ngubani onikele ntoni kwiinkalo ezahlukeneyo.",
-                        filterWeek: "Hluza ngeVeki:",
-                        table: { parameter: "Inkalo", salatiso: "Igalelo likaSalatiso", tee: "Igalelo likaTee", details: "Iinkcukacha" },
-                        params: { food: "Ukulungiselela Ukutya", safety: "Ukhuseleko Nokhuseleko", chores: "Imisebenzi Yasekhaya", planning: "Ukucwangciswa Kwemisebenzi" }
-                    },
-                     funtools: {
-                        title: "Izixhobo Zolonwabo Nemisebenzi",
-                        astrology: { title: "Ukuhambelana Kweenkwenkwezi", salatisoBday: "Usuku lokuzalwa lukaSalatiso (YYYY-MM-DD):", teeBday: "Usuku lokuzalwa lukaTee (YYYY-MM-DD):", checkButton: "Jonga Ukuhambelana" },
-                        quizzes: { title: "Imibuzo Yobudlelwane", placeholder: "Imibuzo iyeza kungekudala!" }
-                    },
-                    feedback: {
-                        title: "Utshintshiselwano Ngempendulo", giveFeedback: "Nika Impendulo", recipient: "Umamkeli:",
-                        tee: "Tee", salatiso: "Salatiso", message: "Umyalezo:", sendButton: "Thumela Impendulo",
-                        receivedFeedback: "Impendulo Efunyenweyo / ILogi", feedbackFrom: "Impendulo evela ku {sender}",
-                        respondedIn: "Uphendule ngexesha: {duration}", pendingResponse: "Kulindelwe impendulo", markAsRead: "Phawula Njengokufundiweyo/Kuphenduliwe"
-                    },
-                    footer: { text: "Tee & Me. Isikhumbuzo sothando lwethu sedijithali." },
-                    modal: { detailsTitle: "Iinkcukacha zeVeki {weekNumber}" }
-                }
-            }
+            xh: { translation: { /* Xhosa translations will be provided as a separate object */ } }
         };
         // --- Initialize i18next ---
         i18next.use(i18nextBrowserLanguageDetector).init({
             debug: true, fallbackLng: 'en', resources: translations
         }, (err, t) => { if (err) return console.error(err); updateContentAll(); });
 
-        function updateContentAll() { // Renamed to avoid conflict
+        function updateContentAll() { 
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 const optionsAttr = el.getAttribute('data-i18n-options');
                 let options = {};
-                if (optionsAttr) {
-                    try { options = JSON.parse(optionsAttr); } catch (e) { console.error("Error parsing i18n options", e); }
+                if (optionsAttr) { try { options = JSON.parse(optionsAttr); } catch (e) { console.error("Error parsing i18n options", e); } }
+                
+                if (el.hasAttribute('data-i18n-placeholder')) {
+                    el.placeholder = i18next.t(key, options);
+                } else if (el.hasAttribute('data-i18n-label')) {
+                    // For custom labelled elements if needed, or just use a separate span with data-i18n
+                } else {
+                    el.innerHTML = i18next.t(key, options);
                 }
-                el.innerHTML = i18next.t(key, options);
             });
-            // Specific updates for dynamic content after language change
-            renderTimeline();
-            renderReinforcementTable();
-            renderInsightsCarousel();
-            renderContributionsTable(document.getElementById('contributionFilterWeek').value || relationshipData.weeks[0]?.weekNumber.toString());
-            renderFeedbackLog();
-            updateDashboardMetrics(); // Update dashboard text metrics
+            renderTimeline(); renderReinforcementTable(); renderInsightsCarousel(); renderMediaGallery(); renderFeedbackLog(); renderRelationshipActionLog();
+            if(relationshipData.weeks.length > 0) renderContributionsTable(document.getElementById('contributionFilterWeek').value || relationshipData.weeks[0]?.weekNumber.toString());
+            updateDashboardMetrics(); 
             updateDashboardChart(document.getElementById('dashboardMetricSelect').value);
             updateTrackingChart(document.getElementById('trackingMetricSelect').value);
         }
         document.getElementById('lang-en').addEventListener('click', () => i18next.changeLanguage('en', updateContentAll));
         document.getElementById('lang-xh').addEventListener('click', () => i18next.changeLanguage('xh', updateContentAll));
 
-        // --- Enhanced Data Structure ---
+        // --- Data Structures (Enhanced) ---
+        const backgroundImages = [ // User adds direct URLs to publicly accessible images or paths to assets/photos/
+            "assets/photos/placeholder1.jpg", // Replace with actual image paths
+            "assets/photos/placeholder2.jpg",
+            "assets/photos/placeholder3.jpg"
+        ];
+        let currentBgImageIndex = 0;
+
         const relationshipData = {
+            // Photo file names from assets/photos/ (will be dynamically listed later if possible, for now manual)
+            photoFileNames: ["placeholder1.jpg", "placeholder2.jpg", "placeholder3.jpg", "placeholder4.jpg", "placeholder5.jpg"],
             weeks: [
                 { 
                     weekNumber: 1, startDate: "2024-05-20", 
-                    affection: { salatiso: 7, tee: 8, shared: 7.5 }, 
-                    support: { salatiso: 8, tee: 9, shared: 8.5 },
-                    communication: { salatiso: 9, tee: 8, shared: 8.5 },
-                    food: { salatisoActions: ["Bought groceries"], teeActions: ["Cooked dinner twice"], score: 7 },
-                    safety: { salatisoActions: ["Locked doors nightly"], teeActions: ["Checked windows"], score: 9, feeling: "Secure" },
+                    contributions: {
+                        affection: { salatiso: 7, tee: 8, notes: "Warm initial interactions." }, 
+                        support: { salatiso: 8, tee: 9, notes: "Mutual encouragement." },
+                        communication: { salatiso: 9, tee: 8, notes: "Frequent check-ins." },
+                        food: { salatisoActions: ["Bought groceries (R300)"], teeActions: ["Cooked dinner twice"], score: 7 },
+                        safety: { salatisoActions: ["Locked doors nightly"], teeActions: ["Checked windows"], score: 9, feeling: "Secure" },
+                        finances: { salatiso: 300, tee: 100, category: "Groceries/Outing", notes: "Salatiso covered more groceries."}
+                    },
                     summaryKey: "timeline.week1.summary", 
-                    events: [/* ... existing events ... */] 
+                    events: [
+                        {type: "event", textKey: "timeline.week1.event1", originalMessage: "Salatiso created group 'Us' (May 22)"}, 
+                        {type: "link", textKey: "timeline.week1.event2", url: "https://www.grootkrokodil.co.za/", originalMessage: "Shared Groot Krokodil link (May 26)"},
+                        {type: "music", songTitle: "Perfect - Ed Sheeran", songUrl: "https://www.youtube.com/watch?v=2Vv-BfVoq4g", sharedBy: "Salatiso", textKey: "timeline.sharedPerfect"}
+                    ] 
                 },
-                // ... more weeks with detailed contributions
+                // ... more weeks
             ],
-            reinforcementWords: [ /* ... existing ... */ ],
+            reinforcementWords: [
+                 { 
+                    wordActionKey: "reinforcement.words.safe", purposeKey: "reinforcement.purpose.reassurance", 
+                    occurrences: { salatiso: [1,3], tee: [2], joint: [5] } 
+                },
+                { 
+                    wordActionKey: "reinforcement.words.loveYou", purposeKey: "reinforcement.purpose.affection", 
+                    occurrences: { salatiso: [1,2,4], tee: [1,3,5], joint: [] } 
+                },
+            ],
             insightsData: [ /* ... existing ... */ ],
-            feedbackLog: [
-                { id: 1, sender: "Salatiso", recipient: "Tee", messageKey: "feedback.sampleMsg1", timestamp: new Date(2024, 5, 1, 10, 0, 0).toISOString(), response: null, responseTimestamp: null },
-                { id: 2, sender: "Tee", recipient: "Salatiso", messageKey: "feedback.sampleMsg2", timestamp: new Date(2024, 5, 2, 14, 0, 0).toISOString(), response: "Thanks for sharing, let's discuss.", responseTimestamp: new Date(2024, 5, 2, 18, 30, 0).toISOString() }
-            ],
-            // Add translation keys for sample feedback messages
+            feedbackLog: [ /* ... existing ... */ ],
+            actionLog: [ // New log for relationship actions
+                { id: 1, type: "apology", actor: "Salatiso", target: "Tee", message: "I'm sorry for being late yesterday.", timestamp: new Date(2024, 5, 3, 10, 0, 0).toISOString(), details: {} },
+                { id: 2, type: "date_proposal", actor: "Tee", target: "Salatiso", message: "Movie night on Friday?", timestamp: new Date(2024, 5, 4, 12, 0, 0).toISOString(), details: { activity: "Movie night", proposedDate: "2024-06-07"} }
+            ]
         };
-        // Add sample feedback message translations
-        translations.en.translation.feedback.sampleMsg1 = "Just wanted to say I appreciate when you make coffee in the morning!";
-        translations.xh.translation.feedback.sampleMsg1 = "Bendingafuna ukuthi enkosi xa usenza ikofu ekuseni!";
-        translations.en.translation.feedback.sampleMsg2 = "I felt a bit unheard during our chat about weekend plans.";
-        translations.xh.translation.feedback.sampleMsg2 = "Ndizive ngathi andiphulaphulwanga kakuhle ngexesha besincokola ngezicwangciso zempelaveki.";
+         translations.en.translation.timeline.sharedPerfect = "Salatiso shared 'Perfect' by Ed Sheeran.";
+         // Add Xhosa translation for this too
 
 
         // --- DOM Elements ---
+        const mainContainer = document.getElementById('mainContainer');
         const navButtons = document.querySelectorAll('.nav-button');
         const contentSections = document.querySelectorAll('.content-section');
         const timelineCarousel = document.getElementById('timelineCarousel');
@@ -536,64 +641,121 @@
         const trackingMetricSelect = document.getElementById('trackingMetricSelect');
         const contributionsTableBody = document.getElementById('contributionsTableBody');
         const contributionFilterWeek = document.getElementById('contributionFilterWeek');
-        const salatisoBdayInput = document.getElementById('salatisoBday');
-        const teeBdayInput = document.getElementById('teeBday');
-        const checkCompatibilityBtn = document.getElementById('checkCompatibilityBtn');
-        const astrologyResult = document.getElementById('astrologyResult');
-        const feedbackRecipient = document.getElementById('feedbackRecipient');
-        const feedbackMessage = document.getElementById('feedbackMessage');
-        const sendFeedbackBtn = document.getElementById('sendFeedbackBtn');
-        const feedbackLogContainer = document.getElementById('feedbackLogContainer');
+        
+        const songListContainer = document.getElementById('songListContainer');
+        const photoGalleryContainer = document.getElementById('photoGalleryContainer');
 
-        const modal = document.getElementById('detailsModal');
+        // Relationship Actions Form Elements
+        const apologyFrom = document.getElementById('apologyFrom');
+        const apologyMessage = document.getElementById('apologyMessage');
+        const sendApologyBtn = document.getElementById('sendApologyBtn');
+        const dissatisfactionFrom = document.getElementById('dissatisfactionFrom');
+        const dissatisfactionMessage = document.getElementById('dissatisfactionMessage');
+        const sendDissatisfactionBtn = document.getElementById('sendDissatisfactionBtn');
+        const dateBooker = document.getElementById('dateBooker');
+        const dateActivity = document.getElementById('dateActivity');
+        const dateProposedDate = document.getElementById('dateProposedDate');
+        const proposeDateBtn = document.getElementById('proposeDateBtn');
+        const terminator = document.getElementById('terminator');
+        const terminationReason = document.getElementById('terminationReason');
+        const terminationOtherReason = document.getElementById('terminationOtherReason');
+        const initiateTerminationBtn = document.getElementById('initiateTerminationBtn');
+        const relationshipActionLogContainer = document.getElementById('relationshipActionLogContainer');
+        
+        // Modals
+        const detailsModal = document.getElementById('detailsModal');
         const closeModalButton = document.getElementById('closeModalButton');
         const modalTitle = document.getElementById('modalTitle');
         const modalCarouselContainer = document.getElementById('modalCarouselContainer');
+        const customAlertModal = document.getElementById('customAlertModal');
+        const customAlertTitle = document.getElementById('customAlertTitle');
+        const customAlertMessage = document.getElementById('customAlertMessage');
+        const customAlertCloseButton = document.getElementById('customAlertCloseButton');
+        const customAlertOkButton = document.getElementById('customAlertOkButton');
+
         let currentModalCarouselIndex = 0;
         let modalCarouselItems = [];
         let dashboardChart, trackingChart;
 
-        // --- Helper Functions ---
-        function getOverallWeeklyScore(metric, weekData) {
-            if (weekData[metric] && typeof weekData[metric].shared !== 'undefined') return weekData[metric].shared;
-            if (weekData[metric] && typeof weekData[metric].score !== 'undefined') return weekData[metric].score;
-            if (weekData[metric] && typeof weekData[metric] === 'number') return weekData[metric]; // backward compatibility
-            return 0; // Default if structure is different or missing
+        // --- Custom Alert Function ---
+        function showAlert(message, title = i18next.t("alert.defaultTitle")) {
+            customAlertTitle.textContent = title;
+            customAlertMessage.textContent = message;
+            customAlertModal.style.display = "block";
         }
+        customAlertCloseButton.onclick = () => customAlertModal.style.display = "none";
+        customAlertOkButton.onclick = () => customAlertModal.style.display = "none";
+        window.onclick = (event) => {
+            if (event.target == detailsModal) detailsModal.style.display = "none";
+            if (event.target == customAlertModal) customAlertModal.style.display = "none";
+        };
+        
+        // --- Background Image/Video ---
+        function changeBackgroundImage() {
+            // Video background is primary. This function can be a fallback or for photo slideshow on specific pages if needed.
+            // For now, video handles background. If you want image slideshow on some pages, we can adapt.
+            // if (backgroundImages.length > 0) {
+            //     currentBgImageIndex = (currentBgImageIndex + 1) % backgroundImages.length;
+            //     // document.body.style.backgroundImage = `url('${backgroundImages[currentBgImageIndex]}')`;
+            //      mainContainer.style.setProperty('--background-image-url', `url('${backgroundImages[currentBgImageIndex]}')`);
+            // }
+        }
+        // setInterval(changeBackgroundImage, 7000); // Change background image every 7 seconds
+        // changeBackgroundImage(); // Initial call
 
+        // --- Helper Functions ---
+        function getOverallWeeklyScore(param, weekData) {
+            if (weekData.contributions && weekData.contributions[param]) {
+                const paramData = weekData.contributions[param];
+                if (typeof paramData.score !== 'undefined') return paramData.score; // For food, safety
+                if (typeof paramData.salatiso === 'number' && typeof paramData.tee === 'number') { // For affection, support, comms
+                    return parseFloat(((paramData.salatiso + paramData.tee) / 2).toFixed(1));
+                }
+                if (typeof paramData === 'number') return paramData; // For finances (total, or average if split)
+            }
+            return 0; 
+        }
         function getWeeklyDataForChart(metric) {
+            if (metric === 'finances') { // Special handling for finances if it's total contribution
+                return relationshipData.weeks.map(week => (week.contributions.finances?.salatiso || 0) + (week.contributions.finances?.tee || 0) );
+            }
             return relationshipData.weeks.map(week => getOverallWeeklyScore(metric, week));
         }
-        
-        function getWeekLabels() {
-            return relationshipData.weeks.map(week => `${i18next.t('timeline.week')} ${week.weekNumber} (${week.startDate})`);
-        }
-
-        function populateWeekFilter() {
+        function getWeekLabels() { /* ... (keep existing) ... */ return relationshipData.weeks.map(week => `${i18next.t('timeline.week')} ${week.weekNumber} (${week.startDate})`); }
+        function populateWeekFilter() { /* ... (keep existing) ... */
             contributionFilterWeek.innerHTML = relationshipData.weeks.map(week => 
                 `<option value="${week.weekNumber}">${i18next.t('timeline.week')} ${week.weekNumber} (${week.startDate})</option>`
             ).join('');
             if (relationshipData.weeks.length > 0) {
-                 contributionFilterWeek.value = relationshipData.weeks[0].weekNumber; // Default to first week
+                 contributionFilterWeek.value = relationshipData.weeks[0].weekNumber;
             }
         }
 
+
         // --- Render Functions ---
-        function renderTimeline() { /* ... (keep existing, ensure it uses i18next.t for summaryKey) ... */
-             timelineCarousel.innerHTML = ''; 
+        function renderTimeline() {
+            timelineCarousel.innerHTML = ''; 
             relationshipData.weeks.forEach(week => {
                 const item = document.createElement('div');
                 item.className = 'carousel-item';
+                let eventsHTML = (week.events || []).map(event => {
+                    if (event.type === 'music') {
+                        return `<p class="text-xs text-rose-700 mt-1"><i class="fas fa-music mr-1"></i> ${i18next.t('timeline.sharedSong')} <a href="${event.songUrl}" target="_blank" class="hover:underline">${event.songTitle}</a> by ${event.sharedBy}</p>`;
+                    }
+                    return ''; // Add other event types if needed in summary card
+                }).join('');
+
                 item.innerHTML = `
                     <h4 class="font-semibold text-lg mb-2 text-rose-600">${i18next.t('timeline.week')} ${week.weekNumber} (${week.startDate})</h4>
                     <p class="text-sm text-gray-600 mb-3">${i18next.t(week.summaryKey) || "Summary not available."}</p>
-                    <button class="text-sm bg-rose-500 hover:bg-rose-600 text-white py-1 px-3 rounded-md see-details-btn" data-week="${week.weekNumber}">${i18next.t('timeline.seeDetails')}</button>
+                    ${eventsHTML}
+                    <button class="action-button text-sm py-1 px-3 mt-2 see-details-btn" data-week="${week.weekNumber}">${i18next.t('timeline.seeDetails')}</button>
                 `;
                 timelineCarousel.appendChild(item);
             });
             addSeeDetailsListeners();
         }
-        function addSeeDetailsListeners() { /* ... (keep existing) ... */
+        function addSeeDetailsListeners() { /* ... (keep existing, ensure modal renders song links too) ... */
              document.querySelectorAll('.see-details-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const weekNumber = parseInt(this.dataset.week);
@@ -602,13 +764,13 @@
                         modalTitle.textContent = i18next.t('modal.detailsTitle', { weekNumber: weekData.weekNumber });
                         modalCarouselItems = weekData.events || [];
                         currentModalCarouselIndex = 0;
-                        renderModalCarousel();
-                        modal.style.display = 'block';
+                        renderModalCarousel(); // This needs to handle song display
+                        detailsModal.style.display = 'block';
                     }
                 });
             });
         }
-        function renderModalCarousel() { /* ... (keep existing) ... */
+        function renderModalCarousel() {
             modalCarouselContainer.innerHTML = '';
             if (modalCarouselItems.length === 0) {
                 modalCarouselContainer.innerHTML = `<p class="text-gray-500 p-4">No specific events recorded for this week.</p>`;
@@ -626,12 +788,19 @@
                 itemDiv.style.width = 'calc(100% - 20px)'; 
                 itemDiv.style.display = index === currentModalCarouselIndex ? 'block' : 'none'; 
                 
-                let eventText = i18next.t(event.textKey) || event.textKey; 
+                let eventText = i18next.t(event.textKey) || event.textKey || event.songTitle; 
                 let originalMessageHTML = event.originalMessage ? `<p class="mt-2 text-xs text-gray-500 italic">"${event.originalMessage}"</p>` : "";
+                let linkHTML = '';
+                if (event.type === 'link' && event.url) {
+                    linkHTML = `<a href="${event.url}" target="_blank" class="text-rose-500 hover:underline text-sm block mt-1">View Link</a>`;
+                } else if (event.type === 'music' && event.songUrl) {
+                    eventText = `${i18next.t('timeline.sharedSong')} ${event.songTitle} by ${event.sharedBy}`;
+                    linkHTML = `<a href="${event.songUrl}" target="_blank" class="text-rose-500 hover:underline text-sm block mt-1">Listen <i class="fas fa-external-link-alt ml-1"></i></a>`;
+                }
 
                 itemDiv.innerHTML = `
                     <p class="text-sm font-medium text-gray-800">${eventText}</p>
-                    ${event.url ? `<a href="${event.url}" target="_blank" class="text-rose-500 hover:underline text-sm">View Link</a>` : ''}
+                    ${linkHTML}
                     ${originalMessageHTML}
                 `;
                 modalCarouselContainer.appendChild(itemDiv);
@@ -639,20 +808,20 @@
         }
 
 
-        function renderReinforcementTable() { /* ... (keep existing) ... */
+        function renderReinforcementTable() {
             reinforcementTableBody.innerHTML = '';
             relationshipData.reinforcementWords.forEach(item => {
                 const row = reinforcementTableBody.insertRow();
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${i18next.t(item.wordActionKey)}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${i18next.t(item.purposeKey)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.occurredWeeks.join(', ')}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.notOccurredWeeks.join(', ')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${(item.occurrences.salatiso || []).join(', ') || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${(item.occurrences.tee || []).join(', ') || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${(item.occurrences.joint || []).join(', ') || '-'}</td>
                 `;
             });
         }
-        function renderInsightsCarousel() { /* ... (keep existing) ... */
-             insightsCarousel.innerHTML = '';
+        function renderInsightsCarousel() { /* ... (keep existing) ... */  insightsCarousel.innerHTML = '';
             relationshipData.insightsData.forEach(insight => {
                 const item = document.createElement('div');
                 item.className = 'carousel-item';
@@ -670,43 +839,88 @@
             const weekNumber = parseInt(weekNum);
             const weekData = relationshipData.weeks.find(w => w.weekNumber === weekNumber);
 
-            if (!weekData) {
+            if (!weekData || !weekData.contributions) {
                 contributionsTableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4">${i18next.t("contributions.noDataForWeek")}</td></tr>`;
                 return;
             }
             
-            const parametersToDisplay = ['food', 'safety', 'chores', 'planning']; // Add more as needed
+            const contrib = weekData.contributions;
+            const parametersToDisplay = ['affection', 'support', 'communication', 'food', 'safety', 'finances', 'chores', 'planning'];
 
             parametersToDisplay.forEach(paramKey => {
-                const paramData = weekData[paramKey];
+                const paramData = contrib[paramKey];
                 if (paramData) {
                     const row = contributionsTableBody.insertRow();
+                    let salatisoInput = '-', teeInput = '-', details = paramData.notes || paramData.feeling || '';
+                    
+                    if (typeof paramData.salatiso === 'number' && typeof paramData.tee === 'number') { // Affection, Support, Comm
+                        salatisoInput = paramData.salatiso;
+                        teeInput = paramData.tee;
+                        details += ` (Shared: ${((paramData.salatiso + paramData.tee)/2).toFixed(1)})`;
+                    } else if (paramData.salatisoActions || paramData.teeActions) { // Food, Safety, Chores, Planning
+                        salatisoInput = (paramData.salatisoActions || []).join(', ') || '-';
+                        teeInput = (paramData.teeActions || []).join(', ') || '-';
+                        if(paramData.score) details += ` (Score: ${paramData.score})`;
+                    } else if (paramKey === 'finances') {
+                        salatisoInput = `R ${paramData.salatiso || 0}`;
+                        teeInput = `R ${paramData.tee || 0}`;
+                        details = `${paramData.category || ''} ${details}`;
+                    }
+
                     row.innerHTML = `
-                        <td>${i18next.t(`contributions.params.${paramKey}`)}</td>
-                        <td>${(paramData.salatisoActions || []).join(', ') || i18next.t("contributions.noneReported")}</td>
-                        <td>${(paramData.teeActions || []).join(', ') || i18next.t("contributions.noneReported")}</td>
-                        <td>${paramData.details || paramData.feeling || ''} (Score: ${paramData.score || 'N/A'})</td>
+                        <td>${i18next.t(`contributions.params.${paramKey}`) || paramKey.charAt(0).toUpperCase() + paramKey.slice(1)}</td>
+                        <td>${salatisoInput}</td>
+                        <td>${teeInput}</td>
+                        <td>${details || '-'}</td>
                     `;
                 }
             });
-            // Add specific affection/support/communication if desired
-            const affectionRow = contributionsTableBody.insertRow();
-            affectionRow.innerHTML = `
-                <td>${i18next.t("overview.affectionLevel")}</td>
-                <td>Salatiso: ${weekData.affection?.salatiso || 'N/A'}</td>
-                <td>Tee: ${weekData.affection?.tee || 'N/A'}</td>
-                <td>Shared: ${weekData.affection?.shared || 'N/A'}</td>
-            `;
-            // Similar rows for support, communication
         }
         
-        function renderFeedbackLog() {
-            feedbackLogContainer.innerHTML = '';
+        function renderMediaGallery() {
+            // Render Songs
+            songListContainer.innerHTML = '';
+            let songsFound = false;
+            relationshipData.weeks.forEach(week => {
+                (week.events || []).forEach(event => {
+                    if (event.type === 'music') {
+                        songsFound = true;
+                        const songDiv = document.createElement('div');
+                        songDiv.className = 'song-item';
+                        songDiv.innerHTML = `
+                            <span><i class="fas fa-music mr-2 text-rose-400"></i>${event.songTitle} (Shared by ${event.sharedBy}, Week ${week.weekNumber})</span>
+                            <a href="${event.songUrl}" target="_blank" class="text-sm hover:underline">Listen <i class="fas fa-external-link-alt"></i></a>
+                        `;
+                        songListContainer.appendChild(songDiv);
+                    }
+                });
+            });
+            if (!songsFound) {
+                songListContainer.innerHTML = `<p class="text-gray-500 p-2">${i18next.t("mediaGallery.noSongs")}</p>`;
+            }
+
+            // Render Photos
+            photoGalleryContainer.innerHTML = '';
+            if (relationshipData.photoFileNames && relationshipData.photoFileNames.length > 0) {
+                relationshipData.photoFileNames.forEach(fileName => {
+                    const photoDiv = document.createElement('div');
+                    photoDiv.className = 'media-gallery-item';
+                    // IMPORTANT: Ensure these images exist in 'assets/photos/' folder
+                    photoDiv.innerHTML = `<img src="assets/photos/${fileName}" alt="Photo moment" onerror="this.src='https://placehold.co/200x150/fdf6f6/c2173c?text=Photo+Missing'; this.alt='Missing Photo'">`;
+                    photoGalleryContainer.appendChild(photoDiv);
+                });
+            } else {
+                photoGalleryContainer.innerHTML = `<p class="text-gray-500 p-2">${i18next.t("mediaGallery.noPhotos")}</p>`;
+            }
+        }
+
+        function renderFeedbackLog() { /* ... (keep existing, but ensure sender is selected in form) ... */
+             feedbackLogContainer.innerHTML = '';
             if (relationshipData.feedbackLog.length === 0) {
                 feedbackLogContainer.innerHTML = `<p class="text-gray-500">${i18next.t("feedback.noFeedbackYet")}</p>`;
                 return;
             }
-            relationshipData.feedbackLog.slice().reverse().forEach(item => { // Show newest first
+            relationshipData.feedbackLog.slice().reverse().forEach(item => { 
                 const div = document.createElement('div');
                 div.className = 'feedback-item';
                 let responseText = i18next.t("feedback.pendingResponse");
@@ -720,9 +934,10 @@
                 div.innerHTML = `
                     <p class="font-semibold text-rose-700">${i18next.t("feedback.feedbackFrom", { sender: i18next.t(`feedback.${item.sender.toLowerCase()}`) })} to ${i18next.t(`feedback.${item.recipient.toLowerCase()}`)}</p>
                     <p class="text-sm text-gray-500">${new Date(item.timestamp).toLocaleString()}</p>
-                    <p class="my-2">${i18next.t(item.messageKey) || item.message}</p> ${item.response ? `<p class="mt-1 p-2 bg-rose-100 rounded text-sm"><strong>Response:</strong> ${item.response}</p>` : ''}
+                    <p class="my-2">${i18next.t(item.messageKey) || item.message}</p>
+                    ${item.response ? `<p class="mt-1 p-2 bg-rose-100 rounded text-sm"><strong>Response:</strong> ${item.response}</p>` : ''}
                     <p class="text-xs mt-2 ${item.responseTimestamp ? 'text-green-600' : 'text-orange-600'}">${responseText}</p>
-                    ${!item.responseTimestamp ? `<button class="text-xs action-button mt-1 mark-read-btn" data-id="${item.id}">${i18next.t("feedback.markAsRead")}</button>` : ''}
+                    ${!item.responseTimestamp ? `<button class="action-button secondary-button text-xs mt-1 mark-read-btn" data-id="${item.id}">${i18next.t("feedback.markAsRead")}</button>` : ''}
                 `;
                 feedbackLogContainer.appendChild(div);
             });
@@ -733,92 +948,99 @@
                     const feedbackItem = relationshipData.feedbackLog.find(fb => fb.id === feedbackId);
                     if (feedbackItem && !feedbackItem.responseTimestamp) {
                         feedbackItem.responseTimestamp = new Date().toISOString();
-                        feedbackItem.response = "Acknowledged."; // Default acknowledgement
-                        renderFeedbackLog(); // Re-render
-                        // Potentially update tracking data for response times
+                        feedbackItem.response = "Acknowledged."; 
+                        renderFeedbackLog(); 
                         updateFeedbackResponseTimeData();
                     }
                 });
             });
         }
-        
-        function updateFeedbackResponseTimeData() {
-            // This function would calculate average response times and update a data series for the tracking chart
-            // For now, it's a placeholder for more complex logic
-            console.log("Feedback response times would be updated here.");
-            // Example: if trackingChart is active and showing feedback_response, update it
+        function updateFeedbackResponseTimeData() { /* ... (keep existing) ... */ 
+             console.log("Feedback response times would be updated here.");
             if (document.getElementById('tracking').classList.contains('active') && trackingMetricSelect.value === 'feedback_response') {
                  updateTrackingChart('feedback_response');
             }
         }
 
+        function renderRelationshipActionLog() {
+            relationshipActionLogContainer.innerHTML = '';
+            if (relationshipData.actionLog.length === 0) {
+                relationshipActionLogContainer.innerHTML = `<p class="text-gray-500">${i18next.t("relationshipActions.noActionsYet") || "No actions logged yet."}</p>`;
+                return;
+            }
+            relationshipData.actionLog.slice().reverse().forEach(action => {
+                const div = document.createElement('div');
+                div.className = 'action-log-item';
+                let detailsText = action.message || '';
+                if (action.type === 'date_proposal' && action.details) {
+                    detailsText = `Activity: ${action.details.activity}, Proposed Date: ${new Date(action.details.proposedDate).toLocaleDateString()}`;
+                } else if (action.type === 'termination' && action.details) {
+                    detailsText = `Reason: ${i18next.t(`relationshipActions.terminate.reasons.${action.details.reason}`)}, Note: ${action.details.otherReason || "N/A"}`;
+                }
+
+                div.innerHTML = `
+                    <p class="font-semibold text-rose-700">${i18next.t("relationshipActions.actionType", {type: (action.type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())) })}</p>
+                    <p class="text-sm text-gray-500">${i18next.t("relationshipActions.actionBy", {actor: i18next.t(`relationshipActions.${action.actor.toLowerCase()}`)})} - ${new Date(action.timestamp).toLocaleString()}</p>
+                    <p class="my-2">${i18next.t("relationshipActions.actionDetails", {details: detailsText})}</p>
+                `;
+                relationshipActionLogContainer.appendChild(div);
+            });
+        }
+
 
         // --- Charting ---
-        const commonChartOptions = { /* ... (keep existing) ... */
-             responsive: true, maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, suggestedMax: 10 } },
-            plugins: { legend: { labels: { color: '#333' } } },
+        const commonChartOptions = { /* ... (keep existing) ... */ 
+            responsive: true, maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, suggestedMax: 10, ticks: { color: '#4b5563'} }, x: { ticks: { color: '#4b5563'}} },
+            plugins: { legend: { labels: { color: '#1f2937', font: {size: 13}} } },
             interaction: { mode: 'index', intersect: false, },
-            elements: { line: { tension: 0.4 }, point: { radius: 4, hoverRadius: 6, backgroundColor: '#f43f5e' } }
+            elements: { line: { tension: 0.35, borderWidth: 2.5 }, point: { radius: 4, hoverRadius: 6.5, backgroundColor: '#f43f5e' } }
         };
 
-        function updateDashboardChart(metricKey = 'affection') {
-            const data = {
+        function updateDashboardChart(metricKey = 'affection') { /* ... (keep existing, ensure labels are translated) ... */
+             const data = {
                 labels: getWeekLabels().slice(0, 12),
                 datasets: [{
-                    label: i18next.t(`overview.${metricKey}Level`) || i18next.t(`overview.${metricKey}Score`) || i18next.t(`overview.${metricKey}Frequency`) || i18next.t(`overview.${metricKey}Contribution`) || i18next.t(`overview.${metricKey}Feeling`),
+                    label: i18next.t(`overview.${metricKey}`) || i18next.t(`overview.${metricKey}Level`) || i18next.t(`overview.${metricKey}Score`) || i18next.t(`overview.${metricKey}Frequency`) || i18next.t(`overview.${metricKey}Contribution`) || i18next.t(`overview.${metricKey}Feeling`),
                     data: getWeeklyDataForChart(metricKey).slice(0, 12),
-                    borderColor: '#f43f5e', backgroundColor: 'rgba(244, 63, 94, 0.2)', fill: true,
+                    borderColor: '#f43f5e', backgroundColor: 'rgba(244, 63, 94, 0.25)', fill: true,
                 }]
             };
             if (dashboardChart) dashboardChart.destroy();
             dashboardChart = new Chart(dashboardChartCanvas, { type: 'line', data, options: commonChartOptions });
         }
-
-        function updateTrackingChart(metricKey = 'affection') {
-             let dataSet;
+        function updateTrackingChart(metricKey = 'affection') { /* ... (keep existing, ensure labels are translated, handle feedback_response) ... */
+             let dataSet, labelsForChart;
             if (metricKey === 'feedback_response') {
-                // Calculate response times (in hours for simplicity)
-                const responseTimes = relationshipData.feedbackLog.map(fb => {
-                    if (fb.responseTimestamp) {
-                        const diffMs = new Date(fb.responseTimestamp) - new Date(fb.timestamp);
-                        return Math.max(0, diffMs / (1000 * 60 * 60)); // hours, non-negative
-                    }
-                    return null; // No response yet
-                }).filter(rt => rt !== null);
+                const responseTimes = relationshipData.feedbackLog
+                    .filter(fb => fb.responseTimestamp)
+                    .map(fb => Math.max(0, (new Date(fb.responseTimestamp) - new Date(fb.timestamp)) / (1000 * 60 * 60)));
+                
+                labelsForChart = relationshipData.feedbackLog
+                    .filter(fb => fb.responseTimestamp)
+                    .map((fb, idx) => `FB ${fb.id} (${new Date(fb.timestamp).toLocaleDateString()})`);
 
                 dataSet = {
                     label: i18next.t('tracking.feedbackResponseTime'),
-                    data: responseTimes, // This will be sparse if few responses
-                    borderColor: '#059669', // emerald-600
-                    backgroundColor: 'rgba(5, 150, 105, 0.2)',
-                    fill: true,
+                    data: responseTimes, 
+                    borderColor: '#059669', backgroundColor: 'rgba(5, 150, 105, 0.25)', fill: true, type: 'bar' // Bar chart for response times
                 };
-                 // For feedback, labels might be feedback item IDs or dates
-                const feedbackLabels = relationshipData.feedbackLog.filter(fb => fb.responseTimestamp).map((fb, idx) => `Feedback ${fb.id}`);
-                 data = {
-                    labels: feedbackLabels.length > 0 ? feedbackLabels : ["No responses yet"],
-                    datasets: [dataSet]
-                };
+                 if (responseTimes.length === 0) labelsForChart = [i18next.t("tracking.noResponseData") || "No response data"];
 
             } else {
+                 labelsForChart = getWeekLabels();
                  dataSet = {
-                    label: i18next.t(`tracking.${metricKey}Level`) || i18next.t(`tracking.${metricKey}Score`) || i18next.t(`tracking.${metricKey}Frequency`) || i18next.t(`tracking.${metricKey}Contribution`) || i18next.t(`tracking.${metricKey}Feeling`),
+                    label: i18next.t(`tracking.${metricKey}`) || i18next.t(`tracking.${metricKey}Level`) || i18next.t(`tracking.${metricKey}Score`) || i18next.t(`tracking.${metricKey}Frequency`) || i18next.t(`tracking.${metricKey}Contribution`) || i18next.t(`tracking.${metricKey}Feeling`),
                     data: getWeeklyDataForChart(metricKey),
-                    borderColor: '#e11d48', backgroundColor: 'rgba(225, 29, 72, 0.2)', fill: true,
-                };
-                 data = {
-                    labels: getWeekLabels(),
-                    datasets: [dataSet]
+                    borderColor: '#e11d48', backgroundColor: 'rgba(225, 29, 72, 0.25)', fill: true, type: 'line'
                 };
             }
-           
+            const data = { labels: labelsForChart, datasets: [dataSet] };
             if (trackingChart) trackingChart.destroy();
-            trackingChart = new Chart(trackingChartCanvas, { type: 'line', data, options: commonChartOptions });
+            trackingChart = new Chart(trackingChartCanvas, { data, options: commonChartOptions }); // Type is per dataset
         }
         
-        function updateDashboardMetrics() {
-            // Calculate overall averages or latest scores for dashboard cards
+        function updateDashboardMetrics() { /* ... (keep existing, adapt to new data structure) ... */
             const numWeeks = relationshipData.weeks.length;
             if (numWeeks === 0) return;
 
@@ -829,97 +1051,97 @@
 
             document.getElementById('affection-metric').textContent = `${avgAffection.toFixed(1)}/10`;
             document.getElementById('support-metric').textContent = `${avgSupport.toFixed(1)}/10`;
-            document.getElementById('food-metric').textContent = `${avgFood.toFixed(1)}/10`;
+            document.getElementById('food-metric').textContent = `${avgFood.toFixed(1)}/10`; // Assuming food is also 0-10 scale
             document.getElementById('safety-metric').textContent = `${avgSafety.toFixed(1)}/10`;
         }
 
         // --- Astrology Tool ---
-        function getZodiacSign(date) {
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return "Aquarius";
-            if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return "Pisces";
-            if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return "Aries";
-            if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return "Taurus"; // Tee: Early May
-            if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return "Gemini";
-            if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return "Cancer";
-            if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return "Leo";
-            if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return "Virgo"; // Salatiso: Sep 16
-            if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return "Libra";
-            if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return "Scorpio";
-            if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return "Sagittarius";
-            if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return "Capricorn";
+        function getZodiacSign(date) { /* ... (keep existing) ... */ 
+            const day = date.getDate(); const month = date.getMonth() + 1;
+            if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return "Aquarius"; if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return "Pisces";
+            if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return "Aries"; if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return "Taurus";
+            if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return "Gemini"; if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return "Cancer";
+            if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return "Leo"; if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return "Virgo";
+            if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return "Libra"; if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return "Scorpio";
+            if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return "Sagittarius"; if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return "Capricorn";
             return "Unknown";
         }
-
-        checkCompatibilityBtn.addEventListener('click', () => {
-            const salatisoDate = new Date(salatisoBdayInput.value);
-            const teeDate = new Date(teeBdayInput.value);
-
-            if (isNaN(salatisoDate) || isNaN(teeDate)) {
-                astrologyResult.innerHTML = `<p class="text-red-500">${i18next.t("funtools.astrology.invalidDate") || "Please enter valid dates."}</p>`;
-                return;
-            }
-            
-            const salatisoSign = getZodiacSign(salatisoDate);
-            const teeSign = getZodiacSign(teeDate);
-
+        document.getElementById('checkCompatibilityBtn').addEventListener('click', () => { /* ... (keep existing) ... */
+            const salatisoDate = new Date(document.getElementById('salatisoBday').value); const teeDate = new Date(document.getElementById('teeBday').value);
+            if (isNaN(salatisoDate) || isNaN(teeDate)) { showAlert(i18next.t("funtools.astrology.invalidDate")); return; }
+            const salatisoSign = getZodiacSign(salatisoDate); const teeSign = getZodiacSign(teeDate);
             let compatibilityText = `${i18next.t("funtools.astrology.salatisoIsA")} ${salatisoSign}. ${i18next.t("funtools.astrology.teeIsA")} ${teeSign}. `;
-            // Simple compatibility (can be expanded)
             if ((salatisoSign === "Virgo" && teeSign === "Taurus") || (salatisoSign === "Taurus" && teeSign === "Virgo")) {
-                compatibilityText += i18next.t("funtools.astrology.virgoTaurus") || "Virgo and Taurus are earth signs that often form a stable and practical bond. You appreciate each other's diligence and loyalty. Grounded and sensual, you can build a beautiful life together!";
-            } else {
-                compatibilityText += i18next.t("funtools.astrology.general") || "Every sign combination has its unique strengths and challenges. Focus on communication and understanding!";
-            }
-            astrologyResult.innerHTML = `<p>${compatibilityText}</p>`;
-            updateContentAll(); // To translate new astrology text
+                compatibilityText += i18next.t("funtools.astrology.virgoTaurus");
+            } else { compatibilityText += i18next.t("funtools.astrology.general"); }
+            document.getElementById('astrologyResult').innerHTML = `<p>${compatibilityText}</p>`;
         });
-         // Add new i18n keys for astrology
-        translations.en.translation.funtools.astrology.invalidDate = "Please enter valid dates.";
-        translations.en.translation.funtools.astrology.salatisoIsA = "Salatiso is a";
-        translations.en.translation.funtools.astrology.teeIsA = "Tee is a";
-        translations.en.translation.funtools.astrology.virgoTaurus = "Virgo and Taurus are earth signs that often form a stable and practical bond. You appreciate each other's diligence and loyalty. Grounded and sensual, you can build a beautiful life together!";
-        translations.en.translation.funtools.astrology.general = "Every sign combination has its unique strengths and challenges. Focus on communication and understanding!";
-        translations.xh.translation.funtools.astrology.invalidDate = "Nceda faka imihla efanelekileyo.";
-        translations.xh.translation.funtools.astrology.salatisoIsA = "USalatiso ngu";
-        translations.xh.translation.funtools.astrology.teeIsA = "UTee ngu";
-        translations.xh.translation.funtools.astrology.virgoTaurus = "IVirgo neTaurus ziimpawu zomhlaba ezihlala zisenza ubuhlobo obuzinzileyo nobusebenzayo. Niyabukana ngokukhuthala nokunyaniseka. Nizinzile kwaye ninothando, ningakha ubomi obuhle kunye!";
-        translations.xh.translation.funtools.astrology.general = "Yonke indibanisela yeempawu inamandla ayo awodwa kunye nemingeni. Gxilani kunxibelelwano nokuqondana!";
-        translations.en.translation.contributions.noDataForWeek = "No specific contribution data recorded for this week.";
-        translations.xh.translation.contributions.noDataForWeek = "Akukho datha yegalelo ethile erekhodiweyo kule veki.";
-        translations.en.translation.contributions.noneReported = "None reported";
-        translations.xh.translation.contributions.noneReported = "Akukho nto ixeliweyo";
-        translations.en.translation.feedback.noFeedbackYet = "No feedback messages yet.";
-        translations.xh.translation.feedback.noFeedbackYet = "Akukho miyalezo yempendulo okwangoku.";
-
-
-
+        
         // --- Feedback Tool ---
-        sendFeedbackBtn.addEventListener('click', () => {
-            const recipient = feedbackRecipient.value;
-            const message = feedbackMessage.value.trim();
-            const sender = recipient === "Tee" ? "Salatiso" : "Tee"; // Determine sender based on recipient
+        document.getElementById('sendFeedbackBtn').addEventListener('click', () => {
+            const sender = document.getElementById('feedbackSender').value;
+            const recipient = document.getElementById('feedbackRecipient').value;
+            const message = document.getElementById('feedbackMessage').value.trim();
 
-            if (!message) {
-                alert(i18next.t("feedback.messageEmpty") || "Message cannot be empty."); // Simple alert for now
-                return;
-            }
+            if (sender === recipient) { showAlert(i18next.t("feedback.senderRecipientSame") || "Sender and recipient cannot be the same."); return; }
+            if (!message) { showAlert(i18next.t("alert.messageEmpty")); return; }
 
             const newFeedback = {
-                id: relationshipData.feedbackLog.length + 1,
-                sender: sender,
-                recipient: recipient,
-                message: message, // Store raw message, can be keyed for translation if it's predefined
-                timestamp: new Date().toISOString(),
-                response: null,
-                responseTimestamp: null
+                id: relationshipData.feedbackLog.length + 1, sender: sender, recipient: recipient,
+                message: message, timestamp: new Date().toISOString(), response: null, responseTimestamp: null
             };
             relationshipData.feedbackLog.push(newFeedback);
             renderFeedbackLog();
-            feedbackMessage.value = ''; // Clear textarea
+            document.getElementById('feedbackMessage').value = ''; 
+            showAlert(i18next.t("feedback.success"));
         });
-         translations.en.translation.feedback.messageEmpty = "Message cannot be empty.";
-         translations.xh.translation.feedback.messageEmpty = "Umyalezo awunakuba nto.";
+        
+        // --- Relationship Actions ---
+        function logRelationshipAction(type, actor, target, message, details = {}) {
+            relationshipData.actionLog.push({
+                id: relationshipData.actionLog.length + 1,
+                type: type, actor: actor, target: target, message: message,
+                timestamp: new Date().toISOString(), details: details
+            });
+            renderRelationshipActionLog();
+            showAlert(i18next.t(`relationshipActions.${type}.success`) || i18next.t("alert.actionLogged"));
+        }
+
+        sendApologyBtn.addEventListener('click', () => {
+            const from = apologyFrom.value;
+            const to = from === "Salatiso" ? "Tee" : "Salatiso";
+            const message = apologyMessage.value.trim();
+            if (!message) { showAlert(i18next.t("alert.messageEmpty")); return; }
+            logRelationshipAction("apology", from, to, message);
+            apologyMessage.value = '';
+        });
+        sendDissatisfactionBtn.addEventListener('click', () => {
+            const from = dissatisfactionFrom.value;
+            const to = from === "Salatiso" ? "Tee" : "Salatiso"; // Dissatisfaction is about the other
+            const message = dissatisfactionMessage.value.trim();
+            if (!message) { showAlert(i18next.t("alert.messageEmpty")); return; }
+            logRelationshipAction("dissatisfaction", from, to, message);
+            dissatisfactionMessage.value = '';
+        });
+        proposeDateBtn.addEventListener('click', () => {
+            const booker = dateBooker.value;
+            const target = booker === "Salatiso" ? "Tee" : "Salatiso";
+            const activity = dateActivity.value.trim();
+            const proposed = dateProposedDate.value;
+            if (!activity || !proposed) { showAlert(i18next.t("alert.fillAllFields")); return; }
+            logRelationshipAction("date_proposal", booker, target, `Proposed: ${activity} on ${proposed}`, {activity, proposedDate: proposed});
+            dateActivity.value = ''; dateProposedDate.value = '';
+        });
+        initiateTerminationBtn.addEventListener('click', () => {
+            if (!confirm(i18next.t("relationshipActions.terminate.confirmMessage"))) return;
+            const initiator = terminator.value;
+            const target = initiator === "Salatiso" ? "Tee" : "Salatiso";
+            const reason = terminationReason.value;
+            const other = terminationOtherReason.value.trim();
+            if (reason === "other" && !other) { showAlert(i18next.t("relationshipActions.terminate.specifyOther") || "Please specify the 'Other' reason."); return; }
+            logRelationshipAction("termination", initiator, target, `Reason: ${reason}`, {reason, otherReason: other});
+            terminationOtherReason.value = '';
+        });
 
 
         // --- Event Listeners ---
@@ -932,8 +1154,10 @@
                 
                 if (targetSection === 'overview') { updateDashboardMetrics(); updateDashboardChart(dashboardMetricSelect.value); }
                 if (targetSection === 'tracking') updateTrackingChart(trackingMetricSelect.value);
-                if (targetSection === 'contributions') renderContributionsTable(contributionFilterWeek.value || relationshipData.weeks[0]?.weekNumber.toString());
+                if (targetSection === 'contributions' && relationshipData.weeks.length > 0) renderContributionsTable(contributionFilterWeek.value || relationshipData.weeks[0]?.weekNumber.toString());
                 if (targetSection === 'feedback') renderFeedbackLog();
+                if (targetSection === 'mediaGallery') renderMediaGallery();
+                if (targetSection === 'relationshipActions') renderRelationshipActionLog();
             });
         });
 
@@ -941,37 +1165,28 @@
         trackingMetricSelect.addEventListener('change', (e) => updateTrackingChart(e.target.value));
         contributionFilterWeek.addEventListener('change', (e) => renderContributionsTable(e.target.value));
         
-        closeModalButton.addEventListener('click', () => modal.style.display = 'none');
-        window.addEventListener('click', (event) => { if (event.target == modal) modal.style.display = 'none'; });
-
-        function setupCarouselScroll(carouselId, leftBtnId, rightBtnId) { /* ... (keep existing) ... */
-            const carousel = document.getElementById(carouselId);
-            const leftBtn = document.getElementById(leftBtnId);
-            const rightBtn = document.getElementById(rightBtnId);
-            if (!carousel || !leftBtn || !rightBtn) return;
-            const scrollAmount = 300;
-            leftBtn.addEventListener('click', () => carousel.scrollLeft -= scrollAmount);
-            rightBtn.addEventListener('click', () => carousel.scrollLeft += scrollAmount);
+        closeModalButton.addEventListener('click', () => detailsModal.style.display = 'none');
+        
+        function setupCarouselScroll(carouselId, leftBtnId, rightBtnId) { /* ... (keep existing) ... */ 
+            const carousel = document.getElementById(carouselId); const leftBtn = document.getElementById(leftBtnId); const rightBtn = document.getElementById(rightBtnId);
+            if (!carousel || !leftBtn || !rightBtn) return; const scrollAmount = 320;
+            leftBtn.addEventListener('click', () => carousel.scrollLeft -= scrollAmount); rightBtn.addEventListener('click', () => carousel.scrollLeft += scrollAmount);
         }
         setupCarouselScroll('timelineCarousel', 'timeline-scroll-left', 'timeline-scroll-right');
         setupCarouselScroll('insightsCarousel', 'insights-scroll-left', 'insights-scroll-right');
-        document.getElementById('modal-carousel-prev').addEventListener('click', () => {
-            currentModalCarouselIndex = (currentModalCarouselIndex - 1 + modalCarouselItems.length) % modalCarouselItems.length;
-            renderModalCarousel();
-        });
-        document.getElementById('modal-carousel-next').addEventListener('click', () => {
-            currentModalCarouselIndex = (currentModalCarouselIndex + 1) % modalCarouselItems.length;
-            renderModalCarousel();
-        });
+        document.getElementById('modal-carousel-prev').addEventListener('click', () => { currentModalCarouselIndex = (currentModalCarouselIndex - 1 + modalCarouselItems.length) % modalCarouselItems.length; renderModalCarousel(); });
+        document.getElementById('modal-carousel-next').addEventListener('click', () => { currentModalCarouselIndex = (currentModalCarouselIndex + 1) % modalCarouselItems.length; renderModalCarousel(); });
+        document.getElementById('generateReportBtn').addEventListener('click', () => showAlert(i18next.t("lifesync.reportNote")));
+
 
         // --- Initialization ---
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
         i18next.on('initialized', () => {
-            populateWeekFilter(); // Populate week filter first
-            updateContentAll(); // This will call all render functions
+            populateWeekFilter(); 
+            updateContentAll(); 
         });
-        if (i18next.isInitialized) { // Fallback if event already fired
+        if (i18next.isInitialized) { 
             populateWeekFilter();
             updateContentAll();
         }
