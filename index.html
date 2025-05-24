@@ -3,1248 +3,1591 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="siteTitle">Us - Our Story</title>
+    <title>Tee & Me - Our Story</title>
+    <!-- Visualization & Content Choices:
+        - Report Info: Weekly relationship summaries, key events, shared media. Goal: Quick overview of relationship progression. Viz/Presentation: Horizontal carousel of cards (Quick Timeline) in Overview. Interaction: Click "See Details" to open a modal with more info, including an internal carousel for multiple events per week. Justification: Carousels are ideal for sequential, condensed information in a fixed-height section. Modals allow for detailed views without leaving the main context. Library/Method: HTML/Tailwind for carousel structure, JS for population and modal control.
+        - Report Info: Metrics like Affection, Support, Food Prep, Safety scores over time. Goal: Visualize trends and current status. Viz/Presentation: Dashboard cards (Overview) for latest/average scores; Line chart (Overview) for initial weeks; Line/Bar chart (Analysis Hub - Tracking) for selected metric over all weeks. Interaction: Dropdown to select metric for charts. Justification: Cards provide quick snapshots. Line/Bar charts are effective for trend visualization. Library/Method: Chart.js (Canvas) for charts, JS for dynamic updates.
+        - Report Info: Individual contributions by Salatiso & Tee (affection, support, finances, chores, etc.). Goal: Compare and reflect on shared responsibilities. Viz/Presentation: Table (Analysis Hub - Contributions), filterable by week. Interaction: Dropdown to select week. Table content scrolls internally. Justification: Tables are suitable for detailed, structured data comparison. Internal scroll manages overflow. Library/Method: HTML/Tailwind for table, JS for filtering and population.
+        - Report Info: Reinforcement words/actions, purpose, occurrences. Goal: Analyze positive communication patterns. Viz/Presentation: Table (Analysis Hub - Reinforcement). Table scrolls internally. Justification: Structured display for specific communication data. Library/Method: HTML/Tailwind for table, JS for population.
+        - Report Info: Shared songs, photo moments, travel logs (visited/dream). Goal: Curate and revisit shared memories. Viz/Presentation: Scrollable list for songs (Media Hub); Scrollable grid for photos (Media Hub); Cards for travel entries (Media Hub). Interaction: Links for songs, internal scroll for lists/grids. Justification: Visually engaging ways to present media and categorized experiences. Library/Method: HTML/Tailwind, JS for population.
+        - Report Info: Feedback exchange, relationship actions (apology, dissatisfaction, date booking, termination). Goal: Facilitate communication and track significant interactions. Viz/Presentation: Forms and logs (Connect & Resolve Hub). Interaction: Form submission, log display with internal scroll. Justification: Structured tools for active relationship management. Library/Method: HTML/Tailwind for forms/logs, JS for handling.
+        - Report Info: Compatibility (Astrology, placeholders for other tests). Goal: Fun and reflective engagement. Viz/Presentation: Input fields and display areas for Astrology; Placeholders for other tests (LifeSync & Fun Hub). Interaction: Input birthdays for Astrology. Justification: Lighthearted and future-looking interactive elements. Library/Method: HTML/Tailwind, JS for Astrology logic.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All charts are Chart.js (Canvas). Icons are Font Awesome. Other visuals are HTML/Tailwind.
+    -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/i18next@23.11.5/dist/umd/i18next.min.js"></script>
-    <script src="https://unpkg.com/i18next-browser-languagedetector@7.1.0/dist/umd/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/dist/umd/i18nextBrowserLanguageDetector.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
-    <link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
-    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
-    <script src="xh_translations.js"></script>
-
     <style>
-        :root {
-            /* LifeSync Inspired Palette */
-            --bg-dark-purple: #301934;
-            --bg-content-purple: rgba(45, 25, 55, 0.97); 
-            --bg-content-purple-opaque: rgb(45, 25, 55);
-            --bg-card-purple: rgba(60, 30, 70, 0.92);
-            --text-primary-light: #FDE7F3; 
-            --text-secondary-lavender: #E9D5FF; 
-            --accent-pink-vibrant: #DB2777; 
-            --accent-purple-medium: #A855F7; 
-            --accent-teal-bright: #2DD4BF; 
-            --border-color-lavender: rgba(168, 85, 247, 0.35); 
-            --border-color-strong: rgba(168, 85, 247, 0.65);
-            --font-main: 'Poppins', sans-serif;
-            --font-heading: 'Ubuntu', sans-serif;
+        body, html {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* No scroll on body */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fdf2f8; /* rose-50 */
         }
-
-        html, body {
-            margin: 0; padding: 0; height: 100%;
-            overflow: hidden;
-            font-family: var(--font-main);
-            background-color: var(--bg-dark-purple);
-            color: var(--text-primary-light);
-        }
-
         #videoBackground {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1;
-            filter: brightness(0.2) contrast(1.05) blur(5px);
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            object-fit: cover;
         }
-
-        .app-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
-
-        header#appHeader {
-            background-color: rgba(30, 10, 40, 0.9); 
-            backdrop-filter: blur(12px);
-            padding: 0.5rem 1rem; 
-            position: fixed; top: 0; left: 0; width: 100%;
+        .content-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(253, 242, 248, 0.85); /* rose-50 with opacity */
+            z-index: -50;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             z-index: 1000;
-            border-bottom: 1px solid var(--border-color-lavender);
+            background-color: rgba(236, 72, 153, 0.8); /* pink-500 with opacity */
+            backdrop-filter: blur(5px);
         }
-        header#appHeader .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1920px; 
-            margin: 0 auto;
-        }
-        header#appHeader h1 {
-            font-family: var(--font-heading); color: var(--accent-teal-bright);
-            text-shadow: 0 0 7px var(--accent-teal-bright);
-            font-size: 1.15rem; 
-        }
-        header#appHeader .controls-container { display: flex; align-items: center; gap: 0.5rem;}
-
-        header#appHeader .language-switcher button, #settingsButton {
-            background-color: transparent;
-            color: var(--text-secondary-lavender);
-            border: 1px solid var(--accent-purple-medium);
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-            padding: 0.2rem 0.5rem; 
-            font-size: 0.65rem; 
-            border-radius: 0.8rem; 
-        }
-         header#appHeader .language-switcher button:hover,
-         header#appHeader .language-switcher button.active-lang,
-         #settingsButton:hover {
-            background-color: var(--accent-pink-vibrant);
-            border-color: var(--accent-pink-vibrant);
-            color: var(--text-primary-light);
-        }
-        #settingsButton i { margin-right: 0.25rem; }
-
-
-        nav#mainNav {
-            background-color: rgba(40, 15, 50, 0.92); 
-            backdrop-filter: blur(10px);
-            padding: 0.3rem 0.5rem;
-            position: fixed; left: 0; width: 100%;
+        nav.main-nav {
+            position: fixed;
+            left: 0;
+            width: 100%;
             z-index: 999;
-            border-bottom: 1px solid var(--border-color-lavender);
+            background-color: rgba(219, 39, 119, 0.85); /* pink-600 with opacity */
+            backdrop-filter: blur(5px);
         }
-        nav#mainNav .nav-tab-container {
-            display: flex; justify-content: center; align-items: center;
-            overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;
-            max-width: 1920px; margin: 0 auto; 
-        }
-        nav#mainNav .nav-tab-container::-webkit-scrollbar { display: none; }
-
-        nav#mainNav .nav-tab {
-            color: var(--text-secondary-lavender); border-bottom: 2px solid transparent;
-            transition: color 0.25s, border-bottom-color 0.25s, transform 0.2s; white-space: nowrap;
-            padding: 0.4rem 0.65rem; font-size: 0.75rem; font-weight: 500; cursor: pointer;
-        }
-        nav#mainNav .nav-tab:hover { color: var(--text-primary-light); border-bottom-color: var(--accent-pink-vibrant); transform: translateY(-1px); }
-        nav#mainNav .nav-tab.active-nav { color: var(--accent-teal-bright); border-bottom-color: var(--accent-teal-bright); font-weight: 600; }
-
         .content-area-wrapper {
-            flex-grow: 1; padding: 0.5rem; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
+            width: 100%;
+            overflow: hidden; /* Crucial for no-scroll sections */
+            display: flex;
+            flex-direction: column;
         }
         .content-area {
-            width: 100%; height: 100%; max-width: 1920px;
-            background-color: var(--bg-content-purple);
-            border-radius: 0.6rem; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            overflow: hidden; display: flex; flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden; /* Each section manages its own potential scroll */
+            display: flex; /* To make sections take full height */
+        }
+        .content-section {
+            width: 100%;
+            height: 100%; /* Fill .content-area */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            overflow: hidden; /* No scroll on the section itself */
+            padding: 1rem; /* Inner padding for content */
+            background-color: transparent; /* Content sections are transparent over the overlay/video */
+        }
+        .content-section.active {
+            display: flex;
+        }
+        .sub-nav-tabs {
+            border-bottom: 2px solid #f472b6; /* pink-400 */
+            margin-bottom: 1rem;
+        }
+        .sub-nav-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px; /* Align with parent border */
+            color: #881337; /* rose-800 */
+        }
+        .sub-nav-tab.active, .sub-nav-tab:hover {
+            border-color: #db2777; /* pink-600 */
+            color: #db2777; /* pink-600 */
+            font-weight: 600;
+        }
+        .sub-content {
+            display: none;
+            flex-grow: 1;
+            overflow-y: auto; /* Allows internal scrolling for sub-content */
+            padding: 0.5rem;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .sub-content::-webkit-scrollbar { /* Chrome, Safari, Opera */
+            display: none;
+        }
+        .sub-content.active {
+            display: block;
         }
 
-        .content-section { display: none; flex-direction: column; width: 100%; height: 100%; overflow: hidden; animation: fadeIn 0.35s ease-out; }
-        .content-section.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0.5; } to { opacity: 1; } }
-
-        .section-header { padding: 0.5rem 1rem; text-align: center; border-bottom: 1px solid var(--border-color-lavender); flex-shrink: 0; }
-        .section-header h2 { font-size: 1.2rem; font-weight: 600; color: var(--accent-pink-vibrant); margin-bottom: 0; }
-
-        .sub-nav-tabs { display: flex; justify-content: center; padding: 0.3rem 0; background-color: rgba(30, 10, 40, 0.7); flex-shrink: 0; border-bottom: 1px solid var(--border-color-lavender); }
-        .sub-nav-tabs .sub-nav-tab { padding: 0.25rem 0.65rem; margin: 0 0.15rem; cursor: pointer; border-bottom: 2px solid transparent; color: var(--text-secondary-lavender); font-size: 0.7rem; font-weight: 500; }
-        .sub-nav-tabs .sub-nav-tab:hover { color: var(--text-primary-light); }
-        .sub-nav-tabs .sub-nav-tab.active-sub-nav { color: var(--accent-teal-bright); border-bottom-color: var(--accent-teal-bright); }
-        
-        .section-content-wrapper { flex-grow: 1; overflow-y: auto; padding: 0.6rem; } 
-        .sub-content { display: none; }
-        .sub-content.active-sub-content { display: block; animation: subContentFadeIn 0.25s ease-out; }
-        @keyframes subContentFadeIn { from { opacity: 0.4; } to { opacity: 1; } }
-
-        /* Overview Timeline & Dashboard */
-        #overview .section-content-wrapper { display: flex; flex-direction: column; }
-        .overview-main-content { flex-grow: 1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 0.6rem; overflow-y: auto; padding-bottom: 0.4rem;}
-        .overview-left-column { grid-column: span 12 / span 12; lg:grid-column: span 4 / span 4; display: flex; flex-direction: column; gap: 0.6rem; }
-        .overview-right-column { grid-column: span 12 / span 12; lg:grid-column: span 8 / span 8; display: flex; flex-direction: column; gap: 0.6rem; }
-        
-        #overviewTimelineContainer {
-            height: 130px; 
-            background-color: rgba(30,10,40,0.7); 
-            border-top: 1px solid var(--border-color-strong);
-            padding: 0.5rem; overflow-x: auto; display: flex;
-            flex-shrink: 0; margin-top: 0.6rem;
+        /* Carousel Styles */
+        .carousel {
+            position: relative;
+            overflow: hidden;
         }
-        .timeline-event-card {
-            flex: 0 0 180px; margin-right: 0.6rem; padding: 0.5rem;
-            background-color: var(--bg-card-purple); border: 1px solid var(--border-color-lavender);
-            border-radius: 5px; color: var(--text-secondary-lavender); font-size: 0.7rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; justify-content: space-between;
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
         }
-        .timeline-event-card h4 { color: var(--accent-teal-bright); font-size: 0.8rem; margin-bottom: 0.15rem; line-height: 1.2;}
-        .timeline-event-card .date { font-size: 0.6rem; color: var(--accent-purple-medium); margin-bottom: 0.15rem;}
-        .timeline-event-card .summary { font-size: 0.65rem; line-height: 1.3; flex-grow: 1; margin-bottom: 0.3rem; }
-        .timeline-event-card .details-link { font-size: 0.65rem; color: var(--accent-pink-vibrant); text-decoration: underline; cursor: pointer; align-self: flex-start;}
-
-
-        .dashboard-card { background-color: var(--bg-card-purple); padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-color-lavender); box-shadow: 0 2px 6px rgba(0,0,0,0.38); }
-        .dashboard-card h3 { color: var(--accent-teal-bright); margin-bottom: 0.3rem; font-size: 0.8rem; font-weight: 600; }
-        .dashboard-metric-display { font-size: 1.3rem; font-weight: 700; color: var(--text-primary-light); }
-        .chart-container { min-height: 160px; padding: 0.4rem; background-color: rgba(0,0,0,0.2); border-radius: 5px; }
-        #overviewImageCarouselContainer { position: relative; width: 100%; height: 180px; lg:height: 100%; overflow: hidden; border-radius: 0.5rem; background-color: rgba(0,0,0,0.25); }
-        #overviewImageCarousel .carousel-item img { width:100%; height: 100%; object-fit: cover; }
-        
-        /* Modals */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(20,5,30,0.7); backdrop-filter: blur(8px); }
-        .modal-content { background-color: var(--bg-content-purple-opaque); margin: 10% auto; padding: 20px; border: 1px solid var(--border-color-strong); width: 90%; max-width: 550px; border-radius: 8px; text-align: center; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
-        .modal.active { display: flex; align-items: center; justify-content: center; }
-        .modal-content h2 { font-family: var(--font-heading); color: var(--accent-pink-vibrant); font-size: 1.2rem; margin-bottom: 1rem; }
-        .modal-content label { display: block; margin-bottom: 0.3rem; text-align: left; font-size: 0.8rem; color: var(--text-secondary-lavender); }
-        .modal-content .input-field { margin-bottom: 0.8rem; }
-
-
-        /* Table Styles */
-        .table-wrapper { flex-grow: 1; overflow-y: auto; border: 1px solid var(--border-color-lavender); border-radius: 0.375rem; background-color: rgba(60, 30, 70, 0.5); /* var(--bg-card-purple-rgb, 60, 30, 70) */ }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
-        .data-table th, .data-table td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border-color-lavender); }
-        .data-table th { background-color: rgba(30,10,40,0.8); font-weight: 600; color: var(--accent-teal-bright); position: sticky; top: 0; z-index: 1;}
-        .data-table tbody tr:nth-child(even) { background-color: rgba(255,255,255,0.01); }
-        .data-table tbody tr:hover { background-color: rgba(168, 85, 247, 0.1); } 
-        .contribution-table th, .contribution-table td { padding: 0.25rem 0.4rem; font-size: 0.7rem; }
-        .contribution-table th { background-color: rgba(219, 39, 119, 0.1); color: var(--accent-pink-vibrant); } /* Pinkish header using accent-pink-vibrant */
-
-        /* Floating Playlist Button */
-        #playlistButton {
-            position: fixed; bottom: 1rem; right: 1rem; z-index: 1010;
-            background-color: var(--accent-pink-vibrant); color: var(--text-primary-light);
-            width: 45px; height: 45px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.2s, background-color 0.2s;
+        .carousel-item {
+            min-width: 100%; /* Full width for main item, adjust for multi-item view */
+            box-sizing: border-box;
+        }
+        .carousel-control-prev, .carousel-control-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.5);
             border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
         }
-        #playlistButton:hover { background-color: var(--accent-purple-medium); transform: scale(1.05); }
-        #playlistButton i { font-size: 1.1rem; }
+        .carousel-control-prev { left: 10px; }
+        .carousel-control-next { right: 10px; }
 
-        /* Ensure TimelineJS specific overrides for dark theme if needed */
-        .tl-timeline { background-color: var(--bg-card-purple) !important; border: 1px solid var(--border-color-lavender) !important;}
-        .tl-timenav-slider { background-color: var(--bg-dark-purple) !important; }
-        .tl-headline, .tl-headline-fadeout, .tl-text p, .tl-slidenav-next .tl-slidenav-title, .tl-slidenav-previous .tl-slidenav-title  { color: var(--text-primary-light) !important; font-family: var(--font-main) !important;}
-        .tl-timemarker .tl-timemarker-content-container { background-color: var(--accent-purple-medium) !important; }
-        .tl-timemarker .tl-timemarker-content .tl-timemarker-text h2.tl-headline, .tl-timemarker .tl-timemarker-content .tl-timemarker-text p { color: var(--text-primary-light) !important;}
-        .tl-storyslider .tl-slidenav-next, .tl-storyslider .tl-slidenav-previous { border-color: var(--accent-teal-bright) !important;}
-        .tl-slidenav-next .tl-slidenav-arrow, .tl-slidenav-previous .tl-slidenav-arrow { border-color: var(--accent-teal-bright) !important;}
-        .tl-menubar { background-color: var(--bg-dark-purple) !important; }
-        .tl-icon-zoom-in, .tl-icon-zoom-out, .tl-icon-goback { filter: invert(1); } 
+        /* Quick Timeline Carousel Specifics */
+        #quickTimelineCarousel .carousel-inner {
+            /* display: flex; already set */
+        }
+        #quickTimelineCarousel .carousel-item {
+            min-width: 280px; /* Adjust for card size */
+            max-width: 280px;
+            padding: 0 0.5rem; /* Spacing between cards */
+        }
+         /* Photo Gallery Grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.5rem;
+        }
+        .photo-grid img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 0.375rem; /* rounded-md */
+        }
 
-        .action-button {
-             padding: 0.6rem 1.2rem;
-             border-radius: 20px;
-             text-decoration: none;
-             font-weight: 600;
-             transition: all 0.3s ease;
-             cursor: pointer;
-             display: inline-block;
-             margin-top: 0.5rem;
-             border: 1px solid transparent;
-             text-transform: uppercase;
-             letter-spacing: 0.5px;
-             font-size: 0.8rem;
-             background-color: var(--accent-pink-vibrant);
-             color: var(--text-primary-light);
-             border-color: var(--accent-pink-vibrant);
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* flex when active */
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
         }
-        .action-button:hover {
-            background-color: transparent;
-            color: var(--accent-pink-vibrant);
-            box-shadow: 0 0 10px var(--accent-pink-vibrant);
+        .modal-content {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
         }
-        .action-button.secondary {
-            background-color: var(--accent-purple-medium);
-            border-color: var(--accent-purple-medium);
+        .modal-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af; /* gray-400 */
         }
-        .action-button.secondary:hover {
-            color: var(--accent-purple-medium);
-            box-shadow: 0 0 10px var(--accent-purple-medium);
+        .modal-close:hover {
+            color: #374151; /* gray-700 */
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Example max-width */
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px; /* Base height, adjust with Tailwind or media queries */
+            max-height: 300px; /* Max height */
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 300px;
+                max-height: 350px;
+            }
+        }
+        
+        /* Floating action button */
+        #playlistFab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1050;
+        }
+
+        /* Custom scrollbar for sub-content (if not hidden) */
+        .sub-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .sub-content::-webkit-scrollbar-track {
+            background: #fce7f3; /* rose-100 */
+        }
+        .sub-content::-webkit-scrollbar-thumb {
+            background: #f472b6; /* pink-400 */
+            border-radius: 4px;
+        }
+        .sub-content::-webkit-scrollbar-thumb:hover {
+            background: #ec4899; /* pink-500 */
+        }
+        .table-scroll-container {
+            max-height: calc(100% - 4rem); /* Adjust based on surrounding elements */
+            overflow-y: auto;
         }
 
     </style>
 </head>
 <body>
-    <video id="videoBackground" autoplay loop muted playsinline>
+    <video autoplay muted loop id="videoBackground">
         <source src="assets/videos/background.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
     </video>
+    <div class="content-overlay"></div>
 
-    <div class="app-container">
-        <header id="appHeader">
-            <div class="header-content">
-                <h1 data-i18n="siteTitle">Us - Our Story</h1>
-                <div class="controls-container">
-                    <div class="language-switcher">
-                        <button id="langEN" data-i18n="langEN">EN</button>
-                        <button id="langXH" class="ml-1" data-i18n="langXH">XH</button>
-                    </div>
-                    <button id="settingsButton" title="Couple Settings"><i class="fas fa-cog"></i> <span data-i18n="settingsButton">Settings</span></button>
-                </div>
-            </div>
-        </header>
+    <header class="p-3 text-white flex justify-between items-center">
+        <h1 class="text-xl font-bold" data-i18n="siteTitle">Tee & Me - Our Story</h1>
+        <div>
+            <button id="lang-en" class="lang-switcher px-2 py-1 text-sm rounded bg-white/30 hover:bg-white/50" data-lang="en">EN</button>
+            <button id="lang-xh" class="lang-switcher px-2 py-1 text-sm rounded bg-white/30 hover:bg-white/50" data-lang="xh">XH</button>
+        </div>
+    </header>
 
-        <nav id="mainNav">
-            <div class="nav-tab-container">
-                <button class="nav-tab" data-section="overview" data-i18n="navOverview">Overview</button>
-                <button class="nav-tab" data-section="analysis" data-i18n="navAnalysis">Analysis Hub</button>
-                <button class="nav-tab" data-section="media" data-i18n="navMedia">Media & Travel</button>
-                <button class="nav-tab" data-section="connect" data-i18n="navConnect">Connect & Resolve</button>
-                <button class="nav-tab" data-section="lifesyncFun" data-i18n="navLifeSync">Fun Zone</button>
-            </div>
-        </nav>
-        
-        <div class="content-area-wrapper" id="contentAreaWrapper">
-            <main class="content-area">
-                <section id="overview" class="content-section">
-                    <div class="section-header"> <h2 data-i18n="overview.title">Our Journey Snapshot</h2> </div>
-                    <div class="section-content-wrapper flex flex-col">
-                        <div class="overview-main-content flex-grow">
-                            <div class="overview-left-column space-y-2.5">
-                                <div class="dashboard-card flex-shrink-0">
-                                    <h3 data-i18n="overview.dashboardTitle" class="text-center">Key Metrics</h3>
-                                    <div class="grid grid-cols-2 gap-2.5">
-                                        <div class="dashboard-metric-card !p-2"> <h3 data-i18n="overview.affectionLevel" class="!text-xs"></h3> <p id="affection-metric" class="dashboard-metric-display !text-base">--</p> </div>
-                                        <div class="dashboard-metric-card !p-2"> <h3 data-i18n="overview.supportScore" class="!text-xs"></h3> <p id="support-metric" class="dashboard-metric-display !text-base">--</p> </div>
-                                        <div class="dashboard-metric-card !p-2"> <h3 data-i18n="overview.foodContribution" class="!text-xs"></h3> <p id="food-metric" class="dashboard-metric-display !text-base">--</p> </div>
-                                        <div class="dashboard-metric-card !p-2"> <h3 data-i18n="overview.safetyFeeling" class="!text-xs"></h3> <p id="safety-metric" class="dashboard-metric-display !text-base">--</p> </div>
+    <nav class="main-nav p-2 shadow-md">
+        <div class="container mx-auto flex justify-around items-center text-sm">
+            <button class="nav-link py-1 px-2 rounded hover:bg-white/20 text-white" data-section="overview" data-i18n="nav.overview">Overview</button>
+            <button class="nav-link py-1 px-2 rounded hover:bg-white/20 text-white" data-section="analysis" data-i18n="nav.analysisHub">Analysis Hub</button>
+            <button class="nav-link py-1 px-2 rounded hover:bg-white/20 text-white" data-section="media" data-i18n="nav.mediaTravelHub">Media & Travel</button>
+            <button class="nav-link py-1 px-2 rounded hover:bg-white/20 text-white" data-section="connect" data-i18n="nav.connectResolve">Connect & Resolve</button>
+            <button class="nav-link py-1 px-2 rounded hover:bg-white/20 text-white" data-section="lifesync" data-i18n="nav.lifeSyncFun">LifeSync & Fun</button>
+        </div>
+    </nav>
+
+    <div class="content-area-wrapper">
+        <div class="content-area">
+            <section id="overview" class="content-section active">
+                <h2 class="text-2xl font-semibold mb-4 text-pink-700" data-i18n="overview.title">Our Journey Snapshot</h2>
+                <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4 overflow-hidden">
+                    <div class="flex flex-col gap-4 overflow-y-auto p-1">
+                        <div>
+                            <h3 class="text-lg font-medium text-pink-600" data-i18n="overview.dashboard">Dashboard</h3>
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <div class="bg-rose-100 p-3 rounded-lg shadow">
+                                    <p class="text-sm text-rose-700" data-i18n="overview.affectionLevel">Affection Level</p>
+                                    <p id="metricAffection" class="text-xl font-bold text-rose-800">8.5/10</p>
+                                </div>
+                                <div class="bg-rose-100 p-3 rounded-lg shadow">
+                                    <p class="text-sm text-rose-700" data-i18n="overview.supportScore">Support Score</p>
+                                    <p id="metricSupport" class="text-xl font-bold text-rose-800">9.2/10</p>
+                                </div>
+                                <div class="bg-rose-100 p-3 rounded-lg shadow">
+                                    <p class="text-sm text-rose-700" data-i18n="overview.foodPrep">Food Prep</p>
+                                    <p id="metricFood" class="text-xl font-bold text-rose-800">Balanced</p>
+                                </div>
+                                <div class="bg-rose-100 p-3 rounded-lg shadow">
+                                    <p class="text-sm text-rose-700" data-i18n="overview.safetySecurity">Safety/Security</p>
+                                    <p id="metricSafety" class="text-xl font-bold text-rose-800">Strong</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-pink-600" data-i18n="overview.specialSong">Our Special Song</h3>
+                            <p class="mt-1 text-sm text-gray-700">"Thank You Baby! (For Makin' Someday Come So Soon)"</p>
+                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="text-pink-500 hover:text-pink-700 text-sm" data-i18n="overview.listen">Listen <i class="fas fa-play-circle"></i></a>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-pink-600" data-i18n="overview.quickTimeline">Quick Timeline</h3>
+                            <div id="quickTimelineCarousel" class="carousel mt-2 bg-white/50 p-2 rounded-lg">
+                                <div class="carousel-inner">
                                     </div>
-                                </div>
-                                <div class="dashboard-card text-center flex-shrink-0">
-                                    <h3 data-i18n="overview.ourSong"></h3>
-                                    <p id="specialSongTitle" class="text-xs mb-1">"Thank You Baby!..."</p>
-                                    <a href="#" id="ourSongLink" target="_blank" class="action-button !text-xs !py-0.5 !px-2"> <i class="fas fa-headphones-alt mr-1"></i> <span data-i18n="overview.listenToSong">Listen</span> </a>
-                                </div>
-                                 <div class="dashboard-card flex-grow">
-                                    <h3 data-i18n="overview.dashboardTitle">Relationship Trends</h3>
-                                     <select id="dashboardMetricSelect" class="select-field !w-full !py-1 !text-xs mb-1.5 !bg-[var(--bg-dark-purple)]">
-                                        </select>
-                                    <div class="chart-container relative h-36 md:h-full"> <canvas id="dashboardChart"></canvas> </div>
-                                </div>
-                            </div>
-                            <div class="overview-right-column">
-                                <div id="overviewImageCarouselContainer" class="relative h-full w-full rounded-lg shadow-lg overflow-hidden">
-                                    <div id="overviewImageCarousel" class="h-full"></div>
-                                    <button id="overview-img-prev" class="carousel-nav-btn prev absolute top-1/2 left-1 transform -translate-y-1/2 bg-black/40 hover:bg-black/70 p-1.5 rounded-full z-10"><i class="fas fa-chevron-left text-white text-xs"></i></button>
-                                    <button id="overview-img-next" class="carousel-nav-btn next absolute top-1/2 right-1 transform -translate-y-1/2 bg-black/40 hover:bg-black/70 p-1.5 rounded-full z-10"><i class="fas fa-chevron-right text-white text-xs"></i></button>
-                                </div>
+                                <button class="carousel-control-prev"><i class="fas fa-chevron-left"></i></button>
+                                <button class="carousel-control-next"><i class="fas fa-chevron-right"></i></button>
                             </div>
                         </div>
-                        <div id="overviewTimelineContainer" class="flex-shrink-0">
-                             </div>
                     </div>
-                </section>
+                    <div class="flex flex-col gap-4 overflow-y-auto p-1">
+                        <div>
+                            <h3 class="text-lg font-medium text-pink-600" data-i18n="overview.imageCarousel">Shared Moments</h3>
+                            <div id="overviewImageCarousel" class="carousel mt-2 h-64 md:h-80 rounded-lg shadow-lg">
+                                <div class="carousel-inner h-full">
+                                    </div>
+                                <button class="carousel-control-prev"><i class="fas fa-chevron-left"></i></button>
+                                <button class="carousel-control-next"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-pink-600" data-i18n="overview.dashboardChartTitle">Initial Weeks Metric Trend</h3>
+                            <div class="chart-container mt-2 bg-white/50 p-2 rounded-lg">
+                                <canvas id="dashboardChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <section id="analysis" class="content-section">
-                    <div class="section-header"> <h2 data-i18n="navAnalysis">Analysis Hub</h2> </div>
-                    <div class="sub-nav-tabs">
-                        <button class="sub-nav-tab" data-subtarget="analysis-tracking" data-i18n="tabTracking">Tracking</button>
-                        <button class="sub-nav-tab" data-subtarget="analysis-contributions" data-i18n="tabContributions">Contributions</button>
-                        <button class="sub-nav-tab" data-subtarget="analysis-reinforcement" data-i18n="tabReinforcement">Reinforcement</button>
+            <section id="analysis" class="content-section">
+                <h2 class="text-2xl font-semibold text-pink-700" data-i18n="analysisHub.title">Analysis Hub</h2>
+                <div class="sub-nav-tabs flex">
+                    <button class="sub-nav-tab active" data-subtarget="tracking" data-i18n="analysisHub.tracking.title">Tracking</button>
+                    <button class="sub-nav-tab" data-subtarget="contributions" data-i18n="analysisHub.contributions.title">Contributions</button>
+                    <button class="sub-nav-tab" data-subtarget="reinforcement" data-i18n="analysisHub.reinforcement.title">Reinforcement</button>
+                </div>
+                <div id="tracking" class="sub-content active">
+                    <label for="trackingMetricSelect" class="block text-sm font-medium text-gray-700" data-i18n="analysisHub.tracking.selectMetric">Select Metric:</label>
+                    <select id="trackingMetricSelect" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md">
+                        </select>
+                    <div class="chart-container mt-4 h-[calc(100%-6rem)] max-h-[calc(100%-6rem)] bg-white/50 p-2 rounded-lg">
+                         <canvas id="trackingChart"></canvas>
                     </div>
-                    <div class="section-content-wrapper">
-                        <div id="analysis-tracking" class="sub-content">
-                            <div class="mb-2 text-center">
-                                <label for="trackingMetricSelect" class="mr-1.5 font-medium text-xs" data-i18n="tracking.selectAspect">Track:</label>
-                                <select id="trackingMetricSelect" class="select-field !w-auto !inline-block !py-1 !text-xs !bg-[var(--bg-dark-purple)]"></select>
-                            </div>
-                            <div class="chart-container h-60 md:h-80"><canvas id="trackingChart"></canvas></div>
-                        </div>
-                        <div id="analysis-contributions" class="sub-content">
-                             <div class="mb-2 text-center">
-                                <label for="contributionFilterWeek" class="mr-1.5 font-medium text-xs" data-i18n="contributions.filterWeek">Week:</label>
-                                <select id="contributionFilterWeek" class="select-field !w-auto !inline-block !py-1 !text-xs !bg-[var(--bg-dark-purple)]"></select>
-                            </div>
-                            <div class="table-wrapper"><table class="data-table"><thead><tr><th data-i18n="parameter">Parameter</th><th id="contributionsName1Header">Person 1</th><th id="contributionsName2Header">Person 2</th><th data-i18n="notes">Details</th></tr></thead><tbody id="contributionsTableBody"></tbody></table></div>
-                        </div>
-                        <div id="analysis-reinforcement" class="sub-content">
-                            <div class="table-wrapper"><table class="data-table"><thead><tr><th data-i18n="wordAction">Word/Action</th><th data-i18n="purpose">Purpose</th><th id="reinforcementName1Header">Person 1 (Wks)</th><th id="reinforcementName2Header">Person 2 (Wks)</th><th data-i18n="joint">Joint (Wks)</th></tr></thead><tbody id="reinforcementTableBody"></tbody></table></div>
-                        </div>
+                </div>
+                <div id="contributions" class="sub-content">
+                    <label for="contributionFilterWeek" class="block text-sm font-medium text-gray-700" data-i18n="analysisHub.contributions.filterByWeek">Filter by Week:</label>
+                    <select id="contributionFilterWeek" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md">
+                        </select>
+                    <div class="mt-4 table-scroll-container bg-white/50 p-2 rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-rose-50">
+                                <tr>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.contributions.parameter">Parameter</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.contributions.salatiso">Salatiso</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.contributions.tee">Tee</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.contributions.notes">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contributionsTableBody" class="bg-white divide-y divide-gray-200 text-sm">
+                                </tbody>
+                        </table>
                     </div>
-                </section>
+                </div>
+                <div id="reinforcement" class="sub-content">
+                     <div class="mt-4 table-scroll-container bg-white/50 p-2 rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-rose-50">
+                                <tr>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.reinforcement.wordAction">Word/Action</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.reinforcement.purpose">Purpose</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.reinforcement.occurrencesSalatiso">Salatiso (Weeks)</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.reinforcement.occurrencesTee">Tee (Weeks)</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-rose-600 uppercase tracking-wider" data-i18n="analysisHub.reinforcement.occurrencesJoint">Joint (Weeks)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reinforcementTableBody" class="bg-white divide-y divide-gray-200 text-sm">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
-                 <section id="media" class="content-section">
-                    <div class="section-header"> <h2 data-i18n="navMedia">Media & Travel</h2> </div>
-                    <div class="sub-nav-tabs">
-                        <button class="sub-nav-tab" data-subtarget="media-songs" data-i18n="tabSongs">Shared Songs</button>
-                        <button class="sub-nav-tab" data-subtarget="media-photos" data-i18n="tabPhotos">Photo Moments</button>
-                        <button class="sub-nav-tab" data-subtarget="travel-visited" data-i18n="tabVisited">Visited Places</button>
-                        <button class="sub-nav-tab" data-subtarget="travel-desired" data-i18n="tabDream">Dream Trips</button>
-                    </div>
-                    <div class="section-content-wrapper">
-                        <div id="media-songs" class="sub-content"><div id="songListContainer" class="space-y-1.5"></div></div>
-                        <div id="media-photos" class="sub-content"><div id="photoGalleryContainer" class="media-gallery-grid"></div></div>
-                        <div id="travel-visited" class="sub-content"><div id="visitedPlacesContainer" class="space-y-2.5"></div></div>
-                        <div id="travel-desired" class="sub-content"><div id="desiredPlacesContainer" class="space-y-2.5"></div></div>
-                    </div>
-                </section>
+            <section id="media" class="content-section">
+                <h2 class="text-2xl font-semibold text-pink-700" data-i18n="mediaTravelHub.title">Media & Travel Hub</h2>
+                <div class="sub-nav-tabs flex">
+                    <button class="sub-nav-tab active" data-subtarget="songs" data-i18n="mediaTravelHub.sharedSongs.title">Shared Songs</button>
+                    <button class="sub-nav-tab" data-subtarget="photos" data-i18n="mediaTravelHub.photoMoments.title">Photo Moments</button>
+                    <button class="sub-nav-tab" data-subtarget="visited" data-i18n="mediaTravelHub.visited.title">Visited</button>
+                    <button class="sub-nav-tab" data-subtarget="dream" data-i18n="mediaTravelHub.dreamTrips.title">Dream Trips</button>
+                </div>
+                <div id="songs" class="sub-content active">
+                    <ul id="sharedSongsList" class="space-y-2">
+                        </ul>
+                </div>
+                <div id="photos" class="sub-content">
+                    <div id="photoMomentsGrid" class="photo-grid">
+                        </div>
+                </div>
+                <div id="visited" class="sub-content">
+                    <div id="visitedTripsList" class="space-y-3">
+                        </div>
+                </div>
+                <div id="dream" class="sub-content">
+                    <div id="dreamTripsList" class="space-y-3">
+                        </div>
+                </div>
+            </section>
 
-                <section id="connect" class="content-section">
-                    <div class="section-header"> <h2 data-i18n="navConnect">Connect & Resolve</h2> </div>
-                     <div class="sub-nav-tabs">
-                        <button class="sub-nav-tab" data-subtarget="connect-feedback" data-i18n="tabFeedback">Feedback</button>
-                        <button class="sub-nav-tab" data-subtarget="connect-actions" data-i18n="tabActions">Actions</button>
-                        <button class="sub-nav-tab" data-subtarget="connect-logs" data-i18n="tabLogs">Logs</button>
+            <section id="connect" class="content-section">
+                <h2 class="text-2xl font-semibold text-pink-700" data-i18n="connectResolve.title">Connect & Resolve</h2>
+                <div class="sub-nav-tabs flex">
+                    <button class="sub-nav-tab active" data-subtarget="feedback" data-i18n="connectResolve.feedback.title">Feedback</button>
+                    <button class="sub-nav-tab" data-subtarget="actions" data-i18n="connectResolve.actions.title">Actions</button>
+                    <button class="sub-nav-tab" data-subtarget="logs" data-i18n="connectResolve.logs.title">Logs</button>
+                </div>
+                <div id="feedback" class="sub-content active grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="text-lg font-medium text-pink-600" data-i18n="connectResolve.feedback.give">Give Feedback</h3>
+                        <form id="feedbackForm" class="space-y-3 mt-2">
+                            <div>
+                                <label for="feedbackSender" class="block text-sm font-medium text-gray-700" data-i18n="connectResolve.feedback.sender">Sender</label>
+                                <select id="feedbackSender" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
+                                    <option value="Salatiso">Salatiso</option>
+                                    <option value="Tee">Tee</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="feedbackRecipient" class="block text-sm font-medium text-gray-700" data-i18n="connectResolve.feedback.recipient">Recipient</label>
+                                <select id="feedbackRecipient" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
+                                    <option value="Tee">Tee</option>
+                                    <option value="Salatiso">Salatiso</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="feedbackMessage" class="block text-sm font-medium text-gray-700" data-i18n="connectResolve.feedback.message">Message</label>
+                                <textarea id="feedbackMessage" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50" required></textarea>
+                            </div>
+                            <button type="submit" class="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600" data-i18n="connectResolve.feedback.send">Send Feedback</button>
+                        </form>
                     </div>
-                    <div class="section-content-wrapper grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div id="connect-feedback" class="sub-content space-y-3">
-                            <div class="dashboard-card">
-                                <h3 data-i18n="feedback.giveFeedback"></h3>
-                                <form id="feedbackForm" class="space-y-2.5">
-                                    <div><label for="feedbackSender" class="block text-xs font-medium" data-i18n="feedback.sender"></label><select id="feedbackSender" class="select-field !bg-[var(--bg-dark-purple)]"></select></div>
-                                    <div><label for="feedbackRecipient" class="block text-xs font-medium" data-i18n="feedback.recipient"></label><select id="feedbackRecipient" class="select-field !bg-[var(--bg-dark-purple)]"></select></div>
-                                    <div><label for="feedbackMessage" class="block text-xs font-medium" data-i18n="feedback.message"></label><textarea id="feedbackMessage" rows="2" class="textarea-field !bg-[var(--bg-dark-purple)]" data-i18n-placeholder="feedbackPlaceholder"></textarea></div>
-                                    <button type="submit" id="sendFeedbackBtn" class="action-button w-full !text-xs !py-1.5" data-i18n="sendFeedback">Send</button>
-                                </form>
+                    <div>
+                        <h3 class="text-lg font-medium text-pink-600" data-i18n="connectResolve.feedback.logTitle">Feedback Log</h3>
+                        <div id="feedbackLogContainer" class="mt-2 space-y-2 max-h-[calc(100%-3rem)] overflow-y-auto">
                             </div>
-                             <div class="dashboard-card flex-grow flex flex-col">
-                                <h3 data-i18n="feedback.receivedFeedback" class="flex-shrink-0"></h3>
-                                <div id="feedbackLogContainer" class="flex-grow overflow-y-auto space-y-1.5 text-xs"></div>
-                            </div>
-                        </div>
-                        <div id="connect-actions" class="sub-content space-y-2.5">
-                            <div class="relationship-action-form dashboard-card"> <h4 data-i18n="relationshipActions.apology.title"></h4> <select id="apologyFrom" class="select-field !text-xs !py-1 mb-1 !bg-[var(--bg-dark-purple)]"></select> <textarea id="apologyMessage" class="textarea-field !min-h-[35px] !text-xs !bg-[var(--bg-dark-purple)]" data-i18n-placeholder="relationshipActions.apology.messagePlaceholder"></textarea> <button id="sendApologyBtn" class="action-button mt-0.5 w-full !text-xs !py-1" data-i18n="relationshipActions.apology.sendButton"></button> </div>
-                            </div>
-                        <div id="connect-logs" class="sub-content dashboard-card md:col-span-2 flex flex-col">
-                             <h3 data-i18n="relationshipActions.logTitleShort" class="flex-shrink-0"></h3>
-                             <div id="relationshipActionLogContainer" class="flex-grow overflow-y-auto space-y-1.5 text-xs"></div>
-                        </div>
                     </div>
-                </section>
+                </div>
+                <div id="actions" class="sub-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form id="apologyForm" class="space-y-3 p-3 bg-rose-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-rose-700" data-i18n="connectResolve.actions.apology.title">Make an Apology</h4>
+                            <select id="apologyActor" class="w-full rounded-md border-gray-300"><option value="Salatiso">Salatiso</option><option value="Tee">Tee</option></select>
+                            <textarea id="apologyMessage" placeholder="Apology message..." rows="2" class="w-full rounded-md border-gray-300" required></textarea>
+                            <button type="submit" class="px-3 py-1 bg-rose-500 text-white rounded hover:bg-rose-600" data-i18n="connectResolve.actions.apology.submit">Submit Apology</button>
+                        </form>
+                        <form id="dissatisfactionForm" class="space-y-3 p-3 bg-rose-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-rose-700" data-i18n="connectResolve.actions.dissatisfaction.title">Express Dissatisfaction</h4>
+                            <select id="dissatisfactionActor" class="w-full rounded-md border-gray-300"><option value="Salatiso">Salatiso</option><option value="Tee">Tee</option></select>
+                            <textarea id="dissatisfactionMessage" placeholder="Details of dissatisfaction..." rows="2" class="w-full rounded-md border-gray-300" required></textarea>
+                            <button type="submit" class="px-3 py-1 bg-rose-500 text-white rounded hover:bg-rose-600" data-i18n="connectResolve.actions.dissatisfaction.submit">Submit Concern</button>
+                        </form>
+                        <form id="bookDateForm" class="space-y-3 p-3 bg-rose-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-rose-700" data-i18n="connectResolve.actions.bookDate.title">Book a Date</h4>
+                            <select id="bookDateActor" class="w-full rounded-md border-gray-300"><option value="Salatiso">Salatiso</option><option value="Tee">Tee</option></select>
+                            <input type="text" id="bookDateActivity" placeholder="Activity description" class="w-full rounded-md border-gray-300" required>
+                            <input type="date" id="bookDateDate" class="w-full rounded-md border-gray-300" required>
+                            <button type="submit" class="px-3 py-1 bg-rose-500 text-white rounded hover:bg-rose-600" data-i18n="connectResolve.actions.bookDate.submit">Propose Date</button>
+                        </form>
+                        <form id="terminationForm" class="space-y-3 p-3 bg-red-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-red-700" data-i18n="connectResolve.actions.termination.title">Initiate Relationship Termination</h4>
+                            <select id="terminationActor" class="w-full rounded-md border-gray-300"><option value="Salatiso">Salatiso</option><option value="Tee">Tee</option></select>
+                            <select id="terminationReason" class="w-full rounded-md border-gray-300">
+                                <option value="irreconcilable_differences" data-i18n="connectResolve.actions.termination.reasonIrreconcilable">Irreconcilable Differences</option>
+                                <option value="growing_apart" data-i18n="connectResolve.actions.termination.reasonGrowingApart">Growing Apart</option>
+                                <option value="other" data-i18n="connectResolve.actions.termination.reasonOther">Other (Specify)</option>
+                            </select>
+                            <textarea id="terminationNotes" placeholder="Additional notes (if any)..." rows="2" class="w-full rounded-md border-gray-300"></textarea>
+                            <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" data-i18n="connectResolve.actions.termination.submit">Initiate</button>
+                        </form>
+                    </div>
+                </div>
+                <div id="logs" class="sub-content">
+                    <h3 class="text-lg font-medium text-pink-600" data-i18n="connectResolve.logs.actionLogTitle">Action Log</h3>
+                    <div id="actionLogContainer" class="mt-2 space-y-2 max-h-[calc(100%-3rem)] overflow-y-auto">
+                        </div>
+                </div>
+            </section>
 
-                <section id="lifesyncFun" class="content-section">
-                     <div class="section-header"> <h2 data-i18n="navLifeSync">Fun Zone</h2> </div>
-                    <div class="sub-nav-tabs">
-                        <button class="sub-nav-tab" data-subtarget="fun-compatibility" data-i18n="tabCompatibility">Compatibility</button>
-                        <button class="sub-nav-tab" data-subtarget="fun-quizzes" data-i18n="tabQuizzes">Quizzes</button>
-                        <button class="sub-nav-tab" data-subtarget="lifesync-reports" data-i18n="tabReports">Reports</button>
-                    </div>
-                    <div class="section-content-wrapper">
-                        <div id="fun-compatibility" class="sub-content space-y-3">
-                            <div class="dashboard-card">
-                                <h3 data-i18n="astrologyTitle"></h3>
-                                <div class="grid grid-cols-2 gap-2 mb-1.5">
-                                    <div><label for="salatisoBirthday" class="block text-xs" id="name1BirthdayLabel">Name 1 Bday:</label><input id="salatisoBirthday" type="date" class="input-field !text-xs !bg-[var(--bg-dark-purple)]"></div>
-                                    <div><label for="teeBirthday" class="block text-xs" id="name2BirthdayLabel">Name 2 Bday:</label><input id="teeBirthday" type="date" class="input-field !text-xs !bg-[var(--bg-dark-purple)]"></div>
-                                </div>
-                                <button id="checkCompatibility" class="action-button secondary !text-xs !py-1" data-i18n="checkCompatibility">Check</button>
-                                <p id="compatibilityResult" class="text-xs mt-1.5 min-h-[18px]"></p>
+            <section id="lifesync" class="content-section">
+                <h2 class="text-2xl font-semibold text-pink-700" data-i18n="lifeSyncFun.title">LifeSync & Fun</h2>
+                <div class="sub-nav-tabs flex">
+                    <button class="sub-nav-tab active" data-subtarget="compatibility" data-i18n="lifeSyncFun.compatibility.title">Compatibility</button>
+                    <button class="sub-nav-tab" data-subtarget="quizzes" data-i18n="lifeSyncFun.quizzes.title">Quizzes</button>
+                    <button class="sub-nav-tab" data-subtarget="reports" data-i18n="lifeSyncFun.reports.title">LifeSync Reports</button>
+                </div>
+                <div id="compatibility" class="sub-content active space-y-4">
+                    <div class="p-3 bg-rose-50 rounded-lg shadow">
+                        <h3 class="text-md font-semibold text-rose-700" data-i18n="lifeSyncFun.compatibility.astrology.title">Astrology Compatibility</h3>
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <div>
+                                <label for="salatisoBirthday" class="text-sm" data-i18n="lifeSyncFun.compatibility.astrology.salatisoBday">Salatiso's Birthday:</label>
+                                <input type="date" id="salatisoBirthday" class="w-full rounded-md border-gray-300 text-sm p-1">
                             </div>
-                            <div class="dashboard-card text-center"> <h3 data-i18n="valuesAlignment"></h3> <button class="action-button !text-xs !py-1 compatibility-test-btn" data-test="values" data-i18n="startTest">Start</button> <p class="text-xs mt-1" data-i18n="comingSoon"></p> </div>
+                            <div>
+                                <label for="teeBirthday" class="text-sm" data-i18n="lifeSyncFun.compatibility.astrology.teeBday">Tee's Birthday:</label>
+                                <input type="date" id="teeBirthday" class="w-full rounded-md border-gray-300 text-sm p-1">
+                            </div>
                         </div>
-                        <div id="fun-quizzes" class="sub-content text-center"><p data-i18n="comingSoon"></p></div>
-                        <div id="lifesync-reports" class="sub-content text-center">
-                            <select id="reportPeriod" class="select-field !w-auto !inline-block !py-1 !text-sm mr-1.5 !bg-[var(--bg-dark-purple)]"></select>
-                            <select id="reportMetrics" class="select-field !w-auto !inline-block !py-1 !text-sm mr-1.5 !bg-[var(--bg-dark-purple)]" multiple></select>
-                            <button id="generateReport" class="action-button !text-sm !py-1" data-i18n="generateReport">Generate</button>
-                            <div id="reportPreview" class="mt-3 text-left text-xs"></div>
-                        </div>
+                        <button id="checkAstrology" class="mt-2 px-3 py-1 bg-rose-500 text-white text-sm rounded hover:bg-rose-600" data-i18n="lifeSyncFun.compatibility.astrology.check">Check Compatibility</button>
+                        <div id="astrologyResult" class="mt-2 text-sm"></div>
                     </div>
-                </section>
-            </main>
+                    <div class="p-3 bg-rose-50 rounded-lg shadow">
+                        <h3 class="text-md font-semibold text-rose-700" data-i18n="lifeSyncFun.compatibility.values.title">Values Alignment</h3>
+                        <p class="text-xs text-gray-600" data-i18n="lifeSyncFun.compatibility.values.desc">Discover how your core values align.</p>
+                        <button class="placeholder-test-btn mt-1 px-3 py-1 bg-gray-400 text-white text-sm rounded" data-i18n="lifeSyncFun.compatibility.startTest">Start Test</button>
+                    </div>
+                     <div class="p-3 bg-rose-50 rounded-lg shadow">
+                        <h3 class="text-md font-semibold text-rose-700" data-i18n="lifeSyncFun.compatibility.communication.title">Communication Styles</h3>
+                        <p class="text-xs text-gray-600" data-i18n="lifeSyncFun.compatibility.communication.desc">Understand your communication patterns.</p>
+                        <button class="placeholder-test-btn mt-1 px-3 py-1 bg-gray-400 text-white text-sm rounded" data-i18n="lifeSyncFun.compatibility.startTest">Start Test</button>
+                    </div>
+                    <div class="p-3 bg-rose-50 rounded-lg shadow">
+                        <h3 class="text-md font-semibold text-rose-700" data-i18n="lifeSyncFun.compatibility.proverbs.title">African Proverbs Wisdom Match</h3>
+                        <p class="text-xs text-gray-600" data-i18n="lifeSyncFun.compatibility.proverbs.desc">Find wisdom in shared cultural understanding.</p>
+                        <button class="placeholder-test-btn mt-1 px-3 py-1 bg-gray-400 text-white text-sm rounded" data-i18n="lifeSyncFun.compatibility.startTest">Start Test</button>
+                    </div>
+                </div>
+                <div id="quizzes" class="sub-content">
+                    <p data-i18n="lifeSyncFun.quizzes.comingSoon">Relationship quizzes coming soon!</p>
+                </div>
+                <div id="reports" class="sub-content">
+                    <label for="reportPeriod" class="block text-sm font-medium" data-i18n="lifeSyncFun.reports.selectPeriod">Select Period:</label>
+                    <select id="reportPeriod" class="mt-1 block w-full rounded-md border-gray-300">
+                        <option value="last_3_months" data-i18n="lifeSyncFun.reports.periodLast3Months">Last 3 Months</option>
+                        <option value="all_time" data-i18n="lifeSyncFun.reports.periodAllTime">All Time</option>
+                    </select>
+                    <button id="generateReportBtn" class="mt-2 px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600" data-i18n="lifeSyncFun.reports.generate">Generate Report</button>
+                </div>
+            </section>
         </div>
-
-        <footer class="py-2 text-center text-xs fixed bottom-0 left-0 w-full" style="background-color: rgba(30, 10, 40, 0.85); border-top: 1px solid var(--border-color-lavender); color: var(--text-secondary-lavender); backdrop-filter: blur(6px);">
-             © <span id="currentYear"></span> Salatiso Lonwabo Mdeni - Father, OHS & Risk Expert, Author. All Rights Reserved. | <a href="#" class="hover:text-primary-light" style="color: var(--accent-teal-bright);">Privacy Policy</a> | <a href="#" class="hover:text-primary-light" style="color: var(--accent-teal-bright);">Terms of Service</a>
-        </footer>
     </div>
 
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeSettingsModal" style="color: var(--text-secondary-lavender);">×</span>
-            <h2 data-i18n="settingsModal.title">Couple Setup</h2>
-            <div class="space-y-3">
-                <div>
-                    <label for="name1Input" data-i18n="settingsModal.name1">Name 1:</label>
-                    <input type="text" id="name1Input" class="input-field !bg-[var(--bg-dark-purple)]" placeholder="Enter first name">
-                </div>
-                <div>
-                    <label for="name2Input" data-i18n="settingsModal.name2">Name 2:</label>
-                    <input type="text" id="name2Input" class="input-field !bg-[var(--bg-dark-purple)]" placeholder="Enter second name">
-                </div>
-                <button id="saveNamesButton" class="action-button secondary w-full" data-i18n="settingsModal.saveButton">Save Names</button>
+    <footer class="fixed bottom-0 left-0 w-full bg-gray-800 text-white text-center text-xs p-1 z-1000">
+        <p data-i18n="footer.copyright">&copy; 2025 Tee & Me. All Rights Reserved. Prototype V7.1</p>
+    </footer>
+
+    <div id="detailsModal" class="modal">
+        <div class="modal-content w-full md:w-2/3 lg:w-1/2">
+            <button class="modal-close" data-modal-id="detailsModal">&times;</button>
+            <h3 id="modalTitle" class="text-xl font-semibold text-pink-700 mb-3">Week Details</h3>
+            <div id="modalTimelineCarousel" class="carousel">
+                <div class="carousel-inner">
+                    </div>
+                <button class="carousel-control-prev text-pink-500"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-control-next text-pink-500"><i class="fas fa-chevron-right"></i></button>
             </div>
+            <p id="modalSummary" class="mt-3 text-sm text-gray-600"></p>
         </div>
     </div>
 
-    <div id="detailsModal" class="modal"><div class="modal-content"><span class="close-modal" id="closeDetailsModalBtn">×</span><h3 id="modalTitle" class="text-lg font-semibold mb-2"></h3><div id="modalBody" class="text-xs max-h-[65vh] overflow-y-auto"></div></div></div>
-    <div id="alertModal" class="modal"><div class="modal-content !max-w-sm"><span class="close-modal" id="closeAlertModalBtn">×</span><h3 id="alertModalTitle" class="text-base font-semibold mb-1.5"></h3><p id="alertModalMessage" class="mb-3 text-xs"></p><button id="alertModalOkBtn" class="action-button !py-1 !px-3">OK</button></div></div>
-    <div id="playlistModal" class="modal"><div class="modal-content"><span class="close-modal" id="closePlaylistModalBtnPopup">×</span><h3 data-i18n="playlist.title" class="text-lg font-semibold mb-2"></h3><iframe id="playlistFrame" width="100%" height="315" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe><p class="mt-1.5 text-xs" data-i18n="playlist.note"></p></div></div>
+    <div id="alertModal" class="modal">
+        <div class="modal-content w-auto max-w-sm">
+            <button class="modal-close" data-modal-id="alertModal">&times;</button>
+            <h4 id="alertModalTitle" class="text-lg font-semibold text-pink-700 mb-2">Notification</h4>
+            <p id="alertModalMessage" class="text-sm text-gray-700 mb-3"></p>
+            <button id="alertModalOk" class="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600 w-full" data-i18n="modal.ok">OK</button>
+        </div>
+    </div>
+    
+    <div id="playlistModal" class="modal">
+        <div class="modal-content w-full md:w-2/3 lg:w-1/2 p-1 aspect-video">
+             <button class="modal-close text-white bg-black/30 rounded-full w-8 h-8 flex items-center justify-center -top-2 -right-2" data-modal-id="playlistModal">&times;</button>
+            <iframe id="playlistFrame" class="w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
 
-    <button id="playlistButton" title="Our Playlist" class="text-lg fixed bottom-3 right-3 z-50 flex items-center justify-center w-11 h-11"> <i class="fas fa-music"></i> </button>
+    <button id="playlistFab" class="p-3 bg-pink-500 text-white rounded-full shadow-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-75">
+        <i class="fas fa-music fa-lg"></i>
+    </button>
 
     <script>
-        // --- Global State & Config ---
-        console.log("Us - Our Story v1.1 (LifeSync Design)");
-        let coupleName1 = "Person 1";
-        let coupleName2 = "Person 2";
-        let currentMainSection = 'overview';
-        let currentSubTargets = {
-            overview: null, 
-            analysis: 'analysis-tracking',
-            media: 'media-songs',
-            connect: 'connect-feedback',
-            lifesyncFun: 'fun-compatibility'
+        // Attempt to load translations from an external file
+        // In a real scenario, xh_translations.js would be in the same directory or specified path
+        const translationsScript = document.createElement('script');
+        translationsScript.src = 'xh_translations.js'; // This will likely 404 in this environment
+        translationsScript.onerror = function() {
+            console.warn('xh_translations.js not found. Using embedded fallback Xhosa translations.');
+            // If xh_translations.js is not found, i18next will use the 'xh' resources defined below if any.
+            // If no 'xh' resources are defined below, it will fallback to 'en'.
+            // For this demo, we will define a minimal xhosaTranslations object directly.
+            if (typeof window.xhosaTranslations === 'undefined') {
+                window.xhosaTranslations = { /* Minimal fallback if file fails and not defined below */
+                    siteTitle: "Tee & Mna - Ibali Lethu (Fallback)",
+                };
+            }
+            // Re-initialize i18next if it was already initialized without xhosa if needed,
+            // or ensure initialization happens after this potential load.
+            // For simplicity, we'll assume i18next init in initializeApp handles this.
         };
-        let dashboardMainChart, analysisTrackingChart; 
-        let overviewImageCarouselInterval;
-        let overviewImageCarouselCurrentIndex = 0;
-        let timelineInstance = null; // To store the TimelineJS instance
+        document.head.appendChild(translationsScript);
 
 
-        const relationshipData = { // This needs to be populated extensively by you from your documents
-            playlistUrl: "https://www.youtube.com/embed/playlist?list=YOUR_PLAYLIST_ID_HERE", // Replace with actual playlist
-            ourSpecialSongUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Placeholder
-            photoFileNames: [ 
-                "https://placehold.co/800x600/DB2777/FFFFFF?text=Our+Memory+1", 
-                "https://placehold.co/800x600/A855F7/FFFFFF?text=Special+Day+2", 
-                "https://placehold.co/800x600/2DD4BF/301934?text=Adventure+3",
-                "https://placehold.co/800x600/F59E0B/FFFFFF?text=Moment+4"
-            ],
-            weeks: [ 
+        const relationshipData = {
+            playlistUrl: "https://www.youtube.com/embed/playlist?list=PL4o29bINVT4EG_y-k5jGoOu3-Am8Nmmd2", // Example playlist
+            photoFileNames: Array.from({length: 12}, (_, i) => `photo${i + 1}.jpg`), // Assumes photo1.jpg to photo12.jpg in assets/photos/
+            weeks: [
                 {
-                    weekNumber: 1, startDate: "2024-05-20",
+                    weekNumber: 1, startDate: "2024-01-01", summaryKey: "week1Summary",
                     contributions: {
-                        affection: { salatiso: 7, tee: 8, notesKey: "timeline.week1.affectionNotes"},
-                        food: {salatisoActions:["Groceries (R300)"], teeActions:["Cooked Mon, Wed"], score:7, notesKey:"timeline.week1.foodNotes"},
-                        safety: {salatisoActions:["Locked up"], teeActions:["Checked stove"], score:9, notesKey:"timeline.week1.safetyNotes"},
-                        finances:{salatiso:300, tee:50, category:"Household", notesKey:"timeline.week1.financeNotes"},
-                        support: { salatiso: 6, tee: 7, notesKey: "timeline.week1.supportNotes" },
-                        communication: { salatiso: 8, tee: 8, notesKey: "timeline.week1.commNotes" }
+                        salatiso: { affection: 8, support: 7, communication: 9, food: 5, safety: 8, finances: 600, chores: 4, planning: 7, notesKey: "week1SalatisoNotes" },
+                        tee: { affection: 9, support: 8, communication: 8, food: 7, safety: 9, finances: 500, chores: 6, planning: 6, notesKey: "week1TeeNotes" }
                     },
-                    summaryKey: "timeline.week1.summary",
                     events: [
-                        {type:"event", date: "2024-05-22", headlineKey: "timeline.event1.headline", textKey: "timeline.event1.text", media: {url: relationshipData.photoFileNames[0] || ''}},
-                        {type:"music", date: "2024-05-23", headlineKey: "timeline.song1.headline", textKey: "timeline.song1.text", media: {url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", caption: "Our Song"}}
+                        { type: "event", textKey: "eventWeek1FirstDate", originalMessageKey: "originalMsgW1FD" },
+                        { type: "music", songTitle: "Perfect", artist: "Ed Sheeran", songUrl: "https://www.youtube.com/watch?v=2Vv-BfVoq4g", sharedBy: "Salatiso", textKey: "musicWeek1Salatiso" }
                     ]
                 },
-                { 
-                    weekNumber: 47, startDate: "2025-04-08", 
-                    contributions: { affection: { salatiso: 2, tee: 3 }, support: { salatiso: 4, tee: 4 }, finances: { salatiso: 8000, tee: 3000 }, conflict: { salatiso: 8, tee: 8 } },
-                    summaryKey: "timeline.week47.summary", 
-                    events: [ {type: "conflict", date: "2025-04-15", headlineKey: "timeline.conflict1.headline", textKey: "timeline.conflict1.text" } ]
-                }
-            ],
-            reinforcementWords: [ { wordActionKey: "reinforcement.words.safe", purposeKey: "reinforcement.purpose.reassurance", occurrences: { salatiso: [1], tee: [1,2], joint: [] } } ],
-            feedbackLog: [ { id: Date.now() + 1, sender: "Salatiso", recipient: "Tee", message: "Appreciated coffee!", timestamp: new Date(2024, 4, 21, 8, 0, 0).toISOString(), response: "You're welcome! ❤️", responseTimestamp: new Date(2024, 4, 21, 9, 30, 0).toISOString() } ],
-            actionLog: [ { id: Date.now() + 1, type: "apology", actor: "Salatiso", target: "Tee", message: "Sorry for being late.", timestamp: new Date(2024, 4, 22, 10, 0, 0).toISOString() } ],
-            travelLog: [ { id: 1, type: "visited", destinationKey: "travel.dest.durban", dates: "2023-07-10", roles: { salatisoKey: "travel.roles.durban.salatiso", teeKey: "travel.roles.durban.tee" }, highlightsKey: "travel.durban.highlights", photos: [relationshipData.photoFileNames[1] || ''] } ],
-            desiredTravel: [ { id: 1, destination: "Cape Town Wine Route", description: "Explore Stellenbosch", priority: "High" } ],
-            sharedSongs: [ { titleKey: "overview.songName_shaggy", artist: "Shaggy", sharedBy: "Salatiso", link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" } ]
-        };
-
-        // --- i18next Configuration ---
-        const translations = {
-            en: {
-                translation: { 
-                    siteTitle: "Us - Our Story", headerTitle: "Us - Our Story", langEN: "EN", langXH: "XH",
-                    navOverview: "Overview", navAnalysis: "Analysis Hub", navMedia: "Media & Travel", navConnect: "Connect & Resolve", navLifeSync: "Fun Zone",
-                    overview: { title: "Our Journey Snapshot", dashboardTitle: "Relationship Dashboard", affectionLevel: "Affection", supportScore: "Support", foodContribution: "Food Prep", safetyFeeling: "Safety", ourSong: "Our Song", songName_shaggy: "\"Thank You Baby!\"", listenToSong: "Listen", quickTimeline: "Recent Milestones" },
-                    tabTracking: "Tracking", tabContributions: "Contributions", tabReinforcement: "Reinforcement",
-                    tabSongs: "Shared Songs", tabPhotos: "Photo Moments", tabVisited: "Visited", tabDream: "Dream Trips",
-                    tabFeedback: "Feedback", tabActions: "Actions", tabLogs: "Logs",
-                    tabCompatibility: "Compatibility", tabQuizzes: "Quizzes", tabReports: "Reports",
-                    parameter: "Parameter", notes: "Details", wordAction: "Word/Action", purpose: "Purpose", joint: "Joint",
-                    person1NamePlaceholder: "Name 1", person2NamePlaceholder: "Name 2",
-                    feedbackPlaceholder: "Type feedback...", sendFeedback: "Send",
-                    makeApology: "Make Apology", apologyPlaceholder: "Apology message...", submitApology: "Submit",
-                    astrologyTitle: "Astrology Check", checkCompatibility: "Check", valuesAlignment: "Values Alignment", startTest: "Start",
-                    comingSoon: "Coming Soon!", last3Months: "Last 3 Months", allTime: "All Time", generateReport: "Generate", ok: "OK",
-                    footer: { text: "© 2025 Salatiso Lonwabo Mdeni - Father, OHS & Risk Expert, Author. All Rights Reserved." },
-                    settingsButton: "Setup",
-                    settingsModal: { title: "Couple Setup", name1: "Your Name:", name2: "Partner's Name:", saveButton: "Save Names", namesSaved: "Names saved!"},
-                    timeline: { 
-                        event1: { headline: "Group Created", text: "The 'Us' WhatsApp group was formed, marking a new chapter." }, 
-                        song1: { headline: "Shared Our Song", text: "Salatiso shared 'Thank You Baby!' as our special song." }, 
-                        conflict1: { headline: "Trip Discussion", text: "A significant disagreement arose concerning travel plans to the Eastern Cape."}, 
-                        week1: {summary: "Initial phase, lots of planning and affectionate communication.", affectionNotes: "Warm initial interactions.", foodNotes: "Shared cooking.", safetyNotes: "Established routines.", financeNotes: "Discussed shared expenses.", supportNotes: "Mutual support.", commNotes: "Good talks."}, 
-                        week47: {summary: "A period of conflict and eventual separation discussions."}, 
-                        noEvents: "No timeline events to display yet.",
-                        sharedSong: "{{sharer}} shared '{{song}}' by {{artist}}." // Example for dynamic event text
+                {
+                    weekNumber: 2, startDate: "2024-01-08", summaryKey: "week2Summary",
+                    contributions: {
+                        salatiso: { affection: 7, support: 8, communication: 7, food: 6, safety: 7, finances: 550, chores: 5, planning: 6, notesKey: "week2SalatisoNotes" },
+                        tee: { affection: 8, support: 9, communication: 9, food: 8, safety: 8, finances: 650, chores: 7, planning: 8, notesKey: "week2TeeNotes" }
                     },
-                    insights: { week1: { affection: "Great affection shown.", intimacy: "Opened up emotionally."} },
-                    tracking: { selectAspect: "Track:", affectionLevel: "Affection", supportScore: "Support", communicationFrequency: "Communication", foodContribution: "Food Prep", safetyFeeling: "Safety Score", financialTeamwork: "Finances", feedbackResponseTime: "Feedback Response", noResponseData: "No data for this metric." },
-                    contributions: { filterWeek: "Week:", table: { parameter: "Parameter", details: "Details" }, params: { food: "Food Prep", safety: "Safety & Security", chores: "Household Chores", planning: "Joint Planning", finances: "Financials", affection: "Affection", support: "Support", communication: "Communication" }, noDataForWeek: "No contribution data for this week.", noneReported: "N/A" },
-                    reinforcement: { table: { wordAction: "Word/Action", purpose: "Purpose", salatisoOccurrences: "Name 1 (Wks)", teeOccurrences: "Name 2 (Wks)", jointOccurrences: "Joint (Wks)"}, words: { safe: "'I'm safe'", loveYou: "'I love you'", helpRequest: "Help Request" }, purpose: { reassurance: "Reassurance", affection: "Affection", supportSeeking: "Support Seeking" }},
-                    mediaGallery: { sharedSongs: "Shared Songs", photoMoments: "Photo Moments", photoNote: "(Placeholder images)", noSongs: "No songs logged yet.", noPhotos: "No photos available." },
-                    travel: { visitedTitle: "Places We've Been", desiredTitle: "Our Dream Trips", rolesTitle: "Our Roles", highlightsTitle: "Highlights", noVisited: "No past travels logged.", noDesired: "No dream trips added yet.", dest: { durban: "Durban Beach Escape"}, roles: {durban: {salatiso: "Logistics & Fun Planner", tee: "Foodie & Vibe Curator"}}, durban: {highlights: "Morning beach walks, seafood, relaxing."} },
-                    relationshipActions: { titleShort: "Log Action", logTitleShort: "Action Log", title: "Connect & Resolve Actions", apology: { title: "Make an Apology", from: "From:", messagePlaceholder: "Your heartfelt apology...", sendButton: "Send Apology", success: "Apology sent and logged." }, noActionsYet: "No actions logged yet.", actionBy: "Action by {{name}}", actionType: "Type: {{type}}", actionDetails: "Details: {{details}}" },
-                    funtools: { quizzes: { title: "Fun Quizzes", placeholder:"Relationship quizzes coming soon!" }, astrology: { title: "Astrology Compatibility", name1Bday:"Name 1's Bday:", name2Bday:"Name 2's Bday:", checkButton: "Check Compatibility", invalidDate: "Invalid dates provided.", signIsA: "{{name}} is a", virgoTaurus: "Virgo & Taurus: Earthy and stable match!", general: "Explore your unique dynamic!" } },
-                    lifesync: { title: "LifeSync Integration", reportGen: "Generate LifeSync Report", last3Months: "Last 3 Months", allTime: "All Time", generateButton: "Generate", reportNote: "(Conceptual LifeSync report.)" },
-                    feedback: { title: "Feedback Channel", giveFeedback: "Give Feedback", sender: "From:", recipient: "To:", message: "Message:", sendButton: "Send Feedback", receivedFeedback: "Feedback Log", feedbackFrom: "From {{name}}", noFeedbackYet: "No feedback messages yet.", success: "Feedback sent.", senderRecipientSame: "Sender and recipient cannot be the same." },
-                    alert: { defaultTitle: "Notification", actionLogged: "Action Logged", fillAllFields: "Please fill all fields.", messageEmpty: "Message empty." },
-                    playlist: { title: "Our Playlist", note: "May open in new tab." }
+                    events: [
+                        { type: "event", textKey: "eventWeek2MovieNight", originalMessageKey: "originalMsgW2MN" },
+                        { type: "link", textKey: "linkWeek2Article", url: "https://www.example.com/article", sharedBy: "Tee" }
+                    ]
+                },
+                 {
+                    weekNumber: 3, startDate: "2024-01-15", summaryKey: "week3Summary",
+                    contributions: {
+                        salatiso: { affection: 9, support: 9, communication: 8, food: 7, safety: 9, finances: 700, chores: 6, planning: 8, notesKey: "week3SalatisoNotes" },
+                        tee: { affection: 9, support: 8, communication: 9, food: 7, safety: 9, finances: 750, chores: 7, planning: 7, notesKey: "week3TeeNotes" }
+                    },
+                    events: [
+                        { type: "event", textKey: "eventWeek3WeekendTrip", originalMessageKey: "originalMsgW3WT" },
+                        { type: "music", songTitle: "A Thousand Years", artist: "Christina Perri", songUrl: "https://www.youtube.com/watch?v=rtOvBOTyX00", sharedBy: "Joint", textKey: "musicWeek3Joint" }
+                    ]
+                },
+                {
+                    weekNumber: 4, startDate: "2024-01-22", summaryKey: "week4Summary",
+                     contributions: {
+                        salatiso: { affection: 8, support: 7, communication: 7, food: 5, safety: 8, finances: 620, chores: 5, planning: 6, notesKey: "week4SalatisoNotes" },
+                        tee: { affection: 7, support: 8, communication: 8, food: 6, safety: 7, finances: 580, chores: 6, planning: 7, notesKey: "week4TeeNotes" }
+                    },
+                    events: [ { type: "event", textKey: "eventWeek4QuietDinner", originalMessageKey: "originalMsgW4QD" } ]
                 }
+                // Add more weeks as needed for robust testing
+            ],
+            reinforcementWords: [
+                { wordKey: "reinforceThankYou", purposeKey: "purposeExpressGratitude", occurrences: { salatiso: [1, 3], tee: [1, 2, 4], joint: [] } },
+                { wordKey: "reinforceAppreciate", purposeKey: "purposeAcknowledgeEffort", occurrences: { salatiso: [2], tee: [3, 4], joint: [1] } },
+                { wordKey: "reinforceLoveYou", purposeKey: "purposeExpressAffection", occurrences: { salatiso: [1,2,3,4], tee: [1,2,3,4], joint: [] } },
+            ],
+            feedbackLog: [
+                { id: "fb1", sender: "Salatiso", recipient: "Tee", messageKey: "feedback1Initial", timestamp: "2024-01-10T10:00:00Z", status: "responded", responseTime: 3600000 }, // 1 hour
+                { id: "fb2", sender: "Tee", recipient: "Salatiso", messageKey: "feedback2Initial", timestamp: "2024-01-12T14:30:00Z", status: "pending", responseTime: null },
+            ],
+            actionLog: [
+                { id: "act1", actor: "Tee", actionTypeKey: "actionApology", detailsKey: "actionDetail1Initial", timestamp: "2024-01-15T14:00:00Z" },
+                { id: "act2", actor: "Salatiso", actionTypeKey: "actionBookDate", detailsKey: "actionDetail2Initial", date: "2024-01-20", timestamp: "2024-01-16T10:00:00Z" },
+            ],
+            travelLog: {
+                visited: [
+                    { id: "tv1", destinationKey: "destDrakensberg", dates: "2023-07-10 - 2023-07-15", roles: { salatisoKey: "rolePlanner", teeKey: "roleNavigator" }, highlightsKey: "drakensbergHighlights", photos: ["photo3.jpg", "photo4.jpg"] }
+                ],
+                dream: [
+                    { id: "td1", destinationKey: "destParis", notesKey: "parisDreamNotes" }, { id: "td2", destinationKey: "destKyoto", notesKey: "kyotoDreamNotes" }
+                ]
             },
-            xh: { translation: typeof xhosaTranslations !== 'undefined' ? xhosaTranslations : {} }
+            metricsMeta: { // For populating dropdowns and chart labels
+                affection: { labelKey: "metric.affection", unit: "/10" },
+                support: { labelKey: "metric.support", unit: "/10" },
+                communication: { labelKey: "metric.communication", unit: "/10" },
+                food: { labelKey: "metric.food", unit: "/10" },
+                safety: { labelKey: "metric.safety", unit: "/10" },
+                finances: { labelKey: "metric.finances", unit: " ZAR" }, // Assuming ZAR
+                chores: { labelKey: "metric.chores", unit: "/10" },
+                planning: { labelKey: "metric.planning", unit: "/10" },
+                feedbackResponseTime: { labelKey: "metric.feedbackResponse", unit: " hours"}
+            }
         };
 
-        // --- App Initialization ---
-        function initializeApp() {
-            console.log("Us - Our Story App Initializing...");
-            loadNames(); 
-            i18next.use(i18nextBrowserLanguageDetector).init({
-                debug: false, fallbackLng: 'en', resources: translations
-            }, (err, t) => {
-                if (err) { console.error("i18next initialization error:", err); return; }
-                
-                updateNavStickiness();
-                populateAllSelects(); 
-                setupEventListeners();
-                navigateToSection(currentMainSection); 
-                updateContentAll(); 
-                
-                document.getElementById('currentYear').textContent = new Date().getFullYear();
-                document.getElementById('ourSongLink').href = relationshipData.ourSpecialSongUrl;
-                document.getElementById('playlistFrame').src = relationshipData.playlistUrl;
+        const englishTranslations = {
+            siteTitle: "Tee & Me - Our Story",
+            nav: { overview: "Overview", analysisHub: "Analysis Hub", mediaTravelHub: "Media & Travel", connectResolve: "Connect & Resolve", lifeSyncFun: "LifeSync & Fun" },
+            overview: {
+                title: "Our Journey Snapshot", dashboard: "Dashboard", affectionLevel: "Affection Level", supportScore: "Support Score",
+                foodPrep: "Food Prep", safetySecurity: "Safety/Security", specialSong: "Our Special Song", listen: "Listen",
+                quickTimeline: "Quick Timeline", seeDetails: "See Details", imageCarousel: "Shared Moments", dashboardChartTitle: "Initial Weeks Metric Trend"
+            },
+            analysisHub: {
+                title: "Analysis Hub",
+                tracking: { title: "Tracking", selectMetric: "Select Metric:" },
+                contributions: { title: "Contributions", filterByWeek: "Filter by Week:", parameter: "Parameter", salatiso: "Salatiso", tee: "Tee", notes: "Notes" },
+                reinforcement: { title: "Reinforcement", wordAction: "Word/Action", purpose: "Purpose", occurrencesSalatiso: "Salatiso (Weeks)", occurrencesTee: "Tee (Weeks)", occurrencesJoint: "Joint (Weeks)" }
+            },
+            mediaTravelHub: {
+                title: "Media & Travel Hub",
+                sharedSongs: { title: "Shared Songs", sharedBy: "Shared by {{user}} in Week {{week}}", listen: "Listen" },
+                photoMoments: { title: "Photo Moments" },
+                visited: { title: "Visited Places", roles: "Roles:", highlights: "Highlights:", photos: "Photos:" },
+                dreamTrips: { title: "Dream Trips", notes: "Notes:" }
+            },
+            connectResolve: {
+                title: "Connect & Resolve",
+                feedback: { title: "Feedback", give: "Give Feedback", sender: "Sender", recipient: "Recipient", message: "Message", send: "Send Feedback", logTitle: "Feedback Log", acknowledged: "Acknowledged", acknowledge: "Acknowledge", respondedIn: "Responded in {{duration}}", pending: "Pending" },
+                actions: {
+                    title: "Actions",
+                    apology: { title: "Make an Apology", submit: "Submit Apology" },
+                    dissatisfaction: { title: "Express Dissatisfaction", submit: "Submit Concern" },
+                    bookDate: { title: "Book a Date", submit: "Propose Date", activity: "Activity", date: "Date" },
+                    termination: { title: "Initiate Relationship Termination", reason: "Reason", notes: "Notes", submit: "Initiate", reasonIrreconcilable: "Irreconcilable Differences", reasonGrowingApart: "Growing Apart", reasonOther: "Other (Specify)" }
+                },
+                logs: { title: "Logs", actionLogTitle: "Action Log" }
+            },
+            lifeSyncFun: {
+                title: "LifeSync & Fun",
+                compatibility: {
+                    title: "Compatibility",
+                    astrology: { title: "Astrology Compatibility", salatisoBday: "Salatiso's Birthday:", teeBday: "Tee's Birthday:", check: "Check Compatibility", result: "{{name1}} ({{zodiac1}}) & {{name2}} ({{zodiac2}}): {{compatibilityText}}" },
+                    values: { title: "Values Alignment", desc: "Discover how your core values align." },
+                    communication: { title: "Communication Styles", desc: "Understand your communication patterns." },
+                    proverbs: { title: "African Proverbs Wisdom Match", desc: "Find wisdom in shared cultural understanding." },
+                    startTest: "Start Test", comingSoon: "Coming Soon!"
+                },
+                quizzes: { title: "Quizzes", comingSoon: "Relationship quizzes coming soon!" },
+                reports: { title: "LifeSync Reports", selectPeriod: "Select Period:", generate: "Generate Report", periodLast3Months: "Last 3 Months", periodAllTime: "All Time", featureComingSoon: "Full report generation is a future feature!" }
+            },
+            weekSummaries: { // Corresponds to summaryKey in relationshipData.weeks
+                week1Summary: "Our exciting first week!", week2Summary: "Getting to know each other more.", week3Summary: "First little adventure.", week4Summary: "Settling into a rhythm."
+            },
+            weekNotes: {
+                week1SalatisoNotes: "Felt a real spark.", week1TeeNotes: "Very hopeful and happy.",
+                week2SalatisoNotes: "Good conversations.", week2TeeNotes: "Enjoying the company.",
+                week3SalatisoNotes: "The trip was amazing!", week3TeeNotes: "Made some great memories.",
+                week4SalatisoNotes: "Comfortable and content.", week4TeeNotes: "Feeling secure."
+            },
+            eventTexts: { // Corresponds to textKey in relationshipData.events
+                eventWeek1FirstDate: "Our memorable first date.", musicWeek1Salatiso: "Salatiso shared 'Perfect'.",
+                eventWeek2MovieNight: "Cozy movie night in.", linkWeek2Article: "Tee shared an interesting article.",
+                eventWeek3WeekendTrip: "Spontaneous weekend trip!", musicWeek3Joint: "We both loved 'A Thousand Years'.",
+                eventWeek4QuietDinner: "A lovely quiet dinner at home."
+            },
+            originalMessages: { // Corresponds to originalMessageKey
+                originalMsgW1FD: "Salatiso: 'Tonight was amazing, Tee. Can't wait to see you again.' Tee: 'You too, Salatiso! I had a wonderful time.'",
+                originalMsgW2MN: "Tee: 'Movie night at my place? I'll get snacks!' Salatiso: 'Sounds perfect!'",
+                originalMsgW3WT: "Salatiso: 'Pack your bags, we're going on an adventure this weekend!' Tee: 'OMG, where?! So excited!'",
+                originalMsgW4QD: "Tee: 'Just a simple, lovely dinner tonight. Thanks for cooking, Salatiso.' Salatiso: 'My pleasure, Tee.'"
+            },
+            reinforcement: {
+                reinforceThankYou: "Saying 'Thank You'", purposeExpressGratitude: "To express gratitude and appreciation.",
+                reinforceAppreciate: "Using 'I appreciate...'", purposeAcknowledgeEffort: "To acknowledge specific efforts or qualities.",
+                reinforceLoveYou: "Saying 'I love you'", purposeExpressAffection: "To affirm love and affection."
+            },
+            feedbackMessages: { // Corresponds to messageKey in relationshipData.feedbackLog
+                feedback1Initial: "I felt a bit unheard yesterday during our discussion about weekend plans.",
+                feedback2Initial: "Thank you for taking out the trash without me asking! I really appreciate it."
+            },
+            actionDetails: { // Corresponds to detailsKey in relationshipData.actionLog
+                actionDetail1Initial: "For being late to our coffee meeting. Work ran over, but I should have managed my time better.",
+                actionDetail2Initial: "Proposed a picnic at the botanical gardens for Saturday."
+            },
+            actionTypes: {
+                actionApology: "Apology", actionExpressDissatisfaction: "Expressed Dissatisfaction", actionBookDate: "Booked a Date", actionTerminate: "Initiated Termination"
+            },
+            travel: {
+                destDrakensberg: "Drakensberg Mountains", destParis: "Paris, France", destKyoto: "Kyoto, Japan",
+                rolePlanner: "Planner", roleNavigator: "Navigator", rolePhotographer: "Photographer",
+                drakensbergHighlights: "Amazing hikes, breathtaking views, cozy evenings by the fire.",
+                parisDreamNotes: "Romantic walks, Eiffel Tower, Louvre, delicious pastries.",
+                kyotoDreamNotes: "Temples, gardens, traditional culture, cherry blossoms."
+            },
+            metrics: relationshipData.metricsMeta, // Reuse for consistency
+            modal: { ok: "OK", detailsTitle: "Week {{weekNumber}} Details" },
+            footer: { copyright: "&copy; 2025 Tee & Me. All Rights Reserved. Prototype V7.1" },
+            general: {
+                salatiso: "Salatiso", tee: "Tee", joint: "Joint/Unspecified",
+                error: "Error", success: "Success",
+                actionLogged: "Action logged successfully.",
+                feedbackSent: "Feedback sent successfully.",
+                feedbackAcknowledged: "Feedback acknowledged."
+            }
+        };
 
-                updateDynamicNameDisplays();
-                initializeTimeline(); // Initialize TimelineJS after i18next and data are ready
-                console.log("Us - Our Story App Initialized & Ready.");
+        // Embedded Xhosa translations (minimal, as xh_translations.js might not load)
+        // In a real setup, xh_translations.js would contain the full object.
+        if (typeof window.xhosaTranslations === 'undefined') {
+            window.xhosaTranslations = {
+                siteTitle: "Tee & Mna - Ibali Lethu",
+                nav: { overview: "Isishwankathelo", analysisHub: "Iziko LoHlalutyo", mediaTravelHub: "Ezosasazo NoHambo", connectResolve: "Qhagamshela & Sombulula", lifeSyncFun: "LifeSync & Ukonwaba" },
+                overview: { title: "Imbonakalo Yohambo Lwethu", dashboard: "Ideshibhodi", affectionLevel: "Iqondo Lothando", specialSong: "Ingoma Yethu Ekhethekileyo", listen: "Mamela" },
+                weekSummaries: { week1Summary: "Iveki yethu yokuqala eyonwabisayo!", week2Summary: "Sisazana ngakumbi." },
+                eventTexts: { eventWeek1FirstDate: "Umhla wethu wokuqala ongenakulibaleka." },
+                modal: { ok: "Kulungile", detailsTitle: "Iinkcukacha Zeveki {{weekNumber}}" },
+                footer: { copyright: "&copy; 2025 Tee & Mna. Onke Amalungelo Agciniwe. Umzekelo V7.1" },
+                general: { salatiso: "uSalatiso", tee: "uTee" }
+                // Add more essential translations here if xh_translations.js is expected to fail often
+            };
+        }
+
+
+        let i18nInstance;
+        let currentLanguage = 'en';
+        let dashboardChartInstance, trackingChartInstance;
+
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        function initializeApp() {
+            console.log("App Initializing...");
+            setupI18Next();
+            adjustLayout();
+            window.addEventListener('resize', adjustLayout);
+            
+            setupNavigation();
+            setupSubNavigation();
+            setupModals();
+            setupCarousels();
+            populateAllSelects();
+
+            renderOverviewSection();
+            renderAnalysisHub(); // Initial render for default views
+            renderMediaTravelHub();
+            renderConnectResolveHub();
+            renderLifeSyncFunHub();
+            
+            setupActionForms();
+            setupCompatibilityTools();
+            setupPlaylistFab();
+
+            document.querySelectorAll('.placeholder-test-btn').forEach(btn => {
+                btn.addEventListener('click', () => showCustomAlert(i18nInstance.t('lifeSyncFun.compatibility.comingSoon')));
+            });
+            document.getElementById('generateReportBtn').addEventListener('click', () => {
+                showCustomAlert(i18nInstance.t('lifeSyncFun.reports.featureComingSoon'));
+            });
+
+            console.log("App Initialized Successfully.");
+        }
+
+        function setupI18Next() {
+            i18nInstance = i18next
+                .use(i18nextBrowserLanguageDetector)
+                .init({
+                    debug: true,
+                    fallbackLng: 'en',
+                    resources: {
+                        en: { translation: englishTranslations },
+                        xh: { translation: window.xhosaTranslations || englishTranslations } // Fallback to English if xhosa not loaded
+                    }
+                }, (err, t) => {
+                    if (err) return console.error('i18next initialization failed', err);
+                    currentLanguage = i18nInstance.language.startsWith('xh') ? 'xh' : 'en';
+                    updateContentAll();
+                    updateLanguageSwitcher();
+                    // After i18n is ready, populate dynamic elements that depend on translations
+                    populateAllSelects(); // Repopulate selects with translated labels
+                    renderAllDynamicContent(); // Re-render content that might use translated keys
+                });
+
+            document.querySelectorAll('.lang-switcher').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const lang = e.target.dataset.lang;
+                    i18nInstance.changeLanguage(lang, (err, t) => {
+                        if (err) return console.error('something went wrong loading', err);
+                        currentLanguage = lang;
+                        updateContentAll();
+                        updateLanguageSwitcher();
+                        populateAllSelects(); // Repopulate selects with translated labels
+                        renderAllDynamicContent();
+                    });
+                });
+            });
+        }
+        
+        function renderAllDynamicContent() {
+            // Call all main render functions again to update with new language
+            renderOverviewSection();
+            renderAnalysisHub(true); // Pass a flag to re-render charts if necessary
+            renderMediaTravelHub();
+            renderConnectResolveHub();
+            // LifeSyncFunHub might not need full re-render if static text is handled by updateContentAll
+        }
+
+
+        function updateLanguageSwitcher() {
+            document.querySelectorAll('.lang-switcher').forEach(btn => {
+                btn.classList.toggle('font-bold', btn.dataset.lang === currentLanguage);
+                btn.classList.toggle('bg-white/50', btn.dataset.lang === currentLanguage);
+                btn.classList.toggle('bg-white/30', btn.dataset.lang !== currentLanguage);
             });
         }
 
-        function updateNavStickiness() {
-            const header = document.getElementById('appHeader');
-            const nav = document.getElementById('mainNav');
-            const contentWrapper = document.getElementById('contentAreaWrapper');
-            if (header && nav && contentWrapper) {
-                const headerHeight = header.offsetHeight;
-                const navHeight = nav.offsetHeight;
-                nav.style.top = `${headerHeight}px`;
-                contentWrapper.style.paddingTop = `${headerHeight + navHeight}px`;
+        function updateContentAll() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                // Basic interpolation for {{var}} style placeholders
+                let translatedText = i18nInstance.t(key);
+                const placeholders = el.dataset.i18nOptions ? JSON.parse(el.dataset.i18nOptions) : {};
+                for (const pKey in placeholders) {
+                    translatedText = translatedText.replace(`{{${pKey}}}`, placeholders[pKey]);
+                }
+                el.innerHTML = translatedText; // Using innerHTML for FontAwesome icons, be cautious with user-generated content
+            });
+             // Update chart titles if they exist and depend on i18n
+            if (dashboardChartInstance) {
+                dashboardChartInstance.options.plugins.title.text = i18nInstance.t('overview.dashboardChartTitle');
+                dashboardChartInstance.update();
+            }
+            if (trackingChartInstance) {
+                const selectedMetricKey = document.getElementById('trackingMetricSelect').value;
+                if (selectedMetricKey && relationshipData.metricsMeta[selectedMetricKey]) {
+                     trackingChartInstance.options.plugins.title.text = i18nInstance.t(relationshipData.metricsMeta[selectedMetricKey].labelKey);
+                     trackingChartInstance.update();
+                }
             }
         }
-        
-        function loadNames() {
-            coupleName1 = localStorage.getItem('usWebsiteCoupleName1') || "Person 1"; // Changed localStorage key
-            coupleName2 = localStorage.getItem('usWebsiteCoupleName2') || "Person 2"; // Changed localStorage key
-            const name1Input = document.getElementById('name1Input');
-            const name2Input = document.getElementById('name2Input');
-            if (name1Input) name1Input.value = coupleName1 === "Person 1" ? "" : coupleName1;
-            if (name2Input) name2Input.value = coupleName2 === "Person 2" ? "" : coupleName2;
+
+        function adjustLayout() {
+            const header = document.querySelector('header');
+            const nav = document.querySelector('nav.main-nav');
+            const footer = document.querySelector('footer');
+            const contentAreaWrapper = document.querySelector('.content-area-wrapper');
+
+            if (!header || !nav || !footer || !contentAreaWrapper) {
+                console.error("Layout elements not found for adjustment.");
+                return;
+            }
+
+            const headerHeight = header.offsetHeight;
+            const navHeight = nav.offsetHeight;
+            const footerHeight = footer.offsetHeight;
+
+            nav.style.top = `${headerHeight}px`;
+            contentAreaWrapper.style.paddingTop = `${headerHeight + navHeight}px`;
+            contentAreaWrapper.style.paddingBottom = `${footerHeight}px`;
+            contentAreaWrapper.style.height = `100vh`;
         }
 
-        function saveNames() {
-            const newName1 = document.getElementById('name1Input').value.trim();
-            const newName2 = document.getElementById('name2Input').value.trim();
-            coupleName1 = newName1 || "Person 1";
-            coupleName2 = newName2 || "Person 2";
-            localStorage.setItem('usWebsiteCoupleName1', coupleName1); // Changed localStorage key
-            localStorage.setItem('usWebsiteCoupleName2', coupleName2); // Changed localStorage key
-            showAlert(i18next.t('settingsModal.namesSaved'));
-            document.getElementById('settingsModal').style.display = 'none';
-            updateDynamicNameDisplays();
-            renderActiveSectionContent(); 
-        }
-        
-        function updateDynamicNameDisplays() {
-            document.querySelectorAll('[data-dynamic-name1]').forEach(el => el.textContent = coupleName1);
-            document.querySelectorAll('[data-dynamic-name2]').forEach(el => el.textContent = coupleName2);
-
-            const contName1Header = document.getElementById('contributionsName1Header');
-            const contName2Header = document.getElementById('contributionsName2Header');
-            if(contName1Header) contName1Header.textContent = coupleName1;
-            if(contName2Header) contName2Header.textContent = coupleName2;
-
-            const reinName1Header = document.getElementById('reinforcementName1Header');
-            const reinName2Header = document.getElementById('reinforcementName2Header');
-            if(reinName1Header) reinName1Header.textContent = `${coupleName1} (Wks)`;
-            if(reinName2Header) reinName2Header.textContent = `${coupleName2} (Wks)`;
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
             
-            const name1BdayLabel = document.getElementById('name1BirthdayLabel');
-            const name2BdayLabel = document.getElementById('name2BirthdayLabel');
-            if(name1BdayLabel) name1BdayLabel.textContent = `${coupleName1}'s Bday:`;
-            if(name2BdayLabel) name2BdayLabel.textContent = `${coupleName2}'s Bday:`;
+            // Set initial active link
+            const initialActiveLink = document.querySelector('.nav-link[data-section="overview"]');
+            if (initialActiveLink) initialActiveLink.classList.add('bg-white/20', 'font-semibold');
 
-            updateFeedbackNameOptions();
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const targetSectionId = link.dataset.section;
+
+                    navLinks.forEach(l => l.classList.remove('bg-white/20', 'font-semibold'));
+                    link.classList.add('bg-white/20', 'font-semibold');
+
+                    sections.forEach(section => {
+                        if (section.id === targetSectionId) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                    // If navigating to a section with sub-tabs, ensure the first sub-tab is active
+                    const targetSectionEl = document.getElementById(targetSectionId);
+                    if (targetSectionEl) {
+                        const firstSubNavTab = targetSectionEl.querySelector('.sub-nav-tab');
+                        if (firstSubNavTab) {
+                            // Deactivate all sub-tabs in this section first
+                            targetSectionEl.querySelectorAll('.sub-nav-tab').forEach(t => t.classList.remove('active'));
+                            targetSectionEl.querySelectorAll('.sub-content').forEach(sc => sc.classList.remove('active'));
+                            // Activate the first one
+                            firstSubNavTab.classList.add('active');
+                            const firstSubContentId = firstSubNavTab.dataset.subtarget;
+                            const firstSubContentEl = targetSectionEl.querySelector(`.sub-content#${firstSubContentId}`);
+                            if (firstSubContentEl) firstSubContentEl.classList.add('active');
+                        }
+                    }
+                });
+            });
+        }
+
+        function setupSubNavigation() {
+            document.querySelectorAll('.content-section').forEach(section => {
+                const subNavTabs = section.querySelectorAll('.sub-nav-tab');
+                const subContents = section.querySelectorAll('.sub-content');
+
+                subNavTabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const subTargetId = tab.dataset.subtarget;
+                        subNavTabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+
+                        subContents.forEach(content => {
+                            content.classList.toggle('active', content.id === subTargetId);
+                        });
+                    });
+                });
+            });
+        }
+
+        function setupModals() {
+            document.querySelectorAll('.modal-close, .modal').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target === el || el.classList.contains('modal-close')) { // Close if backdrop or close button clicked
+                        const modalId = el.dataset.modalId || el.closest('.modal').id;
+                        if (modalId) {
+                            const modal = document.getElementById(modalId);
+                            if (modal) modal.style.display = 'none';
+                            if (modalId === 'playlistModal') { // Stop video when closing playlist
+                                const iframe = document.getElementById('playlistFrame');
+                                if (iframe) iframe.src = iframe.src; // Resets the iframe
+                            }
+                        }
+                    }
+                });
+            });
+            document.getElementById('alertModalOk').addEventListener('click', () => {
+                document.getElementById('alertModal').style.display = 'none';
+            });
         }
         
-        function updateFeedbackNameOptions() {
-            const nameMap = { "Salatiso": coupleName1, "Tee": coupleName2 };
-            ['feedbackSender', 'feedbackRecipient', 'apologyFrom', 'dissatisfactionFrom', 'dateBooker', 'terminator'].forEach(selectId => {
-                const select = document.getElementById(selectId);
-                if (select) {
-                    Array.from(select.options).forEach(option => {
-                        if (nameMap[option.value]) { // Check if the original value ("Salatiso" or "Tee") exists in map
-                            option.textContent = nameMap[option.value]; // Update displayed text
-                        } else if (option.value === coupleName1 || option.value === coupleName2) {
-                            // If option value is already a dynamic name, ensure its text matches (e.g. after lang change)
-                            // This part might be redundant if populateSelectWithOptions handles it well with i18n
+        function showCustomAlert(message, title = i18nInstance.t('general.notification') || "Notification") {
+            document.getElementById('alertModalTitle').textContent = title;
+            document.getElementById('alertModalMessage').textContent = message;
+            document.getElementById('alertModal').style.display = 'flex';
+        }
+
+        function setupCarousels() {
+            document.querySelectorAll('.carousel').forEach(carousel => {
+                const inner = carousel.querySelector('.carousel-inner');
+                const prevButton = carousel.querySelector('.carousel-control-prev');
+                const nextButton = carousel.querySelector('.carousel-control-next');
+                let currentIndex = 0;
+                let items; // Will be populated when content is rendered
+
+                function updateCarousel() {
+                    items = inner.querySelectorAll('.carousel-item'); // Re-query items
+                    if (!items || items.length === 0) return;
+                    const itemWidth = items[0].offsetWidth + parseFloat(getComputedStyle(items[0]).marginRight) + parseFloat(getComputedStyle(items[0]).marginLeft);
+                    
+                    // For multi-item carousels like QuickTimeline
+                    if (carousel.id === 'quickTimelineCarousel') {
+                         const visibleItems = Math.floor(carousel.offsetWidth / itemWidth);
+                         const maxIndex = Math.max(0, items.length - visibleItems);
+                         currentIndex = Math.min(currentIndex, maxIndex);
+                         currentIndex = Math.max(0, currentIndex);
+                         inner.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+
+                    } else { // For single full-width item carousels
+                        inner.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    }
+
+                    if (prevButton) prevButton.disabled = currentIndex === 0;
+                    if (nextButton) {
+                        if (carousel.id === 'quickTimelineCarousel') {
+                            const visibleItems = Math.floor(carousel.offsetWidth / itemWidth);
+                            nextButton.disabled = currentIndex >= items.length - visibleItems;
+                        } else {
+                            nextButton.disabled = currentIndex === items.length - 1;
+                        }
+                    }
+                }
+                
+                carousel.updateCarouselItems = updateCarousel; // Expose update function
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        if (currentIndex > 0) {
+                            currentIndex--;
+                            updateCarousel();
                         }
                     });
                 }
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        items = inner.querySelectorAll('.carousel-item'); // Re-query items
+                        if (!items || items.length === 0) return;
+                        
+                        if (carousel.id === 'quickTimelineCarousel') {
+                            const itemWidth = items[0].offsetWidth + parseFloat(getComputedStyle(items[0]).marginRight) + parseFloat(getComputedStyle(items[0]).marginLeft);
+                            const visibleItems = Math.floor(carousel.offsetWidth / itemWidth);
+                            if (currentIndex < items.length - visibleItems) {
+                                currentIndex++;
+                            }
+                        } else {
+                             if (currentIndex < items.length - 1) {
+                                currentIndex++;
+                            }
+                        }
+                        updateCarousel();
+                    });
+                }
+                // Initial setup
+                // updateCarousel(); // Call this after items are populated
+                // window.addEventListener('resize', updateCarousel); // Add resize listener if needed for responsive item widths
             });
         }
-
-
+        
         function populateAllSelects() {
-            const trackingMetrics = { affection: "tracking.affectionLevel", support: "tracking.supportScore", communication: "tracking.communicationFrequency", food: "tracking.foodContribution", safety: "tracking.safetyFeeling", finances: "tracking.financialTeamwork", feedbackResponse: "tracking.feedbackResponseTime" };
-            populateSelectWithOptions('trackingMetricSelect', trackingMetrics);
-            populateSelectWithOptions('dashboardMetricSelect', trackingMetrics);
-
-            const weekOptions = relationshipData.weeks.reduce((acc, week) => {
-                acc[week.weekNumber] = `Week ${week.weekNumber} (${week.startDate})`;
-                return acc;
-            }, {});
-            populateSelectWithOptions('contributionFilterWeek', weekOptions, false);
-
-            const peopleValues = { "Salatiso": coupleName1, "Tee": coupleName2 }; 
-            ['feedbackSender', 'feedbackRecipient', 'apologyFrom', 'dissatisfactionFrom', 'dateBooker', 'terminator'].forEach(id => {
-                const select = document.getElementById(id);
-                if(select){
-                    select.innerHTML = ''; // Clear first
-                    Object.keys(peopleValues).forEach(originalName => {
-                        const option = document.createElement('option');
-                        option.value = originalName; // Store original key for data consistency
-                        option.textContent = peopleValues[originalName]; // Display current dynamic name
-                        select.appendChild(option);
-                    });
-                }
-            });
-            
-            const terminationReasons = { irreconcilable: "relationshipActions.terminate.reasons.irreconcilable", communication: "relationshipActions.terminate.reasons.communication", paths: "relationshipActions.terminate.reasons.paths", other: "relationshipActions.terminate.reasons.other" };
-            populateSelectWithOptions('terminationReason', terminationReasons);
-            
-            const lifesyncPeriods = { last3Months: "lifesync.last3Months", allTime: "allTime" };
-            populateSelectWithOptions('lifesyncPeriodSelect', lifesyncPeriods);
-
-            const reportMetricsOptions = { affection: "overview.affectionLevel", support: "overview.supportScore", finances: "overview.foodContribution", conflict: "overview.safetyFeeling" };
-            populateSelectWithOptions('reportMetrics', reportMetricsOptions, true, true); 
-        }
-        
-        function initializeTimeline() {
-            const timelineContainer = document.getElementById('overviewTimelineContainer');
-            if (!timelineContainer) { console.error("Timeline container not found."); return; }
-
-            // Clear previous timeline instance if it exists
-            if (timelineInstance && typeof timelineInstance.destroy === 'function') {
-                // TimelineJS doesn't have a standard destroy. We might need to clear HTML and nullify.
-                timelineContainer.innerHTML = ''; 
+            // Tracking Metric Select
+            const trackingMetricSelect = document.getElementById('trackingMetricSelect');
+            if (trackingMetricSelect) {
+                trackingMetricSelect.innerHTML = ''; // Clear existing
+                Object.keys(relationshipData.metricsMeta).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = i18nInstance.t(relationshipData.metricsMeta[key].labelKey);
+                    trackingMetricSelect.appendChild(option);
+                });
+                trackingMetricSelect.addEventListener('change', () => updateTrackingChart());
             }
-            timelineInstance = null; // Reset instance
 
-            const eventsForTimeline = relationshipData.weeks.flatMap(week => 
-                (week.events || []).map(event => {
-                    const titleText = i18next.t(event.headlineKey || (event.type === 'music' ? 'timeline.song1.headline' : 'timeline.event1.headline'), { 
-                        song: i18next.t(event.songTitleKey || event.songTitle || "A Song"), 
-                        artist: event.artist || "Unknown Artist", 
-                        sharer: (event.sharedBy === "Salatiso" ? coupleName1 : (event.sharedBy === "Tee" ? coupleName2 : event.sharedBy)), 
-                        defaultValue: event.headlineKey || "Event" 
-                    });
-                    const eventTextContent = i18next.t(event.textKey || (event.type === 'music' ? 'timeline.song1.text' : 'timeline.event1.text'), { 
-                        song: i18next.t(event.songTitleKey || event.songTitle || "A Song"), 
-                        artist: event.artist || "Unknown Artist", 
-                        sharer: (event.sharedBy === "Salatiso" ? coupleName1 : (event.sharedBy === "Tee" ? coupleName2 : event.sharedBy)), 
-                        defaultValue: event.textKey || "Details for this event."
-                    });
-                    
-                    return {
-                        start_date: {
-                            year: new Date(event.date || week.startDate).getFullYear(),
-                            month: new Date(event.date || week.startDate).getMonth() + 1,
-                            day: new Date(event.date || week.startDate).getDate()
-                        },
-                        text: { headline: titleText, text: eventTextContent },
-                        media: event.media ? { url: event.media.url || '', caption: event.media.caption || '' } : undefined,
-                        group: i18next.t(week.summaryKey, {defaultValue: `Week ${week.weekNumber}`})
-                    };
-                })
-            ).sort((a,b) => (a.start_date.year * 10000 + a.start_date.month * 100 + a.start_date.day) - (b.start_date.year * 10000 + b.start_date.month * 100 + b.start_date.day));
-
-            if (eventsForTimeline.length > 0) {
-                const timeline_options = {
-                    font: 'Poppins', initial_zoom: 2, timenav_position: 'bottom',
-                    hash_bookmark: false, height: 120, // Adjusted height for compact timeline
-                    language: i18next.language.substring(0,2) || 'en',
-                    ga_property_id: null, // Disable Google Analytics
-                    debug: false,
-                    scale_factor: 1 // Adjust for better fit if needed
-                };
-                
-                timelineContainer.innerHTML = '<div id="timeline-embed" style="width: 100%; height: 100%;"></div>';
-                if(typeof TL !== 'undefined' && typeof TL.Timeline === 'function'){
-                   try {
-                     timelineInstance = new TL.Timeline('timeline-embed', { events: eventsForTimeline }, timeline_options);
-                   } catch(e){ 
-                       console.error("TimelineJS instantiation error:", e); 
-                       timelineContainer.innerHTML = '<p class="text-center text-xs text-[var(--text-secondary-lavender)]">Error loading timeline.</p>';
-                   }
-                } else {
-                    console.warn("TimelineJS (TL) not loaded or TL.Timeline is not a function.");
-                    timelineContainer.innerHTML = '<p class="text-center text-xs text-[var(--text-secondary-lavender)]">Timeline library could not be loaded.</p>';
-                }
-            } else {
-                timelineContainer.innerHTML = `<p class="text-center text-xs text-[var(--text-secondary-lavender)]">${i18next.t('timeline.noEvents')}</p>`;
+            // Contribution Filter Week Select
+            const contributionFilterWeek = document.getElementById('contributionFilterWeek');
+            if (contributionFilterWeek) {
+                contributionFilterWeek.innerHTML = ''; // Clear existing
+                relationshipData.weeks.forEach(week => {
+                    const option = document.createElement('option');
+                    option.value = week.weekNumber;
+                    option.textContent = `${i18nInstance.t('general.week') || 'Week'} ${week.weekNumber} (${week.startDate})`;
+                    contributionFilterWeek.appendChild(option);
+                });
+                contributionFilterWeek.addEventListener('change', () => renderContributionsTable());
             }
         }
 
-        function navigateToSection(sectionId) { 
-            currentMainSection = sectionId;
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            const activeSection = document.getElementById(sectionId);
-            if(activeSection) {
-                activeSection.classList.add('active');
-            } else {
-                console.warn(`Section with ID '${sectionId}' not found.`);
-                return;
-            }
+        function renderOverviewSection() {
+            // Metrics - simplified for now, can be calculated averages later
+            // document.getElementById('metricAffection').textContent = '8.5/10'; // Example
+            // ...
 
-            document.querySelectorAll('#mainNav .nav-tab').forEach(btn => {
-                btn.classList.toggle('active-nav', btn.dataset.section === sectionId);
-            });
-            
-            const activeSectionElement = document.getElementById(sectionId);
-            const firstSubNavTab = activeSectionElement?.querySelector('.sub-nav-tab');
-            if (firstSubNavTab) { 
-                navigateToSubSection(sectionId, currentSubTargets[sectionId] || firstSubNavTab.dataset.subtarget, true);
-            } else { 
-                renderActiveSectionContent(); 
-            }
-        }
-        function navigateToSubSection(mainSectionId, subTargetId, isInitialSectionLoad = false) { 
-            currentSubTargets[mainSectionId] = subTargetId;
-            const mainSectionElement = document.getElementById(mainSectionId);
-            mainSectionElement?.querySelectorAll('.sub-nav-tab').forEach(tab => tab.classList.toggle('active-sub-nav', tab.dataset.subtarget === subTargetId));
-            mainSectionElement?.querySelectorAll('.sub-content').forEach(content => content.classList.toggle('active-sub-content', content.id === subTargetId));
-            
-            if (!isInitialSectionLoad) renderActiveSectionContent();
+            renderOverviewTimelineCarousel();
+            renderOverviewImageCarousel();
+            updateDashboardChart();
         }
 
-        function renderActiveSectionContent() { 
-            console.log(`Rendering main: ${currentMainSection}, sub: ${currentSubTargets[currentMainSection]}`);
-            switch (currentMainSection) {
-                case 'overview': renderOverviewSection(); break;
-                case 'analysis': renderAnalysisHubSection(); break;
-                case 'media': renderMediaTravelHubSection(); break;
-                case 'connect': renderConnectResolveSection(); break;
-                case 'lifesyncFun': renderLifesyncFunSection(); break;
-            }
-             // updateContentAll(); // Removed from here to prevent loops. i18next.on('languageChanged') handles it.
-        }
-        
-        function renderOverviewSection() { 
-            updateDashboardMetrics(); 
-            updateDashboardChart(); 
-            renderOverviewImageCarousel(); 
-            startOverviewImageCarousel();
-            // TimelineJS is initialized once in initializeApp and on language change.
-            // If you need to refresh it more often, call initializeTimeline() here too,
-            // but ensure it handles re-initialization gracefully (e.g., by clearing previous instance).
-        }
-        
-        function updateDashboardMetrics() { /* ... (same) ... */
-             const latestWeek = relationshipData.weeks.length > 0 ? relationshipData.weeks[relationshipData.weeks.length - 1] : null;
-            const getScore = (metric) => {
-                if (latestWeek && latestWeek.contributions && latestWeek.contributions[metric]) {
-                    const p1Score = latestWeek.contributions[metric].salatiso || 0;
-                    const p2Score = latestWeek.contributions[metric].tee || 0;
-                    if (p1Score === undefined && p2Score === undefined && latestWeek.contributions[metric].score !== undefined) { // Handle cases like food/safety with a single score
-                        return `${latestWeek.contributions[metric].score}/10`;
-                    }
-                    return ((p1Score + p2Score) / 2).toFixed(1) + "/10";
-                }
-                return '--';
-            };
-            
-            document.getElementById('affection-metric').textContent = getScore('affection');
-            document.getElementById('support-metric').textContent = getScore('support');
-            document.getElementById('food-metric').textContent = getScore('food');
-            document.getElementById('safety-metric').textContent = getScore('safety');
-        }
-        function renderOverviewImageCarousel() { /* ... (same) ... */
-            const container = document.getElementById('overviewImageCarousel');
-            if (!container) { console.error("overviewImageCarousel element not found"); return; }
-            container.innerHTML = ''; 
-            if (!relationshipData.photoFileNames || relationshipData.photoFileNames.length === 0) {
-                container.innerHTML = `<div class="flex items-center justify-center h-full text-gray-400 text-sm">${i18next.t('mediaGallery.noPhotos')}</div>`;
-                return;
-            }
-            relationshipData.photoFileNames.forEach((fileName, index) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'carousel-item absolute top-0 left-0 w-full h-full opacity-0 transition-opacity duration-1000 ease-in-out';
-                itemDiv.innerHTML = `<img src="${fileName}" alt="Overview Image ${index + 1}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Error';">`;
-                container.appendChild(itemDiv);
-            });
-            if (relationshipData.photoFileNames.length > 0) {
-                showOverviewImage(overviewImageCarouselCurrentIndex); 
-            }
-        }
-        function showOverviewImage(index) { /* ... (same) ... */
-            const items = document.querySelectorAll('#overviewImageCarousel .carousel-item');
-            if (items.length === 0) return;
-            overviewImageCarouselCurrentIndex = (index + items.length) % items.length; 
-            items.forEach(item => item.classList.remove('opacity-100', 'z-10'));
-            items[overviewImageCarouselCurrentIndex].classList.add('opacity-100', 'z-10');
-        }
-        function nextOverviewImage() { showOverviewImage(overviewImageCarouselCurrentIndex + 1); }
-        function prevOverviewImage() { showOverviewImage(overviewImageCarouselCurrentIndex - 1); }
-        function startOverviewImageCarousel() { /* ... (same) ... */
-            if (overviewImageInterval) clearInterval(overviewImageInterval);
-            if (relationshipData.photoFileNames.length > 1) {
-                overviewImageInterval = setInterval(nextOverviewImage, 6000); 
-            }
-        }
-        function stopOverviewImageCarousel() { clearInterval(overviewImageInterval); }
-
-        function updateDashboardChart() { /* ... (modified labels to use coupleName1/2) ... */
-            const el = document.getElementById('dashboardChart');
-            if (!el) { return; } 
-            const ctx = el.getContext('2d'); 
-            const selectedMetric = document.getElementById('dashboardMetricSelect')?.value || 'affection';
-            const labels = relationshipData.weeks.map(w => `Wk ${w.weekNumber}`);
-            const data1 = relationshipData.weeks.map(w => w.contributions[selectedMetric]?.salatiso || (w.contributions[selectedMetric]?.score / 2 ) || 0);
-            const data2 = relationshipData.weeks.map(w => w.contributions[selectedMetric]?.tee || (w.contributions[selectedMetric]?.score / 2 ) || 0);
-            const metricLabel = i18next.t(`overview.${selectedMetric}Level`) || i18next.t(`overview.${selectedMetric}Score`) || i18next.t(`overview.${selectedMetric}Contribution`) || i18next.t(`overview.${selectedMetric}Feeling`) || selectedMetric;
-
-            if (dashboardMainChart) dashboardMainChart.destroy();
-            dashboardMainChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: `${coupleName1} - ${metricLabel}`, data: data1, borderColor: 'var(--accent-pink-vibrant)', backgroundColor: 'rgba(219, 39, 119, 0.1)', tension: 0.3, borderWidth: 1.5, pointBackgroundColor: 'var(--accent-pink-vibrant)', pointRadius: 3, fill: true },
-                        { label: `${coupleName2} - ${metricLabel}`, data: data2, borderColor: 'var(--accent-teal-bright)', backgroundColor: 'rgba(45, 212, 191, 0.1)', tension: 0.3, borderWidth: 1.5, pointBackgroundColor: 'var(--accent-teal-bright)', pointRadius: 3, fill: true }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10, ticks:{color: 'var(--text-secondary-lavender)', font: {size: 10}}, grid:{color: 'var(--border-color-lavender)'} }, x:{ticks:{color: 'var(--text-secondary-lavender)', font: {size: 10}}, grid:{color: 'var(--border-color-lavender)'}} }, plugins: { legend: { position: 'top', labels:{color: 'var(--text-primary-light)', font: {size: 10}} } } }
-            });
-        }
-        
-        function renderAnalysisHubSection() { /* ... (ensure chart/table labels use coupleName1/2) ... */
-            const activeSub = currentSubTargets.analysis;
-            if (activeSub === 'analysis-tracking') updateTrackingChart(document.getElementById('trackingMetricSelect')?.value || 'affection');
-            else if (activeSub === 'analysis-contributions') renderContributionsTable(document.getElementById('contributionFilterWeek')?.value || (relationshipData.weeks.length > 0 ? relationshipData.weeks[0].weekNumber.toString() : '1'));
-            else if (activeSub === 'analysis-reinforcement') renderReinforcementTable();
-        }
-
-        function updateTrackingChart(metricKey = 'affection') { /* ... (modify labels for coupleName1/2) ... */
-            const el = document.getElementById('trackingChart'); 
-            if(!el) { return; } 
-            const ctx = el.getContext('2d'); 
-            const labels = relationshipData.weeks.map(w => `Wk ${w.weekNumber} (${w.startDate})`);
-            let data1 = [], data2 = [];
-            let metricLabel = i18next.t(`tracking.${metricKey}`);
-            relationshipData.weeks.forEach(w => {
-                const contrib = w.contributions[metricKey];
-                if (contrib) { data1.push(contrib.salatiso || (contrib.score / 2 ) || 0); data2.push(contrib.tee || (contrib.score / 2 ) || 0); } 
-                else { data1.push(0); data2.push(0); }
-            });
-            
-            if (data1.every(val => val === 0) && data2.every(val => val === 0) && metricKey !== 'feedbackResponseTime') {
-                 metricLabel += ` (${i18next.t('tracking.noResponseData')})`;
-            }
-            if (analysisTrackingChart) analysisTrackingChart.destroy();
-            analysisTrackingChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: `${coupleName1} - ${metricLabel}`, data: data1, backgroundColor: 'rgba(219, 39, 119, 0.3)', borderColor: 'var(--accent-pink-vibrant)', borderWidth: 1.5, tension: 0.3, fill: true },
-                        { label: `${coupleName2} - ${metricLabel}`, data: data2, backgroundColor: 'rgba(45, 212, 191, 0.3)', borderColor: 'var(--accent-teal-bright)', borderWidth: 1.5, tension: 0.3, fill: true }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: (metricKey === 'finances' ? undefined : 10), ticks:{color: 'var(--text-secondary-lavender)'}, grid:{color: 'var(--border-color-lavender)'} }, x:{ticks:{color: 'var(--text-secondary-lavender)'}, grid:{color: 'var(--border-color-lavender)'}} }, plugins: { legend: { position: 'top', labels:{color: 'var(--text-primary-light)'} } } }
-            });
-        }
-        
-        function renderContributionsTable(weekNumStr) { /* ... (update Salatiso/Tee headers with coupleName1/2) ... */
-            const tableBody = document.getElementById('contributionsTableBody');
-            if (!tableBody) { return; }
-            tableBody.innerHTML = ''; 
-
-            const weekNumber = parseInt(weekNumStr);
-            const weekData = relationshipData.weeks.find(w => w.weekNumber === weekNumber);
-            if (!weekData || !weekData.contributions) {
-                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4">${i18next.t('contributions.noDataForWeek')}</td></tr>`; return;
-            }
-            const parameters = i18next.t('contributions.params', { returnObjects: true });
-            Object.keys(parameters).forEach(paramKey => {
-                const contrib = weekData.contributions[paramKey];
-                const tr = tableBody.insertRow();
-                tr.insertCell().textContent = parameters[paramKey];
-                
-                const formatContrib = (personData) => {
-                    if (!personData && personData !== 0) return i18next.t('contributions.noneReported');
-                    let text = '';
-                    if (personData.score !== undefined) text += `${personData.score}`;
-                    else if (typeof personData === 'number') text += `${personData}`; 
-                    
-                    if (personData.actions && personData.actions.length > 0) {
-                        text += (text ? ' (' : '') + personData.actions.join(', ') + (text ? ')' : '');
-                    } else if (Array.isArray(personData) && typeof personData[0] === 'string') {
-                         text += personData.join(', ');
-                    }
-                    return text || (personData === 0 ? '0' : i18next.t('contributions.noneReported'));
-                };
-                
-                tr.insertCell().textContent = formatContrib(contrib?.salatiso !== undefined ? contrib.salatiso : contrib);
-                tr.insertCell().textContent = formatContrib(contrib?.tee !== undefined ? contrib.tee : contrib);
-                
-                const notesKey = contrib?.notesKey;
-                const notesText = notesKey ? i18next.t(notesKey) : (contrib?.notes || '');
-                tr.insertCell().textContent = notesText;
-            });
-        }
-        function renderReinforcementTable() { /* ... (update Salatiso/Tee headers with coupleName1/2) ... */
-            const tableBody = document.getElementById('reinforcementTableBody');
-            if (!tableBody) { return; }
-            tableBody.innerHTML = '';
-            relationshipData.reinforcementWords.forEach(item => {
-                const tr = tableBody.insertRow();
-                tr.insertCell().textContent = i18next.t(item.wordActionKey);
-                tr.insertCell().textContent = i18next.t(item.purposeKey);
-                tr.insertCell().textContent = item.occurrences.salatiso.length > 0 ? item.occurrences.salatiso.join(', ') : '0';
-                tr.insertCell().textContent = item.occurrences.tee.length > 0 ? item.occurrences.tee.join(', ') : '0';
-                tr.insertCell().textContent = item.occurrences.joint.length > 0 ? item.occurrences.joint.join(', ') : '0';
-            });
-        }
-
-        function renderMediaTravelHubSection() { /* ... (no name changes needed here directly unless 'sharedBy' needs mapping) ... */
-            const activeSub = currentSubTargets.media;
-            if (activeSub === 'media-songs') renderSongList();
-            else if (activeSub === 'media-photos') renderPhotoGallery();
-            else if (activeSub === 'travel-visited') renderTravelLog('visitedPlacesContainer', relationshipData.travelLog.filter(t => t.type === 'visited'), 'visited');
-            else if (activeSub === 'travel-desired') renderTravelLog('desiredPlacesContainer', relationshipData.desiredTravel, 'desired');
-        }
-        function renderSongList() { /* ... (if song.sharedBy needs mapping to coupleName1/2) ... */
-            const container = document.getElementById('songListContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            if (!relationshipData.sharedSongs || relationshipData.sharedSongs.length === 0) {
-                container.innerHTML = `<p class="text-sm text-center">${i18next.t('mediaGallery.noSongs')}</p>`; return;
-            }
-            relationshipData.sharedSongs.forEach(song => {
-                const songItem = document.createElement('div');
-                songItem.className = 'song-item p-3 rounded-md shadow-sm flex justify-between items-center';
-                songItem.style.backgroundColor = "var(--bg-card-purple)";
-                const title = song.titleKey ? i18next.t(song.titleKey) : song.title;
-                const sharedBy = (song.sharedBy === "Salatiso" ? coupleName1 : (song.sharedBy === "Tee" ? coupleName2 : song.sharedBy));
-                songItem.innerHTML = `
-                    <div class="song-item-info">
-                        <h4 class="font-semibold text-sm" style="color: var(--accent-pink-vibrant);">${title}</h4>
-                        <p class="text-xs" style="color: var(--text-secondary-lavender);">Artist: ${song.artist} - Shared by: ${sharedBy}</p>
-                    </div>
-                    <div class="song-item-actions">
-                        <a href="${song.link}" target="_blank" title="Listen" class="text-lg" style="color: var(--accent-teal-bright);"><i class="fas fa-play-circle"></i></a>
-                    </div>`;
-                container.appendChild(songItem);
-            });
-        }
-        function renderPhotoGallery() { /* ... (same) ... */
-            const container = document.getElementById('photoGalleryContainer');
-            if (!container) return;
-            container.innerHTML = '';
-             if (!relationshipData.photoFileNames || relationshipData.photoFileNames.length === 0) {
-                container.innerHTML = `<p class="text-sm text-center">${i18next.t('mediaGallery.noPhotos')}</p>`; return;
-            }
-            relationshipData.photoFileNames.forEach((fileName, index) => {
+        function renderOverviewTimelineCarousel() {
+            const carouselInner = document.querySelector('#quickTimelineCarousel .carousel-inner');
+            if (!carouselInner) return;
+            carouselInner.innerHTML = ''; // Clear existing
+            relationshipData.weeks.slice(0, 8).forEach(week => { // Show first 8 weeks for example
                 const item = document.createElement('div');
-                item.className = 'media-gallery-item relative group cursor-pointer aspect-square'; 
-                item.innerHTML = `<img src="${fileName}" alt="Photo ${index + 1}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/300x300/4B0082/FFFFFF?text=Error';">`;
-                container.appendChild(item);
+                item.className = 'carousel-item bg-white p-3 rounded-lg shadow text-sm flex-shrink-0'; // Added flex-shrink-0
+                item.innerHTML = `
+                    <h4 class="font-semibold text-pink-700">${i18nInstance.t('general.week') || 'Week'} ${week.weekNumber} (${week.startDate})</h4>
+                    <p class="text-gray-600 mt-1 truncate">${i18nInstance.t(week.summaryKey)}</p>
+                    <button class="details-btn mt-2 text-xs text-pink-500 hover:text-pink-700" data-week="${week.weekNumber}" data-i18n="overview.seeDetails">See Details</button>
+                `;
+                carouselInner.appendChild(item);
             });
-        }
-        function renderTravelLog(containerId, items, type) { /* ... (if roles need coupleName1/2) ... */
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.innerHTML = '';
-            const noItemsKey = type === 'visited' ? 'travel.noVisited' : 'travel.noDesired';
-            if (!items || items.length === 0) {
-                container.innerHTML = `<p class="text-sm text-center">${i18next.t(noItemsKey)}</p>`; return;
+            // Re-initialize or update carousel logic
+            const carousel = document.getElementById('quickTimelineCarousel');
+            if (carousel && carousel.updateCarouselItems) {
+                 setTimeout(() => carousel.updateCarouselItems(), 0); // Ensure items are in DOM
             }
-            items.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'travel-item p-3 rounded-md shadow-sm';
-                itemDiv.style.backgroundColor = "var(--bg-card-purple)";
-                let content = `<h4>${item.destinationKey ? i18next.t(item.destinationKey) : item.destination}</h4>`;
-                if (type === 'visited') {
-                    const role1 = item.roles.salatisoKey ? i18next.t(item.roles.salatisoKey) : 'N/A';
-                    const role2 = item.roles.teeKey ? i18next.t(item.roles.teeKey) : 'N/A';
-                    content += `<p class="text-xs"><strong>Dates:</strong> ${item.dates}</p>
-                                <p class="text-xs"><strong>${i18next.t('travel.highlightsTitle')}:</strong> ${i18next.t(item.highlightsKey)}</p>
-                                <p class="text-xs"><strong>${i18next.t('travel.rolesTitle')}</strong> ${coupleName1}: ${role1}, ${coupleName2}: ${role2}</p>`;
-                    if (item.photos && item.photos.length > 0) {
-                        content += `<div class="photos-grid mt-1.5 grid grid-cols-3 gap-1">
-                            ${item.photos.map(pUrl => `<img src="${pUrl}" alt="Travel photo" class="rounded object-cover h-16 w-full" onerror="this.onerror=null;this.src='https://placehold.co/100x100/4B0082/FFFFFF?text=X';">`).join('')}
-                        </div>`;
-                    }
-                } else { 
-                    content += `<p class="text-xs">${item.description}</p><p class="text-xs"><strong>Priority:</strong> ${item.priority}</p>`;
-                }
-                itemDiv.innerHTML = content;
-                container.appendChild(itemDiv);
+            
+            document.querySelectorAll('#quickTimelineCarousel .details-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => showDetailsModal(parseInt(e.target.dataset.week)));
             });
         }
 
-        function renderConnectResolveSection() { /* ... (ensure sender/recipient use coupleName1/2) ... */
-            const activeSub = currentSubTargets.connect;
-            if (activeSub === 'connect-feedback') renderFeedbackLog();
-            else if (activeSub === 'connect-logs') renderRelationshipActionLog();
+        function renderOverviewImageCarousel() {
+            const carouselInner = document.querySelector('#overviewImageCarousel .carousel-inner');
+            if (!carouselInner) return;
+            carouselInner.innerHTML = '';
+            const shuffledPhotos = [...relationshipData.photoFileNames].sort(() => 0.5 - Math.random()).slice(0, 5); // Show 5 random
+            shuffledPhotos.forEach(fileName => {
+                const item = document.createElement('div');
+                item.className = 'carousel-item h-full';
+                item.innerHTML = `<img src="assets/photos/${fileName}" alt="Shared Moment" class="w-full h-full object-cover rounded-lg">`;
+                carouselInner.appendChild(item);
+            });
+             const carousel = document.getElementById('overviewImageCarousel');
+            if (carousel && carousel.updateCarouselItems) {
+                 setTimeout(() => carousel.updateCarouselItems(), 0);
+            }
+            // Autoplay logic (simple version)
+            let autoPlayIndex = 0;
+            setInterval(() => {
+                const items = carouselInner.querySelectorAll('.carousel-item');
+                if (items.length > 0) {
+                    autoPlayIndex = (autoPlayIndex + 1) % items.length;
+                    inner.style.transform = `translateX(-${autoPlayIndex * 100}%)`;
+                }
+            }, 5000); // Change image every 5 seconds
         }
-        function renderFeedbackLog() { /* ... (map sender/recipient) ... */
+        
+        function updateDashboardChart() {
+            const ctx = document.getElementById('dashboardChart')?.getContext('2d');
+            if (!ctx) return;
+
+            const initialWeeksData = relationshipData.weeks.slice(0, 4); // First 4 weeks
+            const labels = initialWeeksData.map(w => `${i18nInstance.t('general.week') || 'Week'} ${w.weekNumber}`);
+            const affectionDataS = initialWeeksData.map(w => w.contributions.salatiso.affection);
+            const affectionDataT = initialWeeksData.map(w => w.contributions.tee.affection);
+
+            if (dashboardChartInstance) dashboardChartInstance.destroy();
+            dashboardChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: i18nInstance.t('general.salatiso') + ' ' + i18nInstance.t(relationshipData.metricsMeta.affection.labelKey),
+                            data: affectionDataS,
+                            borderColor: 'rgb(236, 72, 153)', // pink-500
+                            tension: 0.1
+                        },
+                        {
+                            label: i18nInstance.t('general.tee') + ' ' + i18nInstance.t(relationshipData.metricsMeta.affection.labelKey),
+                            data: affectionDataT,
+                            borderColor: 'rgb(244, 114, 182)', // pink-400
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: i18nInstance.t('overview.dashboardChartTitle') },
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: {size: 10} } }
+                    },
+                    scales: { y: { beginAtZero: true, max: 10 } }
+                }
+            });
+        }
+
+        function renderAnalysisHub(forceChartRender = false) {
+            renderContributionsTable();
+            renderReinforcementTable();
+            if (forceChartRender || !trackingChartInstance) { // Avoid re-rendering chart unnecessarily unless forced or not initialized
+                updateTrackingChart();
+            }
+        }
+
+        function updateTrackingChart() {
+            const ctx = document.getElementById('trackingChart')?.getContext('2d');
+            const selectedMetric = document.getElementById('trackingMetricSelect').value;
+            if (!ctx || !selectedMetric) return;
+
+            const metricMeta = relationshipData.metricsMeta[selectedMetric];
+            let labels = relationshipData.weeks.map(w => `${i18nInstance.t('general.week') || 'Week'} ${w.weekNumber}`);
+            let dataS, dataT;
+
+            if (selectedMetric === 'feedbackResponseTime') {
+                // Special handling for feedback response time (average per week, for example)
+                // This is a simplified placeholder. Real calculation would be complex.
+                dataS = relationshipData.weeks.map(() => Math.random() * 5 + 1); // Random data 1-6 hours
+                dataT = relationshipData.weeks.map(() => Math.random() * 5 + 1);
+            } else {
+                dataS = relationshipData.weeks.map(w => w.contributions.salatiso[selectedMetric] || 0);
+                dataT = relationshipData.weeks.map(w => w.contributions.tee[selectedMetric] || 0);
+            }
+            
+            const chartType = (selectedMetric === 'finances') ? 'bar' : 'line';
+
+            if (trackingChartInstance) trackingChartInstance.destroy();
+            trackingChartInstance = new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: `${i18nInstance.t('general.salatiso')} (${i18nInstance.t(metricMeta.labelKey)})`,
+                            data: dataS,
+                            borderColor: 'rgb(219, 39, 119)', // pink-600
+                            backgroundColor: 'rgba(219, 39, 119, 0.5)',
+                            tension: 0.1
+                        },
+                        {
+                            label: `${i18nInstance.t('general.tee')} (${i18nInstance.t(metricMeta.labelKey)})`,
+                            data: dataT,
+                            borderColor: 'rgb(244, 114, 182)', // pink-400
+                            backgroundColor: 'rgba(244, 114, 182, 0.5)',
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: i18nInstance.t(metricMeta.labelKey) },
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: {size: 10} } }
+                    },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+        
+        function renderContributionsTable() {
+            const tbody = document.getElementById('contributionsTableBody');
+            const selectedWeekNum = parseInt(document.getElementById('contributionFilterWeek').value);
+            if (!tbody || !selectedWeekNum) return;
+
+            const weekData = relationshipData.weeks.find(w => w.weekNumber === selectedWeekNum);
+            if (!weekData) return;
+
+            tbody.innerHTML = '';
+            const parameters = Object.keys(relationshipData.metricsMeta).filter(k => k !== 'feedbackResponseTime'); // Exclude feedback time
+
+            parameters.forEach(param => {
+                const row = tbody.insertRow();
+                row.insertCell().textContent = i18nInstance.t(relationshipData.metricsMeta[param].labelKey);
+                row.insertCell().textContent = `${weekData.contributions.salatiso[param] || 'N/A'} ${relationshipData.metricsMeta[param].unit || ''}`;
+                row.insertCell().textContent = `${weekData.contributions.tee[param] || 'N/A'} ${relationshipData.metricsMeta[param].unit || ''}`;
+                const notesS = weekData.contributions.salatiso.notesKey ? i18nInstance.t(weekData.contributions.salatiso.notesKey) : '';
+                const notesT = weekData.contributions.tee.notesKey ? i18nInstance.t(weekData.contributions.tee.notesKey) : '';
+                row.insertCell().textContent = `S: ${notesS || '-'} T: ${notesT || '-'}`;
+            });
+        }
+
+        function renderReinforcementTable() {
+            const tbody = document.getElementById('reinforcementTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            relationshipData.reinforcementWords.forEach(word => {
+                const row = tbody.insertRow();
+                row.insertCell().textContent = i18nInstance.t(word.wordKey);
+                row.insertCell().textContent = i18nInstance.t(word.purposeKey);
+                row.insertCell().textContent = word.occurrences.salatiso.join(', ') || '-';
+                row.insertCell().textContent = word.occurrences.tee.join(', ') || '-';
+                row.insertCell().textContent = word.occurrences.joint.join(', ') || '-';
+            });
+        }
+        
+        function renderMediaTravelHub() {
+            renderSharedSongs();
+            renderPhotoMoments();
+            renderTravelLog();
+        }
+
+        function renderSharedSongs() {
+            const list = document.getElementById('sharedSongsList');
+            if (!list) return;
+            list.innerHTML = '';
+            relationshipData.weeks.forEach(week => {
+                week.events.filter(e => e.type === 'music').forEach(song => {
+                    const li = document.createElement('li');
+                    li.className = 'p-2 bg-rose-50 rounded-md shadow-sm text-sm';
+                    li.innerHTML = `
+                        <span class="font-semibold text-rose-700">${song.songTitle}</span> ${song.artist ? 'by ' + song.artist : ''}
+                        <br>
+                        <span class="text-xs text-gray-600">${i18nInstance.t('mediaTravelHub.sharedSongs.sharedBy', { user: i18nInstance.t(`general.${song.sharedBy.toLowerCase()}`) || song.sharedBy, week: week.weekNumber })}</span>
+                        <a href="${song.songUrl}" target="_blank" class="ml-2 text-xs text-pink-500 hover:text-pink-700">${i18nInstance.t('mediaTravelHub.sharedSongs.listen')} <i class="fas fa-play-circle"></i></a>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+        }
+
+        function renderPhotoMoments() {
+            const grid = document.getElementById('photoMomentsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            relationshipData.photoFileNames.forEach(fileName => {
+                const img = document.createElement('img');
+                img.src = `assets/photos/${fileName}`;
+                img.alt = "Photo moment";
+                img.className = "w-full h-auto object-cover rounded-md shadow aspect-square"; // Added aspect-square
+                grid.appendChild(img);
+            });
+        }
+
+        function renderTravelLog() {
+            const visitedList = document.getElementById('visitedTripsList');
+            const dreamList = document.getElementById('dreamTripsList');
+            if (!visitedList || !dreamList) return;
+
+            visitedList.innerHTML = '';
+            relationshipData.travelLog.visited.forEach(trip => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-rose-50 rounded-lg shadow text-sm';
+                item.innerHTML = `
+                    <h4 class="font-semibold text-rose-700">${i18nInstance.t(trip.destinationKey)} (${trip.dates})</h4>
+                    <p><strong>${i18nInstance.t('mediaTravelHub.visited.roles')}</strong> S: ${i18nInstance.t(trip.roles.salatisoKey)}, T: ${i18nInstance.t(trip.roles.teeKey)}</p>
+                    <p><strong>${i18nInstance.t('mediaTravelHub.visited.highlights')}</strong> ${i18nInstance.t(trip.highlightsKey)}</p>
+                    ${trip.photos && trip.photos.length > 0 ? `<p class="mt-1"><strong>${i18nInstance.t('mediaTravelHub.visited.photos')}</strong></p><div class="flex gap-1 mt-1">${trip.photos.map(p => `<img src="assets/photos/${p}" class="w-16 h-16 object-cover rounded">`).join('')}</div>` : ''}
+                `;
+                visitedList.appendChild(item);
+            });
+
+            dreamList.innerHTML = '';
+            relationshipData.travelLog.dream.forEach(trip => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-rose-50 rounded-lg shadow text-sm';
+                item.innerHTML = `
+                    <h4 class="font-semibold text-rose-700">${i18nInstance.t(trip.destinationKey)}</h4>
+                    <p><strong>${i18nInstance.t('mediaTravelHub.dreamTrips.notes')}</strong> ${i18nInstance.t(trip.notesKey)}</p>
+                `;
+                dreamList.appendChild(item);
+            });
+        }
+        
+        function renderConnectResolveHub() {
+            renderFeedbackLog();
+            renderActionLog();
+        }
+
+        document.getElementById('feedbackForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const sender = document.getElementById('feedbackSender').value;
+            const recipient = document.getElementById('feedbackRecipient').value;
+            const messageText = document.getElementById('feedbackMessage').value;
+            
+            if (!messageText.trim()) {
+                showCustomAlert("Message cannot be empty.");
+                return;
+            }
+
+            const newFeedback = {
+                id: `fb${Date.now()}`,
+                sender,
+                recipient,
+                messageKey: `customFeedback${Date.now()}`, // Need to store custom text, not just key
+                messageText: messageText, // Store the actual text
+                timestamp: new Date().toISOString(),
+                status: 'pending',
+                responseTime: null
+            };
+            // Add to englishTranslations for dynamic display if needed, or handle directly
+            englishTranslations.feedbackMessages[newFeedback.messageKey] = messageText;
+            // For Xhosa, it would ideally be translated or shown in English
+            if (window.xhosaTranslations) window.xhosaTranslations.feedbackMessages[newFeedback.messageKey] = messageText + " (IsiXhosa: Kufuneka iguqulwe)";
+
+
+            relationshipData.feedbackLog.push(newFeedback);
+            renderFeedbackLog();
+            this.reset();
+            showCustomAlert(i18nInstance.t('general.feedbackSent'));
+        });
+
+        function renderFeedbackLog() {
             const container = document.getElementById('feedbackLogContainer');
             if (!container) return;
             container.innerHTML = '';
-            if (relationshipData.feedbackLog.length === 0) {
-                container.innerHTML = `<p class="text-center">${i18next.t('feedback.noFeedbackYet')}</p>`; return;
-            }
-            relationshipData.feedbackLog.slice().reverse().forEach(fb => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'feedback-item p-2.5 border rounded-md mb-2';
-                itemDiv.style.borderColor = "var(--border-color-lavender)";
-                itemDiv.style.backgroundColor = "rgba(255,255,255,0.05)";
-                const senderName = (fb.sender === "Salatiso" ? coupleName1 : (fb.sender === "Tee" ? coupleName2 : fb.sender));
-                const recipientName = (fb.recipient === "Salatiso" ? coupleName1 : (fb.recipient === "Tee" ? coupleName2 : fb.recipient));
-                let responseHtml = `<p class="response-status text-xs mt-1" style="color: var(--accent-purple-medium);">${i18next.t('feedback.pendingResponse')}</p>`;
-                if (fb.responseTimestamp) {
-                    responseHtml = `<p class="text-xs mt-1 pt-1 border-t" style="border-color: var(--border-color-lavender);"><strong>Response from ${recipientName}</strong> (${new Date(fb.responseTimestamp).toLocaleString()}):<br>${fb.response}</p>`;
+            [...relationshipData.feedbackLog].reverse().forEach(fb => { // Show newest first
+                const item = document.createElement('div');
+                item.className = 'p-2 border border-rose-200 rounded-md text-xs';
+                const message = fb.messageText || i18nInstance.t(fb.messageKey); // Use stored text or key
+                let responseInfo = '';
+                if (fb.status === 'responded' && fb.responseTime) {
+                    const hours = Math.floor(fb.responseTime / 3600000);
+                    const minutes = Math.floor((fb.responseTime % 3600000) / 60000);
+                    responseInfo = `<span class="text-green-600">${i18nInstance.t('connectResolve.feedback.respondedIn', { duration: `${hours}h ${minutes}m` })}</span>`;
+                } else if (fb.status === 'pending') {
+                    responseInfo = `<button class="acknowledge-feedback-btn text-blue-500 hover:underline" data-id="${fb.id}">${i18nInstance.t('connectResolve.feedback.acknowledge')}</button>`;
                 }
-                itemDiv.innerHTML = `
-                    <p class="font-medium text-sm">${i18next.t('feedback.feedbackFrom', { name: senderName })} to ${recipientName}:</p>
-                    <p class="text-sm">${fb.message}</p>
-                    <p class="timestamp text-xs mt-1">Sent: ${new Date(fb.timestamp).toLocaleString()}</p>
-                    ${responseHtml}`;
-                container.appendChild(itemDiv);
+
+                item.innerHTML = `
+                    <p><strong>${i18nInstance.t('general.from') || 'From'}:</strong> ${i18nInstance.t(`general.${fb.sender.toLowerCase()}`)} <strong>${i18nInstance.t('general.to') || 'To'}:</strong> ${i18nInstance.t(`general.${fb.recipient.toLowerCase()}`)}</p>
+                    <p class="my-1">"${message}"</p>
+                    <p class="text-gray-500">${new Date(fb.timestamp).toLocaleString()} - ${responseInfo}</p>
+                `;
+                container.appendChild(item);
+            });
+            
+            document.querySelectorAll('.acknowledge-feedback-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const feedbackId = e.target.dataset.id;
+                    const feedbackItem = relationshipData.feedbackLog.find(item => item.id === feedbackId);
+                    if (feedbackItem) {
+                        feedbackItem.status = 'responded';
+                        feedbackItem.responseTime = Date.now() - new Date(feedbackItem.timestamp).getTime();
+                        renderFeedbackLog();
+                        showCustomAlert(i18nInstance.t('general.feedbackAcknowledged'));
+                    }
+                });
             });
         }
-        function renderRelationshipActionLog() { /* ... (map actor) ... */
-            const container = document.getElementById('relationshipActionLogContainer');
+        
+        function setupActionForms() {
+            const forms = [
+                { id: 'apologyForm', typeKey: 'actionApology', fields: ['apologyActor', 'apologyMessage'] },
+                { id: 'dissatisfactionForm', typeKey: 'actionExpressDissatisfaction', fields: ['dissatisfactionActor', 'dissatisfactionMessage'] },
+                { id: 'bookDateForm', typeKey: 'actionBookDate', fields: ['bookDateActor', 'bookDateActivity', 'bookDateDate'] },
+                { id: 'terminationForm', typeKey: 'actionTerminate', fields: ['terminationActor', 'terminationReason', 'terminationNotes'] }
+            ];
+
+            forms.forEach(formInfo => {
+                const formElement = document.getElementById(formInfo.id);
+                if (formElement) {
+                    formElement.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const action = {
+                            id: `act${Date.now()}`,
+                            timestamp: new Date().toISOString(),
+                            actionTypeKey: formInfo.typeKey
+                        };
+                        let detailsText = "";
+                        formInfo.fields.forEach(fieldId => {
+                            const fieldElement = document.getElementById(fieldId);
+                            if (fieldElement) {
+                                const fieldName = fieldId.replace(/^(apology|dissatisfaction|bookDate|termination)/, '').toLowerCase();
+                                action[fieldName] = fieldElement.value;
+                                if (fieldId.includes('Message') || fieldId.includes('Activity') || fieldId.includes('Notes')) {
+                                    detailsText += `${fieldElement.value} `;
+                                } else if (fieldId.includes('Date')) {
+                                    detailsText += `Date: ${fieldElement.value} `;
+                                } else if (fieldId.includes('Reason')) {
+                                    const selectedOption = fieldElement.options[fieldElement.selectedIndex];
+                                    detailsText += `Reason: ${selectedOption.dataset.i18n ? i18nInstance.t(selectedOption.dataset.i18n) : selectedOption.textContent} `;
+                                }
+                            }
+                        });
+                        action.detailsText = detailsText.trim(); // Store compiled details
+                        action.detailsKey = `customActionDetail${Date.now()}`; // For i18n if needed, though text is stored
+                        englishTranslations.actionDetails[action.detailsKey] = action.detailsText;
+                        if(window.xhosaTranslations) window.xhosaTranslations.actionDetails[action.detailsKey] = action.detailsText  + " (IsiXhosa: Kufuneka iguqulwe)";
+
+
+                        if (formInfo.id === 'terminationForm') {
+                            // Simple confirmation for termination
+                            if (!confirm(i18nInstance.t('connectResolve.actions.termination.confirm') || "Are you sure you want to log this action? This is a serious step.")) {
+                                return;
+                            }
+                        }
+                        
+                        relationshipData.actionLog.push(action);
+                        renderActionLog();
+                        formElement.reset();
+                        showCustomAlert(i18nInstance.t('general.actionLogged'));
+                    });
+                }
+            });
+        }
+
+        function renderActionLog() {
+            const container = document.getElementById('actionLogContainer');
             if (!container) return;
             container.innerHTML = '';
-            if (relationshipData.actionLog.length === 0) {
-                container.innerHTML = `<p class="text-center">${i18next.t('relationshipActions.noActionsYet')}</p>`; return;
+            [...relationshipData.actionLog].reverse().forEach(log => { // Show newest first
+                const item = document.createElement('div');
+                item.className = 'p-2 border border-rose-200 rounded-md text-xs';
+                const actor = log.actor || log.apologyactor || log.dissatisfactionactor || log.bookdateactor || log.terminationactor; // Handle variations from form field names
+                const details = log.detailsText || i18nInstance.t(log.detailsKey);
+                item.innerHTML = `
+                    <p><strong>${i18nInstance.t(log.actionTypeKey)}</strong> ${i18nInstance.t('general.by') || 'by'} ${i18nInstance.t(`general.${actor.toLowerCase()}`)}</p>
+                    <p class="my-1">"${details}"</p>
+                    <p class="text-gray-500">${new Date(log.timestamp).toLocaleString()}</p>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderLifeSyncFunHub() {
+            // Astrology is handled by its own setup
+        }
+        
+        function setupCompatibilityTools() {
+            const checkAstrologyBtn = document.getElementById('checkAstrology');
+            if (checkAstrologyBtn) {
+                checkAstrologyBtn.addEventListener('click', () => {
+                    const bdayS = document.getElementById('salatisoBirthday').value;
+                    const bdayT = document.getElementById('teeBirthday').value;
+                    const resultDiv = document.getElementById('astrologyResult');
+                    if (!bdayS || !bdayT || !resultDiv) {
+                        resultDiv.textContent = "Please enter both birthdays.";
+                        return;
+                    }
+                    const zodiacS = getZodiacSign(new Date(bdayS));
+                    const zodiacT = getZodiacSign(new Date(bdayT));
+                    // Super simple compatibility text
+                    const compatibilityText = `(${zodiacS}) and (${zodiacT}) can make a great team if they appreciate their differences!`;
+                    resultDiv.textContent = i18nInstance.t('lifeSyncFun.compatibility.astrology.result', {
+                        name1: i18nInstance.t('general.salatiso'), zodiac1: zodiacS,
+                        name2: i18nInstance.t('general.tee'), zodiac2: zodiacT,
+                        compatibilityText: compatibilityText // This part is not i18n'd, but could be
+                    });
+                });
             }
-            relationshipData.actionLog.slice().reverse().forEach(log => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'action-log-item p-2.5 border rounded-md mb-2';
-                itemDiv.style.borderColor = "var(--border-color-lavender)";
-                itemDiv.style.backgroundColor = "rgba(255,255,255,0.05)";
-                const actorName = (log.actor === "Salatiso" ? coupleName1 : (log.actor === "Tee" ? coupleName2 : log.actor));
-                let detailsText = log.message || '';
-                 if (log.type === "dateProposal" && log.details) {
-                    detailsText = `Activity: ${log.details.activity}, Proposed: ${log.details.proposedDate}. ${log.message || ''}`;
-                } else if (log.type === "termination" && log.details) {
-                    detailsText = `Reason: ${i18next.t(log.details.reasonKey)}. ${log.details.otherReason || ''} ${log.message || ''}`;
-                }
-                itemDiv.innerHTML = `
-                    <p class="font-medium text-sm"><strong>${i18next.t(`relationshipActions.${log.type}.title`, {defaultValue: log.type})}</strong></p>
-                    <p class="text-xs">${i18next.t('relationshipActions.actionBy', { name: actorName })}</p>
-                    ${detailsText ? `<p class="text-sm mt-1">${i18next.t('relationshipActions.actionDetails', { details: detailsText })}</p>` : ''}
-                    <p class="timestamp text-xs mt-1">Logged: ${new Date(log.timestamp).toLocaleString()}</p>`;
-                container.appendChild(itemDiv);
-            });
         }
 
-        function renderLifesyncFunSection() { /* Placeholder */ }
-        
-        function setupEventListeners() { 
-            document.querySelectorAll('#mainNav .nav-tab').forEach(button => button.addEventListener('click', handleNavClick));
-            document.querySelectorAll('.content-section .sub-nav-tab').forEach(tab => tab.addEventListener('click', handleSubNavClick));
-            document.getElementById('langEN')?.addEventListener('click', () => i18next.changeLanguage('en', updateContentAllAndTimeline));
-            document.getElementById('langXH')?.addEventListener('click', () => i18next.changeLanguage('xh', updateContentAllAndTimeline));
-            
-            ['closeDetailsModalBtn', 'closeAlertModalBtn', 'closePlaylistModalBtnPopup', 'closeSettingsModal'].forEach(id => {
-                 document.getElementById(id)?.addEventListener('click', () => {
-                    const modalId = id.replace('close', '').toLowerCase() + (id.includes('Playlist') || id.includes('Settings') ? 'Modal' : 'Modal');
-                    const modalElement = document.getElementById(modalId);
-                    if (modalElement) modalElement.style.display = 'none';
-                 });
-            });
-            document.getElementById('alertModalOkBtn')?.addEventListener('click', () => {
-                const alertModal = document.getElementById('alertModal');
-                if (alertModal) alertModal.style.display = 'none';
-            });
-            document.getElementById('playlistButton')?.addEventListener('click', () => {
-                const playlistModal = document.getElementById('playlistModal');
-                if (playlistModal) playlistModal.style.display = 'flex';
-            });
-            document.getElementById('settingsButton')?.addEventListener('click', () => {
-                const settingsModal = document.getElementById('settingsModal');
-                if (settingsModal) settingsModal.style.display = 'flex';
-            });
-            document.getElementById('saveNamesButton')?.addEventListener('click', saveNames);
-
-
-            document.getElementById('overview-img-prev')?.addEventListener('click', () => { prevOverviewImage(); stopOverviewImageCarousel(); });
-            document.getElementById('overview-img-next')?.addEventListener('click', () => { nextOverviewImage(); stopOverviewImageCarousel(); });
-            document.getElementById('dashboardMetricSelect')?.addEventListener('change', updateDashboardChart);
-            document.getElementById('trackingMetricSelect')?.addEventListener('change', (e) => { if(currentSubTargets.analysis === 'analysis-tracking') updateTrackingChart(e.target.value); });
-            document.getElementById('contributionFilterWeek')?.addEventListener('change', (e) => { if(currentSubTargets.analysis === 'analysis-contributions') {renderContributionsTable(e.target.value); addSeeDetailsListeners();} });
-            
-            document.getElementById('feedbackForm')?.addEventListener('submit', handleSendFeedback);
-            document.getElementById('apologyForm')?.addEventListener('submit', handleSendApology);
-            
-            document.getElementById('checkCompatibility')?.addEventListener('click', handleAstrologyCheck);
-            document.querySelectorAll('.compatibility-test-btn').forEach(btn => btn.addEventListener('click', () => showAlert(i18next.t('comingSoon'))));
-            document.getElementById('generateReport')?.addEventListener('click', () => showAlert(i18next.t('lifesync.reportNote')));
-
-            window.addEventListener('resize', updateNavStickiness);
-             // Close modal if clicked outside content
-            window.addEventListener('click', (event) => {
-                if (event.target.classList.contains('modal')) {
-                    event.target.style.display = 'none';
-                }
-            });
-        }
-        
-        function updateContentAllAndTimeline() {
-            updateContentAll(); 
-            initializeTimeline(); 
-        }
-
-        function handleSendFeedback(e) { 
-            e.preventDefault();
-            const senderValue = document.getElementById('feedbackSender').value; 
-            const recipientValue = document.getElementById('feedbackRecipient').value;
-            const message = document.getElementById('feedbackMessage').value.trim();
-            const actualSender = senderValue; 
-            const actualRecipient = recipientValue;
-
-            if (!message) { showAlert(i18next.t('feedback.messageEmpty')); return; }
-            if (actualSender === actualRecipient) { showAlert(i18next.t('feedback.senderRecipientSame')); return; }
-            relationshipData.feedbackLog.push({ id: Date.now(), sender: actualSender, recipient: actualRecipient, message, timestamp: new Date().toISOString(), response: null, read: false });
-            showAlert(i18next.t('feedback.success'));
-            document.getElementById('feedbackMessage').value = '';
-            if (currentSubTargets.connect === 'connect-feedback') renderFeedbackLog();
-        }
-        function handleSendApology(e) { 
-             e.preventDefault();
-            const fromValue = document.getElementById('apologyFrom').value;
-            const message = document.getElementById('apologyMessage').value.trim();
-            if (!message) { showAlert(i18next.t('alert.messageEmpty')); return; }
-            const actualActor = fromValue;
-            const target = (actualActor === "Salatiso" ? "Tee" : "Salatiso"); 
-            logRelationshipAction('apology', actualActor, target, message);
-            document.getElementById('apologyMessage').value = '';
-        }
-        
-        function handleAstrologyCheck() { 
-            const name1BdayStr = document.getElementById('salatisoBirthday').value; 
-            const name2BdayStr = document.getElementById('teeBirthday').value;
-            const resultDiv = document.getElementById('compatibilityResult');
-            if (!resultDiv) return;
-            if (!name1BdayStr || !name2BdayStr) { resultDiv.textContent = i18next.t('funtools.astrology.invalidDate'); return; }
-            const sign1 = getZodiacSign(new Date(name1BdayStr));
-            const sign2 = getZodiacSign(new Date(name2BdayStr));
-            let msg = `${i18next.t('funtools.astrology.signIsA', {name: coupleName1, sign: sign1})}. ${i18next.t('funtools.astrology.signIsA', {name: coupleName2, sign: sign2})}. `;
-            if ((sign1 === "Virgo" && sign2 === "Taurus") || (sign1 === "Taurus" && sign2 === "Virgo")) {
-                msg += i18next.t('funtools.astrology.virgoTaurus');
-            } else { msg += i18next.t('funtools.astrology.general'); }
-            resultDiv.textContent = msg;
-        }
-
-        function updateContentAll() { 
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                const optionsAttr = el.getAttribute('data-i18n-options');
-                let options = {};
-                if (optionsAttr) { try { options = JSON.parse(optionsAttr); } catch (e) { console.warn(`Error parsing i18n options for ${key}:`, e); } }
-                
-                if(key.includes('person1NamePlaceholder')) options.name1 = coupleName1;
-                if(key.includes('person2NamePlaceholder')) options.name2 = coupleName2;
-                if (key.includes('{name}')) { 
-                    if (options.actor) options.name = (options.actor === "Salatiso" ? coupleName1 : (options.actor === "Tee" ? coupleName2 : options.actor));
-                    else if (options.sender) options.name = (options.sender === "Salatiso" ? coupleName1 : (options.sender === "Tee" ? coupleName2 : options.sender));
-                }
-
-                const translation = i18next.t(key, options);
-                if (el.hasAttribute('data-i18n-placeholder')) { el.placeholder = translation; }
-                else if (el.tagName === 'TITLE') { el.textContent = translation; }
-                else { el.innerHTML = translation; } 
-            });
-            populateAllSelects(); 
-            updateDynamicNameDisplays(); 
-            renderActiveSectionContent();
-        }
-        
-        function getZodiacSign(date) { 
-            if (!(date instanceof Date) || isNaN(date)) return "Invalid Date";
-            const day = date.getDate(); const month = date.getMonth() + 1;
+        function getZodiacSign(date) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
             if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return "Aquarius";
             if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return "Pisces";
             if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return "Aries";
@@ -1259,24 +1602,58 @@
             if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return "Capricorn";
             return "Unknown";
         }
-        function logRelationshipAction(type, actor, target, message, details = {}) { 
-             const newAction = { id: Date.now(), type, actor, target, message, timestamp: new Date().toISOString(), details };
-            relationshipData.actionLog.push(newAction);
-            showAlert(i18next.t('alert.actionLogged'));
-            if (currentSubTargets.connect === 'connect-logs') renderRelationshipActionLog();
+
+        function showDetailsModal(weekNumber) {
+            const week = relationshipData.weeks.find(w => w.weekNumber === weekNumber);
+            if (!week) return;
+
+            document.getElementById('modalTitle').textContent = i18nInstance.t('modal.detailsTitle', { weekNumber: week.weekNumber });
+            document.getElementById('modalSummary').textContent = i18nInstance.t(week.summaryKey);
+            
+            const modalCarouselInner = document.querySelector('#modalTimelineCarousel .carousel-inner');
+            modalCarouselInner.innerHTML = ''; // Clear previous
+            
+            if (week.events && week.events.length > 0) {
+                week.events.forEach(event => {
+                    const item = document.createElement('div');
+                    item.className = 'carousel-item p-2 text-sm'; // Full width for modal items
+                    let eventHtml = `<h5 class="font-semibold text-pink-600">${i18nInstance.t(event.textKey)}</h5>`;
+                    if (event.originalMessageKey) {
+                        eventHtml += `<p class="text-xs text-gray-500 mt-1 whitespace-pre-wrap"><em>${i18nInstance.t(event.originalMessageKey)}</em></p>`;
+                    }
+                    if (event.type === 'music') {
+                        eventHtml += `<p class="text-xs mt-1">${event.songTitle} by ${event.artist} (<a href="${event.songUrl}" target="_blank" class="text-pink-500">Listen</a>)</p>`;
+                    }
+                    if (event.type === 'link') {
+                         eventHtml += `<p class="text-xs mt-1"><a href="${event.url}" target="_blank" class="text-pink-500">View Link</a></p>`;
+                    }
+                    item.innerHTML = eventHtml;
+                    modalCarouselInner.appendChild(item);
+                });
+            } else {
+                modalCarouselInner.innerHTML = `<div class="carousel-item p-2 text-sm">${i18nInstance.t('general.noEvents') || 'No specific events logged for this week.'}</div>`;
+            }
+            
+            const modalCarousel = document.getElementById('modalTimelineCarousel');
+            if (modalCarousel && modalCarousel.updateCarouselItems) {
+                setTimeout(() => modalCarousel.updateCarouselItems(), 0); // Ensure items are in DOM
+            }
+
+            document.getElementById('detailsModal').style.display = 'flex';
         }
-        function showAlert(message, title = i18next.t('alert.defaultTitle')) { 
-            const modal = document.getElementById('alertModal'); 
-            const titleEl = document.getElementById('alertModalTitle'); 
-            const messageEl = document.getElementById('alertModalMessage'); 
-            if (modal && titleEl && messageEl) {
-                titleEl.textContent = title;
-                messageEl.textContent = message;
-                modal.style.display = 'flex'; 
+        
+        function setupPlaylistFab() {
+            const fab = document.getElementById('playlistFab');
+            const modal = document.getElementById('playlistModal');
+            const iframe = document.getElementById('playlistFrame');
+            if (fab && modal && iframe) {
+                fab.addEventListener('click', () => {
+                    iframe.src = relationshipData.playlistUrl;
+                    modal.style.display = 'flex';
+                });
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initializeApp);
-    </script>
+    </script>
 </body>
 </html>
