@@ -14,17 +14,17 @@
 
     <style>
         :root {
-            --bg-dark-purple: #301934;
-            --bg-content-purple: rgba(45, 25, 55, 0.97);
-            --bg-content-purple-opaque: rgb(45, 25, 55);
-            --bg-card-purple: rgba(60, 30, 70, 0.92);
-            --text-primary-light: #FDE7F3;
-            --text-secondary-lavender: #E9D5FF;
-            --accent-pink-vibrant: #DB2777;
-            --accent-purple-medium: #A855F7;
-            --accent-teal-bright: #2DD4BF;
-            --border-color-lavender: rgba(168, 85, 247, 0.35);
-            --border-color-strong: rgba(168, 85, 247, 0.65);
+            --bg-dark-teal: #065F46; /* Deep green for background */
+            --bg-content-teal: rgba(38, 166, 154, 0.97); /* Darker teal for content areas */
+            --bg-content-teal-opaque: rgb(38, 166, 154); /* Opaque version for modals */
+            --bg-card-teal: rgba(167, 243, 208, 0.92); /* Soft green for cards */
+            --text-primary-light: #F3F4F6; /* Light gray for text */
+            --text-secondary-light: #D1D5DB; /* Softer gray for secondary text */
+            --accent-teal-bright: #2DD4BF; /* Main teal/aquamarine accent */
+            --accent-teal-dark: #26A69A; /* Darker teal for contrast */
+            --accent-green-soft: #A7F3D0; /* Soft green for highlights */
+            --border-color-teal: rgba(38, 166, 154, 0.35); /* Border color */
+            --border-color-strong: rgba(38, 166, 154, 0.65); /* Stronger border */
             --font-main: 'Poppins', sans-serif;
             --font-heading: 'Ubuntu', sans-serif;
         }
@@ -35,7 +35,7 @@
             height: 100%;
             overflow: hidden;
             font-family: var(--font-main);
-            background-color: var(--bg-dark-purple);
+            background-color: var(--bg-dark-teal);
             color: var(--text-primary-light);
         }
 
@@ -47,7 +47,7 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
-            filter: brightness(0.2) contrast(1.05) blur(5px);
+            filter: brightness(0.3) contrast(1.1) blur(3px);
         }
 
         .app-container {
@@ -58,7 +58,7 @@
         }
 
         header#appHeader {
-            background-color: rgba(30, 10, 40, 0.9);
+            background-color: rgba(6, 95, 70, 0.9); /* Deep green */
             backdrop-filter: blur(12px);
             padding: 0.5rem 1rem;
             position: fixed;
@@ -66,7 +66,7 @@
             left: 0;
             width: 100%;
             z-index: 1000;
-            border-bottom: 1px solid var(--border-color-lavender);
+            border-bottom: 1px solid var(--border-color-teal);
         }
 
         header#appHeader .header-content {
@@ -81,7 +81,7 @@
             font-family: var(--font-heading);
             color: var(--accent-teal-bright);
             text-shadow: 0 0 7px var(--accent-teal-bright);
-            font-size: 1.15rem;
+            font-size: 1.25rem;
         }
 
         header#appHeader .controls-container {
@@ -93,19 +93,19 @@
         header#appHeader .language-switcher button,
         #settingsButton {
             background-color: transparent;
-            color: var(--text-secondary-lavender);
-            border: 1px solid var(--accent-purple-medium);
+            color: var(--text-secondary-light);
+            border: 1px solid var(--accent-teal-dark);
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-            padding: 0.2rem 0.5rem;
-            font-size: 0.65rem;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.7rem;
             border-radius: 0.8rem;
         }
 
         header#appHeader .language-switcher button:hover,
         header#appHeader .language-switcher button.active-lang,
         #settingsButton:hover {
-            background-color: var(--accent-pink-vibrant);
-            border-color: var(--accent-pink-vibrant);
+            background-color: var(--accent-teal-bright);
+            border-color: var(--accent-teal-bright);
             color: var(--text-primary-light);
         }
 
@@ -114,14 +114,14 @@
         }
 
         nav#mainNav {
-            background-color: rgba(40, 15, 50, 0.92);
+            background-color: rgba(6, 95, 70, 0.92); /* Deep green */
             backdrop-filter: blur(10px);
             padding: 0.3rem 0.5rem;
             position: fixed;
             left: 0;
             width: 100%;
             z-index: 999;
-            border-bottom: 1px solid var(--border-color-lavender);
+            border-bottom: 1px solid var(--border-color-teal);
         }
 
         nav#mainNav .nav-tab-container {
@@ -140,7 +140,7 @@
         }
 
         nav#mainNav .nav-tab {
-            color: var(--text-secondary-lavender);
+            color: var(--text-secondary-light);
             border-bottom: 2px solid transparent;
             transition: color 0.25s, border-bottom-color 0.25s, transform 0.2s;
             white-space: nowrap;
@@ -152,7 +152,7 @@
 
         nav#mainNav .nav-tab:hover {
             color: var(--text-primary-light);
-            border-bottom-color: var(--accent-pink-vibrant);
+            border-bottom-color: var(--accent-teal-bright);
             transform: translateY(-1px);
         }
 
@@ -175,7 +175,7 @@
             width: 100%;
             height: 100%;
             max-width: 1920px;
-            background-color: var(--bg-content-purple);
+            background-color: var(--bg-content-teal);
             border-radius: 0.6rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
             overflow: hidden;
@@ -197,26 +197,21 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0.5;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0.5; }
+            to { opacity: 1; }
         }
 
         .section-header {
             padding: 0.5rem 1rem;
             text-align: center;
-            border-bottom: 1px solid var(--border-color-lavender);
+            border-bottom: 1px solid var(--border-color-teal);
             flex-shrink: 0;
         }
 
         .section-header h2 {
             font-size: 1.2rem;
             font-weight: 600;
-            color: var(--accent-pink-vibrant);
+            color: var(--accent-teal-bright);
             margin-bottom: 0;
         }
 
@@ -224,9 +219,9 @@
             display: flex;
             justify-content: center;
             padding: 0.3rem 0;
-            background-color: rgba(30, 10, 40, 0.7);
+            background-color: rgba(6, 95, 70, 0.7);
             flex-shrink: 0;
-            border-bottom: 1px solid var(--border-color-lavender);
+            border-bottom: 1px solid var(--border-color-teal);
         }
 
         .sub-nav-tabs .sub-nav-tab {
@@ -234,7 +229,7 @@
             margin: 0 0.15rem;
             cursor: pointer;
             border-bottom: 2px solid transparent;
-            color: var(--text-secondary-lavender);
+            color: var(--text-secondary-light);
             font-size: 0.7rem;
             font-weight: 500;
         }
@@ -264,13 +259,8 @@
         }
 
         @keyframes subContentFadeIn {
-            from {
-                opacity: 0.4;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0.4; }
+            to { opacity: 1; }
         }
 
         #overview .section-content-wrapper {
@@ -303,9 +293,61 @@
             gap: 0.6rem;
         }
 
+        /* New Tiles Section */
+        #overviewTilesContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background-color: rgba(6, 95, 70, 0.7);
+            border-radius: 0.5rem;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .overview-tile {
+            background-color: var(--bg-card-teal);
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .overview-tile:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            background-color: var(--accent-green-soft);
+        }
+
+        .overview-tile i {
+            font-size: 2rem;
+            color: var(--accent-teal-bright);
+            margin-bottom: 0.5rem;
+        }
+
+        .overview-tile h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary-light);
+        }
+
+        .overview-tile p {
+            font-size: 0.7rem;
+            color: var(--text-secondary-light);
+            margin-top: 0.3rem;
+        }
+
+        /* Enhanced Timeline */
         #overviewTimelineContainer {
-            height: 130px;
-            background-color: rgba(30, 10, 40, 0.7);
+            height: 120px;
+            background-color: rgba(6, 95, 70, 0.7);
             border-top: 1px solid var(--border-color-strong);
             padding: 0.5rem;
             overflow-x: auto;
@@ -315,53 +357,45 @@
         }
 
         .timeline-event-card {
-            flex: 0 0 180px;
+            flex: 0 0 140px;
             margin-right: 0.6rem;
             padding: 0.5rem;
-            background-color: var(--bg-card-purple);
-            border: 1px solid var(--border-color-lavender);
+            background-color: var(--bg-card-teal);
+            border: 1px solid var(--border-color-teal);
             border-radius: 5px;
-            color: var(--text-secondary-lavender);
-            font-size: 0.7rem;
+            color: var(--text-secondary-light);
+            font-size: 0.65rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-event-card:hover {
+            background-color: var(--accent-green-soft);
+            transform: translateY(-3px);
         }
 
         .timeline-event-card h4 {
             color: var(--accent-teal-bright);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-bottom: 0.15rem;
             line-height: 1.2;
         }
 
         .timeline-event-card .date {
             font-size: 0.6rem;
-            color: var(--accent-purple-medium);
+            color: var(--accent-teal-dark);
             margin-bottom: 0.15rem;
         }
 
-        .timeline-event-card .summary {
-            font-size: 0.65rem;
-            line-height: 1.3;
-            flex-grow: 1;
-            margin-bottom: 0.3rem;
-        }
-
-        .timeline-event-card .details-link {
-            font-size: 0.65rem;
-            color: var(--accent-pink-vibrant);
-            text-decoration: underline;
-            cursor: pointer;
-            align-self: flex-start;
-        }
-
         .dashboard-card {
-            background-color: var(--bg-card-purple);
+            background-color: var(--bg-card-teal);
             padding: 0.6rem 0.8rem;
             border-radius: 6px;
-            border: 1px solid var(--border-color-lavender);
+            border: 1px solid var(--border-color-teal);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.38);
         }
 
@@ -385,22 +419,6 @@
             border-radius: 5px;
         }
 
-        #overviewImageCarouselContainer {
-            position: relative;
-            width: 100%;
-            height: 180px;
-            lg:height[100%];
-            overflow: hidden;
-            border-radius: 0.5rem;
-            background-color: rgba(0, 0, 0, 0.25);
-        }
-
-        #overviewImageCarousel .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -410,12 +428,12 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(20, 5, 30, 0.7);
+            background-color: rgba(6, 95, 70, 0.7);
             backdrop-filter: blur(8px);
         }
 
         .modal-content {
-            background-color: var(--bg-content-purple-opaque);
+            background-color: var(--bg-content-teal-opaque);
             margin: 10% auto;
             padding: 20px;
             border: 1px solid var(--border-color-strong);
@@ -433,9 +451,9 @@
             justify-content: center;
         }
 
-        .modal-content h2 {
+        .modal-content h2, .modal-content h3 {
             font-family: var(--font-heading);
-            color: var(--accent-pink-vibrant);
+            color: var(--accent-teal-bright);
             font-size: 1.2rem;
             margin-bottom: 1rem;
         }
@@ -445,94 +463,17 @@
             margin-bottom: 0.3rem;
             text-align: left;
             font-size: 0.8rem;
-            color: var(--text-secondary-lavender);
+            color: var(--text-secondary-light);
         }
 
         .modal-content .input-field {
             margin-bottom: 0.8rem;
             width: 100%;
             padding: 0.5rem;
-            border: 1px solid var(--border-color-lavender);
+            border: 1px solid var(--border-color-teal);
             border-radius: 0.375rem;
-            background-color: var(--bg-dark-purple);
+            background-color: var(--bg-dark-teal);
             color: var(--text-primary-light);
-        }
-
-        .table-wrapper {
-            flex-grow: 1;
-            overflow-y: auto;
-            border: 1px solid var(--border-color-lavender);
-            border-radius: 0.375rem;
-            background-color: rgba(60, 30, 70, 0.5);
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 0.5rem 0.6rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color-lavender);
-        }
-
-        .data-table th {
-            background-color: rgba(30, 10, 40, 0.8);
-            font-weight: 600;
-            color: var(--accent-teal-bright);
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-        .data-table tbody tr:nth-child(even) {
-            background-color: rgba(255, 255, 255, 0.01);
-        }
-
-        .data-table tbody tr:hover {
-            background-color: rgba(168, 85, 247, 0.1);
-        }
-
-        .contribution-table th,
-        .contribution-table td {
-            padding: 0.25rem 0.4rem;
-            font-size: 0.7rem;
-        }
-
-        .contribution-table th {
-            background-color: rgba(219, 39, 119, 0.1);
-            color: var(--accent-pink-vibrant);
-        }
-
-        #playlistButton {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            z-index: 1010;
-            background-color: var(--accent-pink-vibrant);
-            color: var(--text-primary-light);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-            border: none;
-        }
-
-        #playlistButton:hover {
-            background-color: var(--accent-purple-medium);
-            transform: scale(1.05);
-        }
-
-        #playlistButton i {
-            font-size: 1.1rem;
         }
 
         .action-button {
@@ -548,33 +489,33 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 0.8rem;
-            background-color: var(--accent-pink-vibrant);
+            background-color: var(--accent-teal-bright);
             color: var(--text-primary-light);
-            border-color: var(--accent-pink-vibrant);
+            border-color: var(--accent-teal-bright);
         }
 
         .action-button:hover {
             background-color: transparent;
-            color: var(--accent-pink-vibrant);
-            box-shadow: 0 0 10px var(--accent-pink-vibrant);
+            color: var(--accent-teal-bright);
+            box-shadow: 0 0 10px var(--accent-teal-bright);
         }
 
         .action-button.secondary {
-            background-color: var(--accent-purple-medium);
-            border-color: var(--accent-purple-medium);
+            background-color: var(--accent-teal-dark);
+            border-color: var(--accent-teal-dark);
         }
 
         .action-button.secondary:hover {
             background-color: transparent;
-            color: var(--accent-purple-medium);
-            box-shadow: 0 0 10px var(--accent-purple-medium);
+            color: var(--accent-teal-dark);
+            box-shadow: 0 0 10px var(--accent-teal-dark);
         }
 
         .select-field {
             padding: 0.5rem;
-            border: 1px solid var(--border-color-lavender);
+            border: 1px solid var(--border-color-teal);
             border-radius: 0.375rem;
-            background-color: var(--bg-dark-purple);
+            background-color: var(--bg-dark-teal);
             color: var(--text-primary-light);
             font-size: 0.75rem;
         }
@@ -582,18 +523,23 @@
         .textarea-field {
             width: 100%;
             padding: 0.5rem;
-            border: 1px solid var(--border-color-lavender);
+            border: 1px solid var(--border-color-teal);
             border-radius: 0.375rem;
-            background-color: var(--bg-dark-purple);
+            background-color: var(--bg-dark-teal);
             color: var(--text-primary-light);
             resize: vertical;
             min-height: 60px;
         }
 
-        .media-gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.5rem;
+        /* Floating Animation for Tiles */
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
@@ -667,21 +613,34 @@
                                 </div>
                                 <div class="dashboard-card flex-grow">
                                     <h3 data-i18n="overview.dashboardTitle">Relationship Trends</h3>
-                                    <select id="dashboardMetricSelect" class="select-field w-full py-1 text-xs mb-1.5 bg-[var(--bg-dark-purple)]"></select>
+                                    <select id="dashboardMetricSelect" class="select-field w-full py-1 text-xs mb-1.5 bg-[var(--bg-dark-teal)]"></select>
                                     <div class="chart-container relative h-36 md:h-full">
                                         <canvas id="dashboardChart"></canvas>
                                     </div>
                                 </div>
                             </div>
                             <div class="overview-right-column">
-                                <div id="overviewImageCarouselContainer" class="relative h-full w-full rounded-lg shadow-lg overflow-hidden">
-                                    <div id="overviewImageCarousel" class="h-full"></div>
-                                    <button id="overview-img-prev" class="carousel-nav-btn prev absolute top-1/2 left-1 transform -translate-y-1/2 bg-black/40 hover:bg-black/70 p-1.5 rounded-full z-10" aria-label="Previous Image">
-                                        <i class="fas fa-chevron-left text-white text-xs"></i>
-                                    </button>
-                                    <button id="overview-img-next" class="carousel-nav-btn next absolute top-1/2 right-1 transform -translate-y-1/2 bg-black/40 hover:bg-black/70 p-1.5 rounded-full z-10" aria-label="Next Image">
-                                        <i class="fas fa-chevron-right text-white text-xs"></i>
-                                    </button>
+                                <div id="overviewTilesContainer">
+                                    <div class="overview-tile animate-float" data-tile="ourSong">
+                                        <i class="fas fa-music"></i>
+                                        <h4 data-i18n="overview.ourSong">Our Song</h4>
+                                        <p data-i18n="overview.ourSongTileDesc">Listen to our special song</p>
+                                    </div>
+                                    <div class="overview-tile animate-float" data-tile="keyMoments">
+                                        <i class="fas fa-heart"></i>
+                                        <h4 data-i18n="overview.keyMoments">Key Moments</h4>
+                                        <p data-i18n="overview.keyMomentsTileDesc">Memorable milestones</p>
+                                    </div>
+                                    <div class="overview-tile animate-float" data-tile="sharedInterests">
+                                        <i class="fas fa-users"></i>
+                                        <h4 data-i18n="overview.sharedInterests">Shared Interests</h4>
+                                        <p data-i18n="overview.sharedInterestsTileDesc">What we love together</p>
+                                    </div>
+                                    <div class="overview-tile animate-float" data-tile="futurePlans">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <h4 data-i18n="overview.futurePlans">Future Plans</h4>
+                                        <p data-i18n="overview.futurePlansTileDesc">Our next adventures</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -689,6 +648,7 @@
                     </div>
                 </section>
 
+                <!-- Remaining sections (analysis, media, connect, lifesyncFun) remain unchanged -->
                 <section id="analysis" class="content-section">
                     <div class="section-header">
                         <h2 data-i18n="navAnalysis">Analysis Hub</h2>
@@ -702,7 +662,7 @@
                         <div id="analysis-tracking" class="sub-content active-sub-content">
                             <div class="mb-2 text-center">
                                 <label for="trackingMetricSelect" class="mr-1.5 font-medium text-xs" data-i18n="tracking.selectAspect">Track:</label>
-                                <select id="trackingMetricSelect" class="select-field w-auto inline-block py-1 text-xs bg-[var(--bg-dark-purple)]"></select>
+                                <select id="trackingMetricSelect" class="select-field w-auto inline-block py-1 text-xs bg-[var(--bg-dark-teal)]"></select>
                             </div>
                             <div class="chart-container h-60 md:h-80">
                                 <canvas id="trackingChart"></canvas>
@@ -711,7 +671,7 @@
                         <div id="analysis-contributions" class="sub-content">
                             <div class="mb-2 text-center">
                                 <label for="contributionFilterWeek" class="mr-1.5 font-medium text-xs" data-i18n="contributions.filterWeek">Week:</label>
-                                <select id="contributionFilterWeek" class="select-field w-auto inline-block py-1 text-xs bg-[var(--bg-dark-purple)]"></select>
+                                <select id="contributionFilterWeek" class="select-field w-auto inline-block py-1 text-xs bg-[var(--bg-dark-teal)]"></select>
                             </div>
                             <div class="table-wrapper">
                                 <table class="data-table contribution-table">
@@ -788,15 +748,15 @@
                                 <form id="feedbackForm" class="space-y-2.5">
                                     <div>
                                         <label for="feedbackSender" class="block text-xs font-medium" data-i18n="feedback.sender">From:</label>
-                                        <select id="feedbackSender" class="select-field bg-[var(--bg-dark-purple)]"></select>
+                                        <select id="feedbackSender" class="select-field bg-[var(--bg-dark-teal)]"></select>
                                     </div>
                                     <div>
                                         <label for="feedbackRecipient" class="block text-xs font-medium" data-i18n="feedback.recipient">To:</label>
-                                        <select id="feedbackRecipient" class="select-field bg-[var(--bg-dark-purple)]"></select>
+                                        <select id="feedbackRecipient" class="select-field bg-[var(--bg-dark-teal)]"></select>
                                     </div>
                                     <div>
                                         <label for="feedbackMessage" class="block text-xs font-medium" data-i18n="feedback.message">Message:</label>
-                                        <textarea id="feedbackMessage" rows="2" class="textarea-field bg-[var(--bg-dark-purple)]" placeholder="Type feedback..." data-i18n-placeholder="feedbackPlaceholder"></textarea>
+                                        <textarea id="feedbackMessage" rows="2" class="textarea-field bg-[var(--bg-dark-teal)]" placeholder="Type feedback..." data-i18n-placeholder="feedbackPlaceholder"></textarea>
                                     </div>
                                     <button type="submit" id="sendFeedbackBtn" class="action-button w-full text-xs py-1.5" data-i18n="sendFeedback">Send</button>
                                 </form>
@@ -810,36 +770,36 @@
                             <div class="relationship-action-form dashboard-card">
                                 <h4 data-i18n="relationshipActions.apology.title">Make an Apology</h4>
                                 <form id="apologyForm" class="space-y-2">
-                                    <select id="apologyFrom" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-purple)]"></select>
-                                    <textarea id="apologyMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-purple)]" placeholder="Your heartfelt apology..." data-i18n-placeholder="relationshipActions.apology.messagePlaceholder"></textarea>
+                                    <select id="apologyFrom" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-teal)]"></select>
+                                    <textarea id="apologyMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-teal)]" placeholder="Your heartfelt apology..." data-i18n-placeholder="relationshipActions.apology.messagePlaceholder"></textarea>
                                     <button type="submit" id="sendApologyBtn" class="action-button mt-0.5 w-full text-xs py-1" data-i18n="relationshipActions.apology.sendButton">Send Apology</button>
                                 </form>
                             </div>
                             <div class="relationship-action-form dashboard-card">
                                 <h4 data-i18n="relationshipActions.dissatisfaction.title">Express Dissatisfaction</h4>
                                 <form id="dissatisfactionForm" class="space-y-2">
-                                    <select id="dissatisfactionFrom" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-purple)]"></select>
-                                    <textarea id="dissatisfactionMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-purple)]" placeholder="Describe your concern..." data-i18n-placeholder="relationshipActions.dissatisfaction.messagePlaceholder"></textarea>
+                                    <select id="dissatisfactionFrom" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-teal)]"></select>
+                                    <textarea id="dissatisfactionMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-teal)]" placeholder="Describe your concern..." data-i18n-placeholder="relationshipActions.dissatisfaction.messagePlaceholder"></textarea>
                                     <button type="submit" id="sendDissatisfactionBtn" class="action-button mt-0.5 w-full text-xs py-1" data-i18n="relationshipActions.dissatisfaction.sendButton">Submit</button>
                                 </form>
                             </div>
                             <div class="relationship-action-form dashboard-card">
                                 <h4 data-i18n="relationshipActions.dateProposal.title">Book a Date</h4>
                                 <form id="dateProposalForm" class="space-y-2">
-                                    <select id="dateBooker" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-purple)]"></select>
-                                    <input id="dateActivity" type="text" class="input-field text-xs bg-[var(--bg-dark-purple)]" placeholder="Activity (e.g., Dinner)" data-i18n-placeholder="relationshipActions.dateProposal.activityPlaceholder">
-                                    <input id="dateProposed" type="date" class="input-field text-xs bg-[var(--bg-dark-purple)]">
-                                    <textarea id="dateMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-purple)]" placeholder="Additional notes..." data-i18n-placeholder="relationshipActions.dateProposal.messagePlaceholder"></textarea>
+                                    <select id="dateBooker" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-teal)]"></select>
+                                    <input id="dateActivity" type="text" class="input-field text-xs bg-[var(--bg-dark-teal)]" placeholder="Activity (e.g., Dinner)" data-i18n-placeholder="relationshipActions.dateProposal.activityPlaceholder">
+                                    <input id="dateProposed" type="date" class="input-field text-xs bg-[var(--bg-dark-teal)]">
+                                    <textarea id="dateMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-teal)]" placeholder="Additional notes..." data-i18n-placeholder="relationshipActions.dateProposal.messagePlaceholder"></textarea>
                                     <button type="submit" id="bookDateBtn" class="action-button mt-0.5 w-full text-xs py-1" data-i18n="relationshipActions.dateProposal.sendButton">Propose</button>
                                 </form>
                             </div>
                             <div class="relationship-action-form dashboard-card">
                                 <h4 data-i18n="relationshipActions.terminate.title">Request Termination</h4>
                                 <form id="terminationForm" class="space-y-2">
-                                    <select id="terminator" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-purple)]"></select>
-                                    <select id="terminationReason" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-purple)]"></select>
-                                    <textarea id="terminationOtherReason" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-purple)]" placeholder="Other reason (if applicable)..." data-i18n-placeholder="relationshipActions.terminate.otherReasonPlaceholder"></textarea>
-                                    <textarea id="terminationMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-purple)]" placeholder="Your message..." data-i18n-placeholder="relationshipActions.terminate.messagePlaceholder"></textarea>
+                                    <select id="terminator" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-teal)]"></select>
+                                    <select id="terminationReason" class="select-field text-xs py-1 mb-1 bg-[var(--bg-dark-teal)]"></select>
+                                    <textarea id="terminationOtherReason" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-teal)]" placeholder="Other reason (if applicable)..." data-i18n-placeholder="relationshipActions.terminate.otherReasonPlaceholder"></textarea>
+                                    <textarea id="terminationMessage" class="textarea-field min-h-[35px] text-xs bg-[var(--bg-dark-teal)]" placeholder="Your message..." data-i18n-placeholder="relationshipActions.terminate.messagePlaceholder"></textarea>
                                     <button type="submit" id="requestTerminationBtn" class="action-button mt-0.5 w-full text-xs py-1" data-i18n="relationshipActions.terminate.sendButton">Request</button>
                                 </form>
                             </div>
@@ -867,11 +827,11 @@
                                 <div class="grid grid-cols-2 gap-2 mb-1.5">
                                     <div>
                                         <label for="salatisoBirthday" class="block text-xs" id="name1BirthdayLabel" data-dynamic-name1>Name 1 Bday:</label>
-                                        <input id="salatisoBirthday" type="date" class="input-field text-xs bg-[var(--bg-dark-purple)]">
+                                        <input id="salatisoBirthday" type="date" class="input-field text-xs bg-[var(--bg-dark-teal)]">
                                     </div>
                                     <div>
                                         <label for="teeBirthday" class="block text-xs" id="name2BirthdayLabel" data-dynamic-name2>Name 2 Bday:</label>
-                                        <input id="teeBirthday" type="date" class="input-field text-xs bg-[var(--bg-dark-purple)]">
+                                        <input id="teeBirthday" type="date" class="input-field text-xs bg-[var(--bg-dark-teal)]">
                                     </div>
                                 </div>
                                 <button id="checkCompatibility" class="action-button secondary text-xs py-1" data-i18n="checkCompatibility">Check</button>
@@ -887,8 +847,8 @@
                             <p data-i18n="comingSoon">Coming Soon!</p>
                         </div>
                         <div id="lifesync-reports" class="sub-content text-center">
-                            <select id="reportPeriod" class="select-field w-auto inline-block py-1 text-sm mr-1.5 bg-[var(--bg-dark-purple)]"></select>
-                            <select id="reportMetrics" class="select-field w-auto inline-block py-1 text-sm mr-1.5 bg-[var(--bg-dark-purple)]" multiple></select>
+                            <select id="reportPeriod" class="select-field w-auto inline-block py-1 text-sm mr-1.5 bg-[var(--bg-dark-teal)]"></select>
+                            <select id="reportMetrics" class="select-field w-auto inline-block py-1 text-sm mr-1.5 bg-[var(--bg-dark-teal)]" multiple></select>
                             <button id="generateReport" class="action-button text-sm py-1" data-i18n="generateReport">Generate</button>
                             <div id="reportPreview" class="mt-3 text-left text-xs"></div>
                         </div>
@@ -897,7 +857,7 @@
             </main>
         </div>
 
-        <footer class="py-2 text-center text-xs fixed bottom-0 left-0 w-full bg-[rgba(30,10,40,0.85)] border-t border-[var(--border-color-lavender)] text-[var(--text-secondary-lavender)] backdrop-blur-sm">
+        <footer class="py-2 text-center text-xs fixed bottom-0 left-0 w-full bg-[rgba(6,95,70,0.85)] border-t border-[var(--border-color-teal)] text-[var(--text-secondary-light)] backdrop-blur-sm">
             © <span id="currentYear"></span> Salatiso Lonwabo Mdeni - Father, OHS & Risk Expert, Author. All Rights Reserved. | <a href="#" class="hover:text-[var(--text-primary-light)] text-[var(--accent-teal-bright)]">Privacy Policy</a> | <a href="#" class="hover:text-[var(--text-primary-light)] text-[var(--accent-teal-bright)]">Terms of Service</a>
         </footer>
     </div>
@@ -909,11 +869,11 @@
             <div class="space-y-3">
                 <div>
                     <label for="name1Input" data-i18n="settingsModal.name1">Your Name:</label>
-                    <input type="text" id="name1Input" class="input-field bg-[var(--bg-dark-purple)]" placeholder="Enter first name">
+                    <input type="text" id="name1Input" class="input-field bg-[var(--bg-dark-teal)]" placeholder="Enter first name">
                 </div>
                 <div>
                     <label for="name2Input" data-i18n="settingsModal.name2">Partner's Name:</label>
-                    <input type="text" id="name2Input" class="input-field bg-[var(--bg-dark-purple)]" placeholder="Enter second name">
+                    <input type="text" id="name2Input" class="input-field bg-[var(--bg-dark-teal)]" placeholder="Enter second name">
                 </div>
                 <button id="saveNamesButton" class="action-button secondary w-full" data-i18n="settingsModal.saveButton">Save Names</button>
             </div>
@@ -950,7 +910,7 @@
 
     <script>
         // Global State & Config
-        console.log("Us - Our Story v1.2 (LifeSync Design)");
+        console.log("Us - Our Story v1.3 (LifeSync Design - Teal/Green Update)");
         let coupleName1 = "Person 1";
         let coupleName2 = "Person 2";
         let currentMainSection = 'overview';
@@ -962,8 +922,6 @@
             lifesyncFun: 'fun-compatibility'
         };
         let dashboardMainChart, analysisTrackingChart;
-        let overviewImageCarouselInterval;
-        let overviewImageCarouselCurrentIndex = 0;
 
         const relationshipData = {
             playlistUrl: "https://music.youtube.com/playlist?list=PLXPU1hLJ2t0MZKrDGjGxk7vNlVeh9pX0C&si=ZPqinjcSRBsq8FZZ",
@@ -1026,6 +984,14 @@
             ],
             sharedSongs: [
                 { titleKey: "overview.songName_shaggy", artist: "Shaggy", sharedBy: "Salatiso", link: "https://youtu.be/DOcCQ-kC4iE?si=DrJURhh0p86ce7yt" }
+            ],
+            sharedInterests: [
+                { name: "Music", description: "We both love listening to R&B and jazz." },
+                { name: "Travel", description: "Exploring new cities together is our passion." }
+            ],
+            futurePlans: [
+                { destination: "Cape Town", description: "Wine tasting in Stellenbosch", date: "2025-12" },
+                { destination: "Paris", description: "A romantic getaway", date: "2026-03" }
             ]
         };
 
@@ -1052,7 +1018,14 @@
                         ourSong: "Our Song",
                         songName_shaggy: "\"Thank You Baby!\"",
                         listenToSong: "Listen",
-                        quickTimeline: "Recent Milestones"
+                        quickTimeline: "Recent Milestones",
+                        ourSongTileDesc: "Listen to our special song",
+                        keyMoments: "Key Moments",
+                        keyMomentsTileDesc: "Memorable milestones",
+                        sharedInterests: "Shared Interests",
+                        sharedInterestsTileDesc: "What we love together",
+                        futurePlans: "Future Plans",
+                        futurePlansTileDesc: "Our next adventures"
                     },
                     tabTracking: "Tracking",
                     tabContributions: "Contributions",
@@ -1487,7 +1460,7 @@
             ).sort((a, b) => new Date(a.date) - new Date(b.date));
 
             if (events.length === 0) {
-                timelineContainer.innerHTML = `<p class="text-center text-xs text-[var(--text-secondary-lavender)]">${i18next.t('timeline.noEvents')}</p>`;
+                timelineContainer.innerHTML = `<p class="text-center text-xs text-[var(--text-secondary-light)]">${i18next.t('timeline.noEvents')}</p>`;
                 return;
             }
 
@@ -1510,25 +1483,102 @@
                     <div>
                         <h4>${headline}</h4>
                         <p class="date">${event.date}</p>
-                                                <p class="summary">${text}</p>
                     </div>
-                    <span class="details-link" data-event-headline="${headline}" data-event-text="${text}" data-event-media="${event.media?.url || ''}">${i18next.t('timeline.details', { defaultValue: 'Details' })}</span>
                 `;
+                card.dataset.eventHeadline = headline;
+                card.dataset.eventText = text;
+                card.dataset.eventMedia = event.media?.url || '';
                 timelineContainer.appendChild(card);
             });
 
-            // Add event listeners for details links
-            timelineContainer.querySelectorAll('.details-link').forEach(link => {
-                link.addEventListener('click', () => {
+            timelineContainer.querySelectorAll('.timeline-event-card').forEach(card => {
+                card.addEventListener('click', () => {
                     const modal = document.getElementById('detailsModal');
                     const modalTitle = document.getElementById('modalTitle');
                     const modalBody = document.getElementById('modalBody');
                     if (modal && modalTitle && modalBody) {
-                        modalTitle.textContent = link.dataset.eventHeadline;
+                        modalTitle.textContent = card.dataset.eventHeadline;
                         modalBody.innerHTML = `
-                            <p>${link.dataset.eventText}</p>
-                            ${link.dataset.eventMedia ? `<img src="${link.dataset.eventMedia}" alt="Event media" class="w-full mt-2 rounded" onerror="this.style.display='none';">` : ''}
+                            <p>${card.dataset.eventText}</p>
+                            ${card.dataset.eventMedia ? `<img src="${card.dataset.eventMedia}" alt="Event media" class="w-full mt-2 rounded" onerror="this.style.display='none';">` : ''}
                         `;
+                        modal.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        function renderOverviewTiles() {
+            const tilesContainer = document.getElementById('overviewTilesContainer');
+            if (!tilesContainer) {
+                console.error("overviewTilesContainer element not found");
+                return;
+            }
+            tilesContainer.querySelectorAll('.overview-tile').forEach(tile => {
+                tile.addEventListener('click', () => {
+                    const tileType = tile.dataset.tile;
+                    const modal = document.getElementById('detailsModal');
+                    const modalTitle = document.getElementById('modalTitle');
+                    const modalBody = document.getElementById('modalBody');
+                    if (modal && modalTitle && modalBody) {
+                        modalTitle.textContent = i18next.t(`overview.${tileType}`);
+                        let content = '';
+                        switch (tileType) {
+                            case 'ourSong':
+                                content = `
+                                    <p>"Thank You Baby! (For Makin' Someday Come So Soon)" by Shaggy</p>
+                                    <a href="${relationshipData.ourSpecialSongUrl}" target="_blank" class="action-button text-xs py-1 px-2 mt-2">
+                                        <i class="fas fa-headphones-alt mr-1"></i> ${i18next.t('overview.listenToSong')}
+                                    </a>
+                                `;
+                                break;
+                            case 'keyMoments':
+                                                                content = relationshipData.weeks.flatMap(week =>
+                                    (week.events || []).map(event => {
+                                        const headline = i18next.t(event.headlineKey, {
+                                            song: i18next.t(event.songTitleKey || event.songTitle || "A Song"),
+                                            artist: event.artist || "Unknown Artist",
+                                            sharer: event.sharedBy === "Salatiso" ? coupleName1 : (event.sharedBy === "Tee" ? coupleName2 : event.sharedBy),
+                                            defaultValue: event.headlineKey || "Event"
+                                        });
+                                        const text = i18next.t(event.textKey, {
+                                            song: i18next.t(event.songTitleKey || event.songTitle || "A Song"),
+                                            artist: event.artist || "Unknown Artist",
+                                            sharer: event.sharedBy === "Salatiso" ? coupleName1 : (event.sharedBy === "Tee" ? coupleName2 : event.sharedBy),
+                                            defaultValue: event.textKey || "Details for this event."
+                                        });
+                                        return `
+                                            <div class="mb-3">
+                                                <h4 class="text-sm font-semibold text-[var(--accent-teal-bright)]">${headline}</h4>
+                                                <p class="text-xs text-[var(--text-secondary-light)]">${event.date}</p>
+                                                <p class="text-xs">${text}</p>
+                                                ${event.media?.url ? `<img src="${event.media.url}" alt="Event media" class="w-full mt-2 rounded" onerror="this.style.display='none';">` : ''}
+                                            </div>
+                                        `;
+                                    })
+                                ).join('') || `<p class="text-xs">${i18next.t('timeline.noEvents')}</p>`;
+                                break;
+                            case 'sharedInterests':
+                                content = relationshipData.sharedInterests.map(interest => `
+                                    <div class="mb-3">
+                                        <h4 class="text-sm font-semibold text-[var(--accent-teal-bright)]">${interest.name}</h4>
+                                        <p class="text-xs">${interest.description}</p>
+                                    </div>
+                                `).join('') || `<p class="text-xs">${i18next.t('mediaGallery.noSongs', { defaultValue: 'No shared interests logged yet.' })}</p>`;
+                                break;
+                            case 'futurePlans':
+                                content = relationshipData.futurePlans.map(plan => `
+                                    <div class="mb-3">
+                                        <h4 class="text-sm font-semibold text-[var(--accent-teal-bright)]">${plan.destination}</h4>
+                                        <p class="text-xs">${plan.description}</p>
+                                        <p class="text-xs text-[var(--accent-teal-dark)]">${plan.date}</p>
+                                    </div>
+                                `).join('') || `<p class="text-xs">${i18next.t('travel.noDesired', { defaultValue: 'No future plans added yet.' })}</p>`;
+                                break;
+                            default:
+                                content = `<p class="text-xs">${i18next.t('comingSoon', { defaultValue: 'More details coming soon!' })}</p>`;
+                        }
+                        modalBody.innerHTML = content;
                         modal.classList.add('active');
                     }
                 });
@@ -1597,8 +1647,7 @@
         function renderOverviewSection() {
             updateDashboardMetrics();
             updateDashboardChart();
-            renderOverviewImageCarousel();
-            startOverviewImageCarousel();
+            renderOverviewTiles();
             renderTimeline();
         }
 
@@ -1625,55 +1674,6 @@
             });
         }
 
-        function renderOverviewImageCarousel() {
-            const container = document.getElementById('overviewImageCarousel');
-            if (!container) {
-                console.error("overviewImageCarousel element not found");
-                return;
-            }
-            container.innerHTML = '';
-            if (!relationshipData.photoFileNames || relationshipData.photoFileNames.length === 0) {
-                container.innerHTML = `<div class="flex items-center justify-center h-full text-[var(--text-secondary-lavender)] text-sm">${i18next.t('mediaGallery.noPhotos')}</div>`;
-                return;
-            }
-            relationshipData.photoFileNames.forEach((fileName, index) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'carousel-item absolute top-0 left-0 w-full h-full opacity-0 transition-opacity duration-1000 ease-in-out';
-                itemDiv.innerHTML = `<img src="${fileName}" alt="${i18next.t('mediaGallery.photoMoments')} ${index + 1}" class="w-full h-full object-cover" onerror="this.src='assets/photos/fallback.jpg';">`;
-                container.appendChild(itemDiv);
-            });
-            if (relationshipData.photoFileNames.length > 0) {
-                showOverviewImage(overviewImageCarouselCurrentIndex);
-            }
-        }
-
-        function showOverviewImage(index) {
-            const items = document.querySelectorAll('#overviewImageCarousel .carousel-item');
-            if (items.length === 0) return;
-            overviewImageCarouselCurrentIndex = (index + items.length) % items.length;
-            items.forEach(item => item.classList.remove('opacity-100', 'z-10'));
-            items[overviewImageCarouselCurrentIndex].classList.add('opacity-100', 'z-10');
-        }
-
-        function nextOverviewImage() {
-            showOverviewImage(overviewImageCarouselCurrentIndex + 1);
-        }
-
-        function prevOverviewImage() {
-            showOverviewImage(overviewImageCarouselCurrentIndex - 1);
-        }
-
-        function startOverviewImageCarousel() {
-            if (overviewImageCarouselInterval) clearInterval(overviewImageCarouselInterval);
-            if (relationshipData.photoFileNames.length > 1) {
-                overviewImageCarouselInterval = setInterval(nextOverviewImage, 6000);
-            }
-        }
-
-        function stopOverviewImageCarousel() {
-            if (overviewImageCarouselInterval) clearInterval(overviewImageCarouselInterval);
-        }
-
         function updateDashboardChart() {
             const el = document.getElementById('dashboardChart');
             if (!el) {
@@ -1696,22 +1696,22 @@
                         {
                             label: `${coupleName1} - ${metricLabel}`,
                             data: data1,
-                            borderColor: 'var(--accent-pink-vibrant)',
-                            backgroundColor: 'rgba(219, 39, 119, 0.1)',
+                            borderColor: 'var(--accent-teal-bright)',
+                            backgroundColor: 'rgba(45, 212, 191, 0.1)',
                             tension: 0.3,
                             borderWidth: 1.5,
-                            pointBackgroundColor: 'var(--accent-pink-vibrant)',
+                            pointBackgroundColor: 'var(--accent-teal-bright)',
                             pointRadius: 3,
                             fill: true
                         },
                         {
                             label: `${coupleName2} - ${metricLabel}`,
                             data: data2,
-                            borderColor: 'var(--accent-teal-bright)',
-                            backgroundColor: 'rgba(45, 212, 191, 0.1)',
+                            borderColor: 'var(--accent-teal-dark)',
+                            backgroundColor: 'rgba(38, 166, 154, 0.1)',
                             tension: 0.3,
                             borderWidth: 1.5,
-                            pointBackgroundColor: 'var(--accent-teal-bright)',
+                            pointBackgroundColor: 'var(--accent-teal-dark)',
                             pointRadius: 3,
                             fill: true
                         }
@@ -1724,12 +1724,12 @@
                         y: {
                             beginAtZero: true,
                             max: 10,
-                            ticks: { color: 'var(--text-secondary-lavender)', font: { size: 10 } },
-                            grid: { color: 'var(--border-color-lavender)' }
+                            ticks: { color: 'var(--text-secondary-light)', font: { size: 10 } },
+                            grid: { color: 'var(--border-color-teal)' }
                         },
                         x: {
-                            ticks: { color: 'var(--text-secondary-lavender)', font: { size: 10 } },
-                            grid: { color: 'var(--border-color-lavender)' }
+                            ticks: { color: 'var(--text-secondary-light)', font: { size: 10 } },
+                            grid: { color: 'var(--border-color-teal)' }
                         }
                     },
                     plugins: {
@@ -1786,8 +1786,8 @@
                         {
                             label: `${coupleName1} - ${metricLabel}`,
                             data: data1,
-                            backgroundColor: 'rgba(219, 39, 119, 0.3)',
-                            borderColor: 'var(--accent-pink-vibrant)',
+                            backgroundColor: 'rgba(45, 212, 191, 0.3)',
+                            borderColor: 'var(--accent-teal-bright)',
                             borderWidth: 1.5,
                             tension: 0.3,
                             fill: true
@@ -1795,8 +1795,8 @@
                         {
                             label: `${coupleName2} - ${metricLabel}`,
                             data: data2,
-                            backgroundColor: 'rgba(45, 212, 191, 0.3)',
-                            borderColor: 'var(--accent-teal-bright)',
+                            backgroundColor: 'rgba(38, 166, 154, 0.3)',
+                            borderColor: 'var(--accent-teal-dark)',
                             borderWidth: 1.5,
                             tension: 0.3,
                             fill: true
@@ -1810,12 +1810,12 @@
                         y: {
                             beginAtZero: true,
                             max: (metricKey === 'finances' ? undefined : 10),
-                            ticks: { color: 'var(--text-secondary-lavender)' },
-                            grid: { color: 'var(--border-color-lavender)' }
+                            ticks: { color: 'var(--text-secondary-light)' },
+                            grid: { color: 'var(--border-color-teal)' }
                         },
                         x: {
-                            ticks: { color: 'var(--text-secondary-lavender)' },
-                            grid: { color: 'var(--border-color-lavender)' }
+                            ticks: { color: 'var(--text-secondary-light)' },
+                            grid: { color: 'var(--border-color-teal)' }
                         }
                     },
                     plugins: {
@@ -1839,13 +1839,14 @@
             const weekNumber = parseInt(weekNumStr);
             const weekData = relationshipData.weeks.find(w => w.weekNumber === weekNumber);
             if (!weekData || !weekData.contributions) {
-                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4">${i18next.t('contributions.noDataForWeek')}</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-xs">${i18next.t('contributions.noDataForWeek')}</td></tr>`;
                 return;
             }
             const parameters = i18next.t('contributions.params', { returnObjects: true });
             Object.keys(parameters).forEach(paramKey => {
                 const contrib = weekData.contributions[paramKey];
                 const tr = tableBody.insertRow();
+                tr.className = 'text-xs';
                 tr.insertCell().textContent = parameters[paramKey];
 
                 const formatContrib = (personData) => {
@@ -1876,6 +1877,7 @@
             tableBody.innerHTML = '';
             relationshipData.reinforcementWords.forEach(item => {
                 const tr = tableBody.insertRow();
+                tr.className = 'text-xs';
                 tr.insertCell().textContent = i18next.t(item.wordActionKey);
                 tr.insertCell().textContent = i18next.t(item.purposeKey);
                 tr.insertCell().textContent = item.occurrences.salatiso.length > 0 ? item.occurrences.salatiso.join(', ') : '0';
@@ -1900,18 +1902,18 @@
             }
             container.innerHTML = '';
             if (!relationshipData.sharedSongs || relationshipData.sharedSongs.length === 0) {
-                container.innerHTML = `<p class="text-sm text-center">${i18next.t('mediaGallery.noSongs')}</p>`;
+                container.innerHTML = `<p class="text-sm text-center text-[var(--text-secondary-light)]">${i18next.t('mediaGallery.noSongs')}</p>`;
                 return;
             }
             relationshipData.sharedSongs.forEach(song => {
                 const songItem = document.createElement('div');
-                songItem.className = 'song-item p-3 rounded-md shadow-sm flex justify-between items-center bg-[var(--bg-card-purple)]';
+                songItem.className = 'song-item p-3 rounded-md shadow-sm flex justify-between items-center bg-[var(--bg-card-teal)]';
                 const title = song.titleKey ? i18next.t(song.titleKey) : song.title;
                 const sharedBy = song.sharedBy === "Salatiso" ? coupleName1 : (song.sharedBy === "Tee" ? coupleName2 : song.sharedBy);
                 songItem.innerHTML = `
                     <div class="song-item-info">
-                        <h4 class="font-semibold text-sm text-[var(--accent-pink-vibrant)]">${title}</h4>
-                        <p class="text-xs text-[var(--text-secondary-lavender)]">${i18next.t('mediaGallery.sharedSongs')} by: ${sharedBy} - Artist: ${song.artist}</p>
+                        <h4 class="font-semibold text-sm text-[var(--accent-teal-bright)]">${title}</h4>
+                        <p class="text-xs text-[var(--text-secondary-light)]">${i18next.t('mediaGallery.sharedSongs')} by: ${sharedBy} - Artist: ${song.artist}</p>
                     </div>
                     <div class="song-item-actions">
                         <a href="${song.link}" target="_blank" title="${i18next.t('overview.listenToSong')}" class="text-lg text-[var(--accent-teal-bright)]"><i class="fas fa-play-circle"></i></a>
@@ -1928,13 +1930,13 @@
             }
             container.innerHTML = '';
             if (!relationshipData.photoFileNames || relationshipData.photoFileNames.length === 0) {
-                container.innerHTML = `<p class="text-sm text-center">${i18next.t('mediaGallery.noPhotos')}</p>`;
+                container.innerHTML = `<p class="text-sm text-center text-[var(--text-secondary-light)]">${i18next.t('mediaGallery.noPhotos')}</p>`;
                 return;
             }
             relationshipData.photoFileNames.forEach((fileName, index) => {
                 const item = document.createElement('div');
                 item.className = 'media-gallery-item relative group cursor-pointer aspect-square';
-                item.innerHTML = `<img src="${fileName}" alt="${i18next.t('mediaGallery.photoMoments')} ${index + 1}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.src='assets/photos/fallback.jpg';">`;
+                item.innerHTML = `<img src="${fileName}" alt="${i18next.t('mediaGallery.photoMoments')} ${index + 1}" class="w-full h-full object-cover rounded transition-transform duration-300 group-hover:scale-105" onerror="this.src='assets/photos/fallback.jpg';">`;
                 item.addEventListener('click', () => {
                     const modal = document.getElementById('detailsModal');
                     const modalTitle = document.getElementById('modalTitle');
@@ -1958,13 +1960,13 @@
             container.innerHTML = '';
             const noItemsKey = type === 'visited' ? 'travel.noVisited' : 'travel.noDesired';
             if (!items || items.length === 0) {
-                container.innerHTML = `<p class="text-sm text-center">${i18next.t(noItemsKey)}</p>`;
+                container.innerHTML = `<p class="text-sm text-center text-[var(--text-secondary-light)]">${i18next.t(noItemsKey)}</p>`;
                 return;
             }
             items.forEach(item => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = 'travel-item p-3 rounded-md shadow-sm bg-[var(--bg-card-purple)]';
-                let content = `<h4 class="text-[var(--accent-teal-bright)]">${item.destinationKey ? i18next.t(item.destinationKey) : item.destination}</h4>`;
+                itemDiv.className = 'travel-item p-3 rounded-md shadow-sm bg-[var(--bg-card-teal)]';
+                let content = `<h4 class="text-[var(--accent-teal-bright)] text-sm">${item.destinationKey ? i18next.t(item.destinationKey) : item.destination}</h4>`;
                 if (type === 'visited') {
                     const role1 = item.roles.salatisoKey ? i18next.t(item.roles.salatisoKey) : 'N/A';
                     const role2 = item.roles.teeKey ? i18next.t(item.roles.teeKey) : 'N/A';
@@ -1999,19 +2001,19 @@
             }
             container.innerHTML = '';
             if (relationshipData.feedbackLog.length === 0) {
-                container.innerHTML = `<p class="text-center">${i18next.t('feedback.noFeedbackYet')}</p>`;
+                container.innerHTML = `<p class="text-center text-xs text-[var(--text-secondary-light)]">${i18next.t('feedback.noFeedbackYet')}</p>`;
                 return;
             }
             relationshipData.feedbackLog.slice().reverse().forEach(fb => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = 'feedback-item p-2.5 border rounded-md mb-2';
-                itemDiv.style.borderColor = "var(--border-color-lavender)";
+                itemDiv.className = 'feedback-item p-2.5 border rounded-md';
+                itemDiv.style.borderColor = "var(--border-color-teal)";
                 itemDiv.style.backgroundColor = "rgba(255,255,255,0.05)";
                 const senderName = fb.sender === "Salatiso" ? coupleName1 : (fb.sender === "Tee" ? coupleName2 : fb.sender);
                 const recipientName = fb.recipient === "Salatiso" ? coupleName1 : (fb.recipient === "Tee" ? coupleName2 : fb.recipient);
-                let responseHtml = `<p class="response-status text-xs mt-1 text-[var(--accent-purple-medium)]">${i18next.t('feedback.pendingResponse')}</p>`;
+                let responseHtml = `<p class="response-status text-xs mt-1 text-[var(--accent-teal-dark)]">${i18next.t('feedback.pendingResponse')}</p>`;
                 if (fb.responseTimestamp) {
-                    responseHtml = `<p class="text-xs mt-1 pt-1 border-t border-[var(--border-color-lavender)]"><strong>${i18next.t('feedback.responseFrom', { defaultValue: 'Response from' })} ${recipientName}</strong> (${new Date(fb.responseTimestamp).toLocaleString()}):<br>${fb.response}</p>`;
+                    responseHtml = `<p class="text-xs mt-1 pt-1 border-t border-[var(--border-color-teal)]"><strong>${i18next.t('feedback.responseFrom', { defaultValue: 'Response from' })} ${recipientName}</strong> (${new Date(fb.responseTimestamp).toLocaleString()}):<br>${fb.response}</p>`;
                 }
                 itemDiv.innerHTML = `
                     <p class="font-medium text-sm">${i18next.t('feedback.feedbackFrom', { name: senderName })} ${i18next.t('feedback.to', { defaultValue: 'to' })} ${recipientName}:</p>
@@ -2030,13 +2032,13 @@
             }
             container.innerHTML = '';
             if (relationshipData.actionLog.length === 0) {
-                container.innerHTML = `<p class="text-center">${i18next.t('relationshipActions.noActionsYet')}</p>`;
+                container.innerHTML = `<p class="text-center text-xs text-[var(--text-secondary-light)]">${i18next.t('relationshipActions.noActionsYet')}</p>`;
                 return;
             }
             relationshipData.actionLog.slice().reverse().forEach(log => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = 'action-log-item p-2.5 border rounded-md mb-2';
-                itemDiv.style.borderColor = "var(--border-color-lavender)";
+                itemDiv.className = 'action-log-item p-2.5 border rounded-md';
+                itemDiv.style.borderColor = "var(--border-color-teal)";
                 itemDiv.style.backgroundColor = "rgba(255,255,255,0.05)";
                 const actorName = log.actor === "Salatiso" ? coupleName1 : (log.actor === "Tee" ? coupleName2 : log.actor);
                 let detailsText = log.message || '';
@@ -2072,7 +2074,7 @@
             const period = document.getElementById('reportPeriod')?.value;
             const metrics = Array.from(document.getElementById('reportMetrics')?.selectedOptions || []).map(opt => opt.value);
             if (!period || metrics.length === 0) {
-                container.innerHTML = `<p class="text-xs">${i18next.t('lifesync.selectOptions', { defaultValue: 'Select a period and metrics to generate a report.' })}</p>`;
+                container.innerHTML = `<p class="text-xs text-[var(--text-secondary-light)]">${i18next.t('lifesync.selectOptions', { defaultValue: 'Select a period and metrics to generate a report.' })}</p>`;
                 return;
             }
 
@@ -2125,15 +2127,6 @@
             });
 
             document.getElementById('saveNamesButton')?.addEventListener('click', saveNames);
-
-            document.getElementById('overview-img-prev')?.addEventListener('click', () => {
-                prevOverviewImage();
-                stopOverviewImageCarousel();
-            });
-            document.getElementById('overview-img-next')?.addEventListener('click', () => {
-                nextOverviewImage();
-                stopOverviewImageCarousel();
-            });
 
             document.getElementById('dashboardMetricSelect')?.addEventListener('change', updateDashboardChart);
             document.getElementById('trackingMetricSelect')?.addEventListener('change', (e) => {
@@ -2356,4 +2349,3 @@
     </script>
 </body>
 </html>
-                   
